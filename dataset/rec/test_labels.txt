@@ -1,0 +1,5 @@
+test/a9_crop0.jpg	30E65373
+test/a9_crop1.jpg	30A87551
+test/a9_crop2.jpg	30F25654
+test/a9_crop3jpg	29B31677
+test/a10.jpg	28A23329

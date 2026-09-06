@@ -1,0 +1,56 @@
+[build-system]
+requires = ["setuptools>=45", "wheel", "setuptools_scm>=6.2"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "litealpr"
+version = "0.1.0"
+description = "Accurate and Efficient General OCR System for License Plates"
+readme = "README.md"
+requires-python = ">=3.8"
+license = {text = "Apache License 2.0"}
+authors = [
+    {name = "vn-anhnth", email = "anhlone3@gmail.com"}
+]
+keywords = [
+    "ocr",
+    "license plate recognition",
+    "yolov8",
+    "svtr",
+    "deep learning",
+    "computer vision"
+]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: Apache Software License",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Topic :: Scientific/Engineering :: Image Recognition",
+]
+
+dependencies = [
+    "numpy<2.0",
+    "opencv-python<=5.0.0.93",
+    "pyyaml<=6.0.3",
+    "huggingface-hub<=0.31",
+    "torch>=1.7.0",
+    "torchvision",
+    "ultralytics<=8.3.99",
+]
+
+[project.urls]
+"Homepage" = "https://github.com/vn-anhnth/LiteALPR"
+"Documentation" = "https://github.com/vn-anhnth/LiteALPR/tree/main/docs"
+"Bug Reports" = "https://github.com/vn-anhnth/LiteALPR/issues"
+
+[tool.setuptools]
+include-package-data = true
+
+[tool.setuptools.packages.find]
+include = ["litealpr*"]
+
+[tool.setuptools.package-data]
+"*" = ["*.txt", "*.yml", "*.yaml"]

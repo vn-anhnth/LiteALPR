@@ -1,0 +1,8 @@
+include README.md
+include LICENSE
+
+# Include all Python files
+recursive-include litealpr *.py
+
+# Include dictionary files
+recursive-include litealpr *.txt

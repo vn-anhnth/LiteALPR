@@ -1,0 +1,42 @@
+# Python and Environment
+__pycache__/
+.ipynb_checkpoints/
+*.py[cod]
+*$py.class
+*.so
+env/
+venv/
+.env
+
+# Build and Distribution
+build/
+dist/
+*.egg-info/
+
+# IDE and OS
+.vscode/
+.idea/
+*.DS_Store
+*.vs
+*.user
+*~
+
+# Logs and Outputs
+*.log
+output/
+inference/
+inference_results/
+e2e_results/
+rec_results/
+det_results/
+test_output/
+gradio_outputs/
+
+# Data and Models
+dataset/
+train_data/
+train_data_lmdb/
+pretrained_models/
+*.pt
+*.pth
+*.safetensors

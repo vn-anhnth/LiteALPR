@@ -1,0 +1,43 @@
+# Ultralytics YOLO 🚀, AGPL-3.0 license
+# Custom Architecture: YOLOv8n-Ghost
+# Replace heavy C2f blocks with C3Ghost to reduce computational cost
+
+# Parameters
+nc: 1  # Number of classes (license plate)
+scales:
+  # [depth, width, max_channels]
+  n: [0.33, 0.25, 1024]  # Keep the original YOLOv8n scaling
+
+# YOLOv8-Ghost backbone
+backbone:
+  # [from, repeats, module, args]
+  - [-1, 1, Conv, [64, 3, 2]]  # 0-P1/2
+  - [-1, 1, Conv, [128, 3, 2]]  # 1-P2/4
+  - [-1, 3, C3Ghost, [128, True]]  # Replace C2f with C3Ghost
+  - [-1, 1, Conv, [256, 3, 2]]  # 3-P3/8
+  - [-1, 6, C3Ghost, [256, True]]  # Replace C2f with C3Ghost
+  - [-1, 1, Conv, [512, 3, 2]]  # 5-P4/16
+  - [-1, 6, C3Ghost, [512, True]]  # Replace C2f with C3Ghost
+  - [-1, 1, Conv, [1024, 3, 2]]  # 7-P5/32
+  - [-1, 3, C3Ghost, [1024, True]]  # Replace C2f with C3Ghost
+  - [-1, 1, SPPF, [1024, 5]]  # 9
+
+# YOLOv8-Ghost head
+head:
+  - [-1, 1, nn.Upsample, [None, 2, 'nearest']]
+  - [[-1, 6], 1, Concat, [1]]  # Concatenate with backbone P4
+  - [-1, 3, C3Ghost, [512]]  # 12 - Replace C2f with C3Ghost
+
+  - [-1, 1, nn.Upsample, [None, 2, 'nearest']]
+  - [[-1, 4], 1, Concat, [1]]  # Concatenate with backbone P3
+  - [-1, 3, C3Ghost, [256]]  # 15 - P3/8-small
+
+  - [-1, 1, Conv, [256, 3, 2]]
+  - [[-1, 12], 1, Concat, [1]]  # Concatenate with head P4
+  - [-1, 3, C3Ghost, [512]]  # 18 - P4/16-medium
+
+  - [-1, 1, Conv, [512, 3, 2]]
+  - [[-1, 9], 1, Concat, [1]]  # Concatenate with backbone P5
+  - [-1, 3, C3Ghost, [1024]]  # 21 - P5/32-large
+
+  - [[15, 18, 21], 1, Detect, [nc]]  # Detect(P3, P4, P5)

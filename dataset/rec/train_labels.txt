@@ -1,0 +1,5 @@
+train/a1.jpg	29X504899
+train/a2.jpg	29E07476
+train/a3.jpg	99H141390
+train/a4.jpg	29BK04366
+train/a66_crop0.jpg	30G76363
