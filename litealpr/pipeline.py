@@ -149,7 +149,13 @@ class LiteALPR:
             img = cv2.imread(img)
 
         device_arg = 0 if "cuda" in str(self.device) else "cpu"
-        det_results = self.det_model(img, verbose=False, conf=conf_thresh, device=device_arg)[0]
+        det_results = self.det_model(
+            img,
+            imgsz=getattr(self, "det_imgsz", 416),
+            verbose=False,
+            conf=conf_thresh,
+            device=device_arg,
+        )[0]
         boxes = det_results.boxes.data.cpu().numpy()  # [x1, y1, x2, y2, conf, cls]
 
         results = []
