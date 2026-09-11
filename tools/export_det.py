@@ -42,8 +42,7 @@ def main():
         imgsz=args.imgsz,
         opset=opset_version,
         dynamic=False,
-        simplify=True,
-        dynamo=False
+        simplify=False
     )
 
     # Ultralytics exports as best.onnx; rename to save_path (e.g. best_416.onnx)

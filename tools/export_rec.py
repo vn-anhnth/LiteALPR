@@ -65,7 +65,6 @@ def main():
         input_names=['input'],
         output_names=['output'],
         dynamic_axes=dynamic_axes,
-        dynamo=False
     )
 
     # Verify ONNX
