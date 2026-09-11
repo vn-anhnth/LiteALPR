@@ -129,9 +129,20 @@ model = LiteALPR(device="cuda:0")
 
 ## 🏋️ Training & Evaluation
 
-LiteALPR provides a complete suite of scripts in the `tools/` directory for dataset preparation, training, evaluation, and inference.
+LiteALPR provides a complete suite of scripts in the `tools/` directory for dataset preparation, training, evaluation, batch inference, and ONNX export.
 
-### 0. Model Weights Preparation
+### 0. Environment Setup
+To use the training and evaluation tools, clone the repository and install the development dependencies:
+```bash
+git clone https://github.com/vn-anhnth/LiteALPR.git
+cd LiteALPR
+
+# Install dependencies (choose CPU or GPU):
+pip install -r requirements.txt        # CPU usage
+# pip install -r requirements-gpu.txt  # For GPU ONNX acceleration
+```
+
+### 1. Model Weights Preparation
 Before training or evaluation, download the official pre-trained models from our [HuggingFace Repository](https://huggingface.co/anhone3/LiteALPR) and place them in the following structure:
 ```
 LiteALPR/
@@ -147,24 +158,16 @@ wget -O pretrained_models/det/yolov8n_efficient/best.pt https://huggingface.co/a
 wget -O pretrained_models/rec/svtr26_tiny/best.pth https://huggingface.co/anhone3/LiteALPR/resolve/main/svtr26_tiny/best.pth
 ```
 
-### 1. Data Preparation (Create LMDB)
-Because our LMDB script uses hardcoded paths for simplicity, please open `tools/create_lmdb_dataset.py` and modify the `data_dir` variable in the `__main__` block to match your dataset path before running:
-```python
-if __name__ == '__main__':
-    data_dir = './dataset/rec' # Set your dataset directory
-
-    label_file_list = [
-        os.path.join(data_dir, 'train_labels.txt'),
-        os.path.join(data_dir, 'val_labels.txt'),
-        os.path.join(data_dir, 'test_labels.txt')
-    ]
-```
-After modifying the paths, generate the LMDB:
+### 2. Data Preparation (Create LMDB)
+The recognition module requires datasets to be formatted into Lightning Memory-Mapped Databases (LMDB) for fast I/O access during training. Generate the LMDB using our CLI script:
 ```bash
-python tools/create_lmdb_dataset.py
+python tools/create_lmdb_dataset.py \
+    --data_dir ./dataset/rec \
+    --label_files train_labels.txt val_labels.txt test_labels.txt \
+    --output_dir ./dataset/rec/lmdb_data
 ```
 
-### 2. Training (Det & Rec)
+### 3. Training (Det & Rec)
 Before training, you must configure your dataset paths, batch sizes, and learning parameters:
 
 **For Detection:**
@@ -210,7 +213,7 @@ torchrun --nproc_per_node=1 tools/train_rec.py \
     -c configs/rec/svtr26/svtr26_tiny.yml
 ```
 
-### 3. Evaluation (Validation)
+### 4. Evaluation (Validation)
 Evaluate your trained checkpoints on the validation set:
 ```bash
 # Evaluate Detection
@@ -220,7 +223,7 @@ python tools/eval_det.py -m output/det/yolov8n_efficient/train/weights/best.pt
 python tools/eval_rec.py -c configs/rec/svtr26/svtr26_tiny.yml -m output/rec/svtr26_tiny/train/best.pth
 ```
 
-### 4. Batch Inference
+### 5. Batch Inference
 Test your checkpoints directly on directories of images (supports `--save_log` to save predictions):
 ```bash
 # Infer Detection
@@ -230,17 +233,17 @@ python tools/infer_det.py -m pretrained_models/det/yolov8n_efficient/best.pt -d 
 python tools/infer_rec.py -m pretrained_models/rec/svtr26_tiny/best.pth -d dataset/rec/test --save_log
 ```
 
-### 5. Export to ONNX
-Export your trained PyTorch models to the ONNX format for deployment in production environments (C++, C#, TensorRT, etc.).
+### 6. Export to ONNX
+Export your trained PyTorch models to the ONNX format for deployment in production environments (C++, C#, TensorRT, etc.). You can configure the ONNX operator set version via `--opset` (default: 12).
 
 ```bash
-# Export Detection
-# The ONNX file will automatically be saved alongside the original `.pt` file
-python tools/export_det.py -m output/det/yolov8n_efficient/train/weights/best.pt
+# Export Detection (default: imgsz=416, opset=12)
+# The ONNX file will automatically be saved alongside the original `.pt` file (e.g., best_416.onnx)
+python tools/export_det.py -m output/det/yolov8n_efficient/train/weights/best.pt --imgsz 416 --opset 18
 
-# Export Recognition
-# By default, the SVTR ONNX model expects a fixed 128x32 image. If you need it to accept dynamic width images in production, add the `--dynamic` flag
-python tools/export_rec.py -m output/rec/svtr26_tiny/train/best.pth --save_path output/rec/svtr26_tiny/train/best.onnx --dynamic
+# Export Recognition (default: 128x32, opset=12)
+# If you need it to accept dynamic width images in production, add the `--dynamic` flag
+python tools/export_rec.py -m output/rec/svtr26_tiny/train/best.pth --save_path output/rec/svtr26_tiny/train/best.onnx --opset 18 --dynamic
 ```
 
 ## 🤝 Acknowledgements

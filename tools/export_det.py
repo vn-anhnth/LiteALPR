@@ -10,12 +10,13 @@ def parse_args():
     parser = argparse.ArgumentParser(description="Export YOLOv8 Detection Model to ONNX")
     parser.add_argument("-m", "--model", type=str, default="output/det/yolov8n_efficient/train/weights/best.pt", help="Path to trained model .pt")
     parser.add_argument("--imgsz", type=int, default=416, help="Image size for export")
+    parser.add_argument("--opset", type=int, default=12, help="ONNX opset version (default: 12)")
     return parser.parse_args()
 
 
 def main():
     args = parse_args()
-    opset_version = 12
+    opset_version = args.opset
     device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 
     print(f"[INFO] Initializing export on device: {device}")
@@ -42,7 +43,7 @@ def main():
         imgsz=args.imgsz,
         opset=opset_version,
         dynamic=False,
-        simplify=False
+        simplify=True
     )
 
     # Ultralytics exports as best.onnx; rename to save_path (e.g. best_416.onnx)
