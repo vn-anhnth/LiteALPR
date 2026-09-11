@@ -64,7 +64,8 @@ def main():
         do_constant_folding=True,
         input_names=['input'],
         output_names=['output'],
-        dynamic_axes=dynamic_axes
+        dynamic_axes=dynamic_axes,
+        dynamo=False
     )
 
     # Verify ONNX
