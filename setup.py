@@ -40,7 +40,7 @@ setup(
     # Package configuration
     packages=find_packages(include=["litealpr", "litealpr.*"]),
     install_requires=[
-        "numpy",
+        "numpy<2.0",
         "opencv-python<=5.0.0.93",
         "PyYAML<=6.0.3",
         "huggingface-hub<=0.31",
