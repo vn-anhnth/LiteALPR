@@ -47,6 +47,7 @@ setup(
         "torch>=1.7.0",
         "torchvision",
         "ultralytics<=8.3.99",
+        "onnx>=1.13.0",
     ],
     extras_require={
         "cpu": ["onnxruntime>=1.13.0"],
