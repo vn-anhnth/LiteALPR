@@ -8,23 +8,33 @@ import cv2
 import torch
 
 __dir__ = os.path.dirname(os.path.abspath(__file__))
-sys.path.append(os.path.abspath(os.path.join(__dir__, '..')))
+sys.path.append(os.path.abspath(os.path.join(__dir__, "..")))
 
 from ultralytics import YOLO
 
 
 def parse_args():
     parser = argparse.ArgumentParser()
-    parser.add_argument('-m', '--model', type=str, default='pretrained_models/det/yolov8n_efficient/best.pt', help='path to model.pt')
-    parser.add_argument('-d', '--dir', type=str, default='dataset/det/test/images', help='Image directory')
-    parser.add_argument('--save_log', action='store_true', help='Save inference predictions to log file')
+    parser.add_argument(
+        "-m",
+        "--model",
+        type=str,
+        default="pretrained_models/det/yolov8n_efficient/best.pt",
+        help="path to model.pt",
+    )
+    parser.add_argument(
+        "-d", "--dir", type=str, default="dataset/det/test/images", help="Image directory"
+    )
+    parser.add_argument(
+        "--save_log", action="store_true", help="Save inference predictions to log file"
+    )
     return parser.parse_args()
 
 
 def main():
     args = parse_args()
 
-    device = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
+    device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
     print(f"[INFO] Initializing inference on device: {str(device).upper()}")
 
     pretrained_model = args.model
@@ -33,8 +43,9 @@ def main():
     model.to(device)
 
     # Discover images
-    image_paths = glob.glob(os.path.join(args.dir, '*.[jJ][pP][gG]')) + \
-                  glob.glob(os.path.join(args.dir, '*.[pP][nN][gG]'))
+    image_paths = glob.glob(os.path.join(args.dir, "*.[jJ][pP][gG]")) + glob.glob(
+        os.path.join(args.dir, "*.[pP][nN][gG]")
+    )
 
     if not image_paths:
         print(f"[ERROR] No images found in {args.dir}")
@@ -78,7 +89,7 @@ def main():
             torch.cuda.synchronize()
         end_time = time.time()
 
-        total_time += (end_time - start_time)
+        total_time += end_time - start_time
 
         if args.save_log:
             # Format predictions: class, conf, bbox
@@ -100,18 +111,18 @@ def main():
         f"[INFO] Device        : {str(device).upper()}",
         f"[INFO] Total Images  : {total_samples}",
         f"[INFO] Avg Time/Img  : {avg_time_ms:.2f} ms",
-        f"[INFO] FPS           : {fps:.2f} frames/sec"
+        f"[INFO] FPS           : {fps:.2f} frames/sec",
     ]
 
     if args.save_log:
         # Determine infer output dir dynamically based on model's folder name
         model_name = os.path.basename(os.path.dirname(args.model))
-        if not model_name or model_name == 'weights':  # if it's nested in a weights folder
-            model_name = 'yolov8n_efficient'
+        if not model_name or model_name == "weights":  # if it's nested in a weights folder
+            model_name = "yolov8n_efficient"
 
-        infer_dir = os.path.join('output', 'det', model_name, 'infer')
+        infer_dir = os.path.join("output", "det", model_name, "infer")
         os.makedirs(infer_dir, exist_ok=True)
-        log_path = os.path.join(infer_dir, 'infer.log')
+        log_path = os.path.join(infer_dir, "infer.log")
         summary_lines.append(f"[INFO] Log saved     : {log_path}")
 
     summary_lines.append("[INFO] ========================================")
@@ -120,14 +131,15 @@ def main():
     print(f"\n{summary_text}\n")
 
     if args.save_log:
-        with open(log_path, 'w', encoding='utf-8') as f:
+        with open(log_path, "w", encoding="utf-8") as f:
             f.write(summary_text + "\n\n")
             f.write("FileName\tPredictions [Class, Conf, BBox]\n")
             f.write("----------------------------------------\n")
             for path, preds in results_list:
                 f.write(f"{os.path.basename(path)}\t{preds}\n")
 
-if __name__ == '__main__':
+
+if __name__ == "__main__":
     # python tools/infer_det.py
     # python tools/infer_det.py --save_log
     # python tools/infer_det.py -m pretrained_models/det/yolov8n_efficient/best.pt -d dataset/det/test/images --save_log

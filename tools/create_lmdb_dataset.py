@@ -1,3 +1,4 @@
+import argparse
 import io
 import os
 
@@ -22,18 +23,20 @@ def get_datalist(data_dir, data_path, max_len):
         for p in data_path:
             train_data.extend(get_datalist(data_dir, p, max_len))
     else:
-        with open(data_path, 'r', encoding='utf-8') as f:
-            for line in tqdm(f.readlines(),
-                             desc=f'load data from {data_path}'):
-                line = (line.strip('\n').replace('.jpg ', '.jpg\t').replace(
-                    '.png ', '.png\t').split('\t'))
+        with open(data_path, "r", encoding="utf-8") as f:
+            for line in tqdm(f.readlines(), desc=f"load data from {data_path}"):
+                line = (
+                    line.strip("\n")
+                    .replace(".jpg ", ".jpg\t")
+                    .replace(".png ", ".png\t")
+                    .split("\t")
+                )
                 if len(line) > 1:
-                    img_path = os.path.join(data_dir, line[0].strip(' '))
+                    img_path = os.path.join(data_dir, line[0].strip(" "))
                     label = line[1]
                     if len(label) > max_len:
                         continue
-                    if os.path.exists(
-                            img_path) and os.path.getsize(img_path) > 0:
+                    if os.path.exists(img_path) and os.path.getsize(img_path) > 0:
                         train_data.append([str(img_path), label])
     return train_data
 
@@ -66,60 +69,72 @@ def createDataset(data_list, outputPath, checkValid=True):
     env = lmdb.open(outputPath, map_size=2147483648)
     cache = {}
     cnt = 1
-    for imagePath, label in tqdm(data_list,
-                                 desc=f'make dataset, save to {outputPath}'):
-        with open(imagePath, 'rb') as f:
+    for imagePath, label in tqdm(data_list, desc=f"make dataset, save to {outputPath}"):
+        with open(imagePath, "rb") as f:
             imageBin = f.read()
             buf = io.BytesIO(imageBin)
             w, h = Image.open(buf).size
         if checkValid:
             try:
                 if not checkImageIsValid(imageBin):
-                    print(f'{imagePath} is not a valid image')
+                    print(f"{imagePath} is not a valid image")
                     continue
-            except:
+            except Exception:
                 continue
 
-        imageKey = b'image-%09d' % cnt
-        labelKey = b'label-%09d' % cnt
-        whKey = b'wh-%09d' % cnt
+        imageKey = b"image-%09d" % cnt
+        labelKey = b"label-%09d" % cnt
+        whKey = b"wh-%09d" % cnt
         cache[imageKey] = imageBin
         cache[labelKey] = label.encode()
-        cache[whKey] = (str(w) + '_' + str(h)).encode()
+        cache[whKey] = (str(w) + "_" + str(h)).encode()
 
         if cnt % 1000 == 0:
             writeCache(env, cache)
             cache = {}
         cnt += 1
     nSamples = cnt - 1
-    cache[b'num-samples'] = str(nSamples).encode()
+    cache[b"num-samples"] = str(nSamples).encode()
     writeCache(env, cache)
-    print('Created dataset with %d samples' % nSamples)
+    print("Created dataset with %d samples" % nSamples)
 
-
-import argparse
 
 def parse_args():
-    parser = argparse.ArgumentParser(description='Create LMDB dataset for ALPR character recognition')
-    parser.add_argument('--data_dir', type=str, default='./dataset/rec',
-                        help='Root directory of the dataset images and labels')
-    parser.add_argument('--label_files', nargs='+', default=['train_labels.txt', 'val_labels.txt', 'test_labels.txt'],
-                        help='List of label files inside data_dir')
-    parser.add_argument('--output_dir', type=str, default='./dataset/rec/lmdb_data',
-                        help='Directory to save output LMDB databases')
-    parser.add_argument('--max_len', type=int, default=800,
-                        help='Maximum character length filter')
+    parser = argparse.ArgumentParser(
+        description="Create LMDB dataset for ALPR character recognition"
+    )
+    parser.add_argument(
+        "--data_dir",
+        type=str,
+        default="./dataset/rec",
+        help="Root directory of the dataset images and labels",
+    )
+    parser.add_argument(
+        "--label_files",
+        nargs="+",
+        default=["train_labels.txt", "val_labels.txt", "test_labels.txt"],
+        help="List of label files inside data_dir",
+    )
+    parser.add_argument(
+        "--output_dir",
+        type=str,
+        default="./dataset/rec/lmdb_data",
+        help="Directory to save output LMDB databases",
+    )
+    parser.add_argument("--max_len", type=int, default=800, help="Maximum character length filter")
     return parser.parse_args()
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     args = parse_args()
     data_dir = args.data_dir
     save_path_root = args.output_dir
 
     for label_file in args.label_files:
-        data_list_path = os.path.join(data_dir, label_file) if not os.path.isabs(label_file) else label_file
-        file_name = os.path.basename(data_list_path).split('.')[0].replace('_labels', '')
+        data_list_path = (
+            os.path.join(data_dir, label_file) if not os.path.isabs(label_file) else label_file
+        )
+        file_name = os.path.basename(data_list_path).split(".")[0].replace("_labels", "")
         save_path = os.path.join(save_path_root, file_name)
 
         # Check if the text file exists

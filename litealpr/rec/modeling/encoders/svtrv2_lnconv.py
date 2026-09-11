@@ -7,7 +7,6 @@ from litealpr.rec.modeling.common import DropPath, Identity, Mlp
 
 
 class ConvBNLayer(nn.Module):
-
     def __init__(
         self,
         in_channels,
@@ -40,7 +39,6 @@ class ConvBNLayer(nn.Module):
 
 
 class Attention(nn.Module):
-
     def __init__(
         self,
         dim,
@@ -62,8 +60,7 @@ class Attention(nn.Module):
 
     def forward(self, x):
         B, N, _ = x.shape
-        qkv = (self.qkv(x).reshape(B, N, 3, self.num_heads,
-                                   self.head_dim).permute(2, 0, 3, 1, 4))
+        qkv = self.qkv(x).reshape(B, N, 3, self.num_heads, self.head_dim).permute(2, 0, 3, 1, 4)
         q, k, v = qkv.unbind(0)
         attn = q @ k.transpose(-2, -1) * self.scale
         attn = attn.softmax(dim=-1)
@@ -76,7 +73,6 @@ class Attention(nn.Module):
 
 
 class Block(nn.Module):
-
     def __init__(
         self,
         dim,
@@ -118,7 +114,6 @@ class Block(nn.Module):
 
 
 class ConvBlock(nn.Module):
-
     def __init__(
         self,
         dim,
@@ -153,13 +148,11 @@ class ConvBlock(nn.Module):
 
 
 class FlattenTranspose(nn.Module):
-
     def forward(self, x):
         return x.flatten(2).transpose(1, 2)
 
 
 class SubSample2D(nn.Module):
-
     def __init__(
         self,
         in_channels,
@@ -169,11 +162,7 @@ class SubSample2D(nn.Module):
         if stride is None:
             stride = [2, 1]
         super().__init__()
-        self.conv = nn.Conv2d(in_channels,
-                              out_channels,
-                              kernel_size=3,
-                              stride=stride,
-                              padding=1)
+        self.conv = nn.Conv2d(in_channels, out_channels, kernel_size=3, stride=stride, padding=1)
         self.norm = nn.LayerNorm(out_channels)
 
     def forward(self, x, sz):
@@ -186,7 +175,6 @@ class SubSample2D(nn.Module):
 
 
 class SubSample1D(nn.Module):
-
     def __init__(
         self,
         in_channels,
@@ -196,11 +184,7 @@ class SubSample1D(nn.Module):
         if stride is None:
             stride = [2, 1]
         super().__init__()
-        self.conv = nn.Conv2d(in_channels,
-                              out_channels,
-                              kernel_size=3,
-                              stride=stride,
-                              padding=1)
+        self.conv = nn.Conv2d(in_channels, out_channels, kernel_size=3, stride=stride, padding=1)
         self.norm = nn.LayerNorm(out_channels)
 
     def forward(self, x, sz):
@@ -213,40 +197,40 @@ class SubSample1D(nn.Module):
 
 
 class IdentitySize(nn.Module):
-
     def forward(self, x, sz):
         return x, sz
 
 
 class SVTRStage(nn.Module):
-
-    def __init__(self,
-                 dim=64,
-                 out_dim=256,
-                 depth=3,
-                 mixer=['Local'] * 3,
-                 sub_k=None,
-                 num_heads=2,
-                 mlp_ratio=4,
-                 qkv_bias=True,
-                 qk_scale=None,
-                 drop_rate=0.0,
-                 attn_drop_rate=0.0,
-                 drop_path=[0.1] * 3,
-                 norm_layer=nn.LayerNorm,
-                 act=nn.GELU,
-                 eps=1e-6,
-                 downsample=None,
-                 **kwargs):
+    def __init__(
+        self,
+        dim=64,
+        out_dim=256,
+        depth=3,
+        mixer=["Local"] * 3,
+        sub_k=None,
+        num_heads=2,
+        mlp_ratio=4,
+        qkv_bias=True,
+        qk_scale=None,
+        drop_rate=0.0,
+        attn_drop_rate=0.0,
+        drop_path=[0.1] * 3,
+        norm_layer=nn.LayerNorm,
+        act=nn.GELU,
+        eps=1e-6,
+        downsample=None,
+        **kwargs,
+    ):
         if sub_k is None:
             sub_k = [2, 1]
         super().__init__()
         self.dim = dim
 
-        conv_block_num = sum([1 if mix == 'Conv' else 0 for mix in mixer])
+        conv_block_num = sum([1 if mix == "Conv" else 0 for mix in mixer])
         self.blocks = nn.Sequential()
         for i in range(depth):
-            if mixer[i] == 'Conv':
+            if mixer[i] == "Conv":
                 self.blocks.append(
                     ConvBlock(
                         dim=dim,
@@ -257,7 +241,8 @@ class SVTRStage(nn.Module):
                         drop_path=drop_path[i],
                         norm_layer=norm_layer,
                         eps=eps,
-                    ))
+                    )
+                )
             else:
                 self.blocks.append(
                     Block(
@@ -272,13 +257,14 @@ class SVTRStage(nn.Module):
                         drop_path=drop_path[i],
                         norm_layer=norm_layer,
                         eps=eps,
-                    ))
-            if i == conv_block_num - 1 and mixer[-1] != 'Conv':
+                    )
+                )
+            if i == conv_block_num - 1 and mixer[-1] != "Conv":
                 self.blocks.append(FlattenTranspose())
         if downsample:
-            if mixer[-1] == 'Conv':
+            if mixer[-1] == "Conv":
                 self.downsample = SubSample2D(dim, out_dim, stride=sub_k)
-            elif mixer[-1] == 'Global':
+            elif mixer[-1] == "Global":
                 self.downsample = SubSample1D(dim, out_dim, stride=sub_k)
         else:
             self.downsample = IdentitySize()
@@ -291,24 +277,22 @@ class SVTRStage(nn.Module):
 
 
 class ADDPosEmbed(nn.Module):
-
     def __init__(self, feat_max_size=None, embed_dim=768):
         if feat_max_size is None:
             feat_max_size = [8, 32]
         super().__init__()
         pos_embed = torch.zeros(
-            [1, feat_max_size[0] * feat_max_size[1], embed_dim],
-            dtype=torch.float32)
+            [1, feat_max_size[0] * feat_max_size[1], embed_dim], dtype=torch.float32
+        )
         trunc_normal_(pos_embed, mean=0, std=0.02)
         self.pos_embed = nn.Parameter(
-            pos_embed.transpose(1, 2).reshape(1, embed_dim, feat_max_size[0],
-                                              feat_max_size[1]),
+            pos_embed.transpose(1, 2).reshape(1, embed_dim, feat_max_size[0], feat_max_size[1]),
             requires_grad=True,
         )
 
     def forward(self, x):
         sz = x.shape[2:]
-        x = x + self.pos_embed[:, :, :sz[0], :sz[1]]
+        x = x + self.pos_embed[:, :, : sz[0], : sz[1]]
         return x
 
 
@@ -358,12 +342,11 @@ class POPatchEmbed(nn.Module):
 
 
 class LastStage(nn.Module):
-
     def __init__(self, in_channels, out_channels, last_drop, out_char_num):
         super().__init__()
         self.last_conv = nn.Linear(
-            in_channels, out_channels,
-            bias=False)  # self.num_features, self.out_channels, bias=False)
+            in_channels, out_channels, bias=False
+        )  # self.num_features, self.out_channels, bias=False)
         self.hardswish = nn.Hardswish()
         self.dropout = nn.Dropout(p=last_drop)
 
@@ -377,7 +360,6 @@ class LastStage(nn.Module):
 
 
 class Feat2D(nn.Module):
-
     def __init__(self):
         super().__init__()
 
@@ -416,37 +398,38 @@ class Feat2D(nn.Module):
 
 
 class SVTRv2LNConv(nn.Module):
-
-    def __init__(self,
-                 max_sz=None,
-                 in_channels=3,
-                 out_channels=192,
-                 out_char_num=25,
-                 depths=None,
-                 dims=None,
-                 mixer=None,
-                 use_pos_embed=True,
-                 sub_k=None,
-                 num_heads=None,
-                 mlp_ratio=4,
-                 qkv_bias=True,
-                 qk_scale=None,
-                 drop_rate=0.0,
-                 last_drop=0.1,
-                 attn_drop_rate=0.0,
-                 drop_path_rate=0.1,
-                 norm_layer=nn.LayerNorm,
-                 act=nn.GELU,
-                 last_stage=False,
-                 feat2d=False,
-                 eps=1e-6,
-                 **kwargs):
+    def __init__(
+        self,
+        max_sz=None,
+        in_channels=3,
+        out_channels=192,
+        out_char_num=25,
+        depths=None,
+        dims=None,
+        mixer=None,
+        use_pos_embed=True,
+        sub_k=None,
+        num_heads=None,
+        mlp_ratio=4,
+        qkv_bias=True,
+        qk_scale=None,
+        drop_rate=0.0,
+        last_drop=0.1,
+        attn_drop_rate=0.0,
+        drop_path_rate=0.1,
+        norm_layer=nn.LayerNorm,
+        act=nn.GELU,
+        last_stage=False,
+        feat2d=False,
+        eps=1e-6,
+        **kwargs,
+    ):
         if num_heads is None:
             num_heads = [2, 4, 8]
         if sub_k is None:
             sub_k = [[1, 1], [2, 1], [1, 1]]
         if mixer is None:
-            mixer = [['Conv'] * 3, ['Conv'] * 3 + ['Global'] * 3, ['Global'] * 3]
+            mixer = [["Conv"] * 3, ["Conv"] * 3 + ["Global"] * 3, ["Global"] * 3]
         if dims is None:
             dims = [64, 128, 256]
         if depths is None:
@@ -463,11 +446,10 @@ class SVTRv2LNConv(nn.Module):
             feat_max_size=feat_max_size,
             embed_dim=dims[0],
             use_pos_embed=use_pos_embed,
-            flatten=mixer[0][0] != 'Conv',
+            flatten=mixer[0][0] != "Conv",
         )
 
-        dpr = np.linspace(0, drop_path_rate,
-                          sum(depths))  # stochastic depth decay rule
+        dpr = np.linspace(0, drop_path_rate, sum(depths))  # stochastic depth decay rule
 
         self.stages = nn.ModuleList()
         for i_stage in range(num_stages):
@@ -483,7 +465,7 @@ class SVTRv2LNConv(nn.Module):
                 qk_scale=qk_scale,
                 drop=drop_rate,
                 attn_drop=attn_drop_rate,
-                drop_path=dpr[sum(depths[:i_stage]):sum(depths[:i_stage + 1])],
+                drop_path=dpr[sum(depths[:i_stage]) : sum(depths[: i_stage + 1])],
                 norm_layer=norm_layer,
                 act=act,
                 downsample=i_stage != num_stages - 1,
@@ -495,9 +477,7 @@ class SVTRv2LNConv(nn.Module):
         self.last_stage = last_stage
         if last_stage:
             self.out_channels = out_channels
-            self.stages.append(
-                LastStage(self.num_features, out_channels, last_drop,
-                          out_char_num))
+            self.stages.append(LastStage(self.num_features, out_channels, last_drop, out_char_num))
         if feat2d:
             self.stages.append(Feat2D())
         self.apply(self._init_weights)
@@ -511,11 +491,11 @@ class SVTRv2LNConv(nn.Module):
             zeros_(m.bias)
             ones_(m.weight)
         if isinstance(m, nn.Conv2d):
-            kaiming_normal_(m.weight, mode='fan_out', nonlinearity='relu')
+            kaiming_normal_(m.weight, mode="fan_out", nonlinearity="relu")
 
     @torch.jit.ignore
     def no_weight_decay(self):
-        return {'patch_embed', 'downsample', 'pos_embed'}
+        return {"patch_embed", "downsample", "pos_embed"}
 
     def forward(self, x):
         x, sz = self.pope(x)

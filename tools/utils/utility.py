@@ -52,11 +52,9 @@ def get_image_file_list(img_file):
 
 def binarize_img(img):
     if len(img.shape) == 3 and img.shape[2] == 3:
-        gray = cv2.cvtColor(img,
-                            cv2.COLOR_BGR2GRAY)  # conversion to grayscale image
+        gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)  # conversion to grayscale image
         # use cv2 threshold binarization
-        _, gray = cv2.threshold(gray, 0, 255,
-                                cv2.THRESH_BINARY + cv2.THRESH_OTSU)
+        _, gray = cv2.threshold(gray, 0, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)
         img = cv2.cvtColor(gray, cv2.COLOR_GRAY2BGR)
     return img
 
@@ -138,11 +136,11 @@ def check_install(module_name, install_name):
         try:
             subprocess.check_call(
                 [python, "-m", "pip", "install", install_name],
-                stdout=subprocess.DEVNULL, )
+                stdout=subprocess.DEVNULL,
+            )
             print(f"The {module_name} module is now installed")
         except subprocess.CalledProcessError:
-            raise Exception(
-                f"Install {module_name} failed, please install manually")
+            raise Exception(f"Install {module_name} failed, please install manually")
     else:
         print(f"{module_name} has been installed.")
 

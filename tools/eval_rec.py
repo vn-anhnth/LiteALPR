@@ -4,7 +4,7 @@ import sys
 __dir__ = os.path.dirname(os.path.abspath(__file__))
 
 sys.path.append(__dir__)
-sys.path.insert(0, os.path.abspath(os.path.join(__dir__, '..')))
+sys.path.insert(0, os.path.abspath(os.path.join(__dir__, "..")))
 
 from tools.engine.config import Config
 from tools.engine.trainer import Trainer
@@ -21,29 +21,29 @@ def main():
     FLAGS = parse_args()
     cfg = Config(FLAGS.config)
     FLAGS = vars(FLAGS)
-    opt = FLAGS.pop('opt')
-    model_path = FLAGS.pop('model', None)
+    opt = FLAGS.pop("opt")
+    model_path = FLAGS.pop("model", None)
     cfg.merge_dict(FLAGS)
     cfg.merge_dict(opt)
 
     if model_path:
-        cfg.cfg['Global']['pretrained_model'] = model_path
+        cfg.cfg["Global"]["pretrained_model"] = model_path
 
-    trainer = Trainer(cfg, mode='eval')
+    trainer = Trainer(cfg, mode="eval")
 
-    best_model_dict = trainer.status.get('metrics', {})
-    trainer.logger.info('metric in ckpt ***************')
+    best_model_dict = trainer.status.get("metrics", {})
+    trainer.logger.info("metric in ckpt ***************")
     for k, v in best_model_dict.items():
-        trainer.logger.info(f'{k}:{v}')
+        trainer.logger.info(f"{k}:{v}")
 
     metric = trainer.eval()
 
-    trainer.logger.info('metric eval ***************')
+    trainer.logger.info("metric eval ***************")
     for k, v in metric.items():
-        trainer.logger.info(f'{k}:{v}')
+        trainer.logger.info(f"{k}:{v}")
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     # python tools/eval_rec.py
     # python tools/eval_rec.py -c configs/rec/svtr26/svtr26_tiny.yml -m output/rec/svtr26_tiny/train/best.pth
     main()

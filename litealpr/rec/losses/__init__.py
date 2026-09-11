@@ -4,38 +4,39 @@ from importlib import import_module
 from torch import nn
 
 name_to_module = {
-    'ABINetLoss': '.abinet_loss',
-    'ARLoss': '.ar_loss',
-    'CDistNetLoss': '.cdistnet_loss',
-    'CELoss': '.ce_loss',
-    'CPPDLoss': '.cppd_loss',
-    'CTCLoss': '.ctc_loss',
-    'IGTRLoss': '.igtr_loss',
-    'LISTERLoss': '.lister_loss',
-    'LPVLoss': '.lpv_loss',
-    'MGPLoss': '.mgp_loss',
-    'PARSeqLoss': '.parseq_loss',
-    'RobustScannerLoss': '.robustscanner_loss',
-    'SEEDLoss': '.seed_loss',
-    'SMTRLoss': '.smtr_loss',
-    'SRNLoss': '.srn_loss',
-    'VisionLANLoss': '.visionlan_loss',
-    'CAMLoss': '.cam_loss',
-    'MDiffLoss': '.mdiff_loss',
-    'UniRecLoss': '.unirec_loss',
-    'CMERLoss': '.cmer_loss',
+    "ABINetLoss": ".abinet_loss",
+    "ARLoss": ".ar_loss",
+    "CDistNetLoss": ".cdistnet_loss",
+    "CELoss": ".ce_loss",
+    "CPPDLoss": ".cppd_loss",
+    "CTCLoss": ".ctc_loss",
+    "IGTRLoss": ".igtr_loss",
+    "LISTERLoss": ".lister_loss",
+    "LPVLoss": ".lpv_loss",
+    "MGPLoss": ".mgp_loss",
+    "PARSeqLoss": ".parseq_loss",
+    "RobustScannerLoss": ".robustscanner_loss",
+    "SEEDLoss": ".seed_loss",
+    "SMTRLoss": ".smtr_loss",
+    "SRNLoss": ".srn_loss",
+    "VisionLANLoss": ".visionlan_loss",
+    "CAMLoss": ".cam_loss",
+    "MDiffLoss": ".mdiff_loss",
+    "UniRecLoss": ".unirec_loss",
+    "CMERLoss": ".cmer_loss",
 }
 
 
 def build_loss(config):
     config = copy.deepcopy(config)
-    module_name = config.pop('name')
+    module_name = config.pop("name")
 
     if module_name in globals():
         module_class = globals()[module_name]
     else:
         assert module_name in name_to_module, Exception(
-            f'{module_name} is not supported. The losses in {list(name_to_module.keys())} are supportes')
+            f"{module_name} is not supported. The losses in {list(name_to_module.keys())} are supportes"
+        )
         module_path = name_to_module[module_name]
         module = import_module(module_path, package=__package__)
         module_class = getattr(module, module_name)
@@ -44,16 +45,10 @@ def build_loss(config):
 
 
 class GTCLoss(nn.Module):
-
-    def __init__(self,
-                 gtc_loss,
-                 gtc_weight=1.0,
-                 ctc_weight=1.0,
-                 zero_infinity=True,
-                 **kwargs):
+    def __init__(self, gtc_loss, gtc_weight=1.0, ctc_weight=1.0, zero_infinity=True, **kwargs):
         super().__init__()
         # Dynamically build CTCLoss
-        ctc_config = {'name': 'CTCLoss', 'zero_infinity': zero_infinity}
+        ctc_config = {"name": "CTCLoss", "zero_infinity": zero_infinity}
         self.ctc_loss = build_loss(ctc_config)
         # Build GTC loss
         self.gtc_loss = build_loss(gtc_loss)
@@ -61,11 +56,10 @@ class GTCLoss(nn.Module):
         self.ctc_weight = ctc_weight
 
     def forward(self, predicts, batch):
-        ctc_loss = self.ctc_loss(predicts['ctc_pred'],
-                                 [None] + batch[-2:])['loss']
-        gtc_loss = self.gtc_loss(predicts['gtc_pred'], batch[:-2])['loss']
+        ctc_loss = self.ctc_loss(predicts["ctc_pred"], [None] + batch[-2:])["loss"]
+        gtc_loss = self.gtc_loss(predicts["gtc_pred"], batch[:-2])["loss"]
         return {
-            'loss': self.ctc_weight * ctc_loss + self.gtc_weight * gtc_loss,
-            'ctc_loss': ctc_loss,
-            'gtc_loss': gtc_loss
+            "loss": self.ctc_weight * ctc_loss + self.gtc_weight * gtc_loss,
+            "ctc_loss": ctc_loss,
+            "gtc_loss": gtc_loss,
         }

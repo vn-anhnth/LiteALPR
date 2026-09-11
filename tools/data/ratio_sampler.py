@@ -8,25 +8,26 @@ from torch.utils.data import Sampler
 
 
 class RatioSampler(Sampler):
-
-    def __init__(self,
-                 data_source,
-                 scales,
-                 first_bs=512,
-                 fix_bs=True,
-                 divided_factor=None,
-                 is_training=True,
-                 max_ratio=10,
-                 max_bs=1024,
-                 seed=None):
+    def __init__(
+        self,
+        data_source,
+        scales,
+        first_bs=512,
+        fix_bs=True,
+        divided_factor=None,
+        is_training=True,
+        max_ratio=10,
+        max_bs=1024,
+        seed=None,
+    ):
         """
-            multi scale samper
-            Args:
-                data_source(dataset)
-                scales(list): several scales for image resolution
-                first_bs(int): batch size for the first scale in scales
-                divided_factor(list[w, h]): ImageNet models down-sample images by a factor, ensure that width and height dimensions are multiples are multiple of devided_factor.
-                is_training(boolean): mode
+        multi scale samper
+        Args:
+            data_source(dataset)
+            scales(list): several scales for image resolution
+            first_bs(int): batch size for the first scale in scales
+            divided_factor(list[w, h]): ImageNet models down-sample images by a factor, ensure that width and height dimensions are multiples are multiple of devided_factor.
+            is_training(boolean): mode
         """
         # min. and max. spatial dimensions
         if divided_factor is None:
@@ -58,11 +59,9 @@ class RatioSampler(Sampler):
         self.base_im_w = base_im_w
 
         # Get the GPU and node related information
-        num_replicas = torch.cuda.device_count() if torch.cuda.is_available(
-        ) else 1
+        num_replicas = torch.cuda.device_count() if torch.cuda.is_available() else 1
         # rank = dist.get_rank()
-        rank = (int(os.environ['LOCAL_RANK'])
-                if 'LOCAL_RANK' in os.environ else 0)
+        rank = int(os.environ["LOCAL_RANK"]) if "LOCAL_RANK" in os.environ else 0
         # self.rank = rank
         # adjust the total samples to avoid batch dropping
         num_samples_per_replica = math.ceil(self.n_data_samples * 1.0 / num_replicas)
@@ -73,17 +72,11 @@ class RatioSampler(Sampler):
             # compute the spatial dimensions and corresponding batch size
             # ImageNet models down-sample images by a factor of 32.
             # Ensure that width and height dimensions are multiples are multiple of 32.
-            width_dims = [
-                int((w // divided_factor[0]) * divided_factor[0])
-                for w in width_dims
-            ]
-            height_dims = [
-                int((h // divided_factor[1]) * divided_factor[1])
-                for h in height_dims
-            ]
+            width_dims = [int((w // divided_factor[0]) * divided_factor[0]) for w in width_dims]
+            height_dims = [int((h // divided_factor[1]) * divided_factor[1]) for h in height_dims]
 
             img_batch_pairs = []
-            for (h, w) in zip(height_dims, width_dims):
+            for h, w in zip(height_dims, width_dims):
                 if fix_bs:
                     batch_size = base_batch_size
                 else:
@@ -106,8 +99,7 @@ class RatioSampler(Sampler):
         self.current = 0
         self.is_training = is_training
         if is_training:
-            indices_rank_i = self.img_indices[
-                self.rank:len(self.img_indices):self.num_replicas]
+            indices_rank_i = self.img_indices[self.rank : len(self.img_indices) : self.num_replicas]
         else:
             indices_rank_i = self.img_indices
         self.indices_rank_i_ori = np.array(self.wh_ratio_sort[indices_rank_i])
@@ -131,29 +123,28 @@ class RatioSampler(Sampler):
             else:
                 batch_size_ratio = min(
                     self.max_bs,
-                    int(
-                        max(1, (self.base_elements /
-                                (self.base_im_h * ratio * self.base_im_h)))))
+                    int(max(1, (self.base_elements / (self.base_im_h * ratio * self.base_im_h)))),
+                )
             if num_ratio > batch_size_ratio:
                 batch_num_ratio = num_ratio // batch_size_ratio
-                print(self.rank, num_ratio, ratio * self.base_im_h,
-                      batch_num_ratio, batch_size_ratio)
-                ratio_ids_full = ratio_ids[:batch_num_ratio *
-                                           batch_size_ratio].reshape(
-                                               batch_num_ratio,
-                                               batch_size_ratio, 1)
+                print(
+                    self.rank, num_ratio, ratio * self.base_im_h, batch_num_ratio, batch_size_ratio
+                )
+                ratio_ids_full = ratio_ids[: batch_num_ratio * batch_size_ratio].reshape(
+                    batch_num_ratio, batch_size_ratio, 1
+                )
                 w = np.full_like(ratio_ids_full, ratio * self.base_im_h)
                 h = np.full_like(ratio_ids_full, self.base_im_h)
                 ra_wh = np.full_like(ratio_ids_full, ratio)
-                ratio_ids_full = np.concatenate([w, h, ratio_ids_full, ra_wh],
-                                                axis=-1)
+                ratio_ids_full = np.concatenate([w, h, ratio_ids_full, ra_wh], axis=-1)
                 batch_ratio = ratio_ids_full.tolist()
 
                 if batch_num_ratio * batch_size_ratio < num_ratio:
-                    drop = ratio_ids[batch_num_ratio * batch_size_ratio:]
+                    drop = ratio_ids[batch_num_ratio * batch_size_ratio :]
                     if self.is_training:
-                        drop_full = ratio_ids[:batch_size_ratio - (
-                            num_ratio - batch_num_ratio * batch_size_ratio)]
+                        drop_full = ratio_ids[
+                            : batch_size_ratio - (num_ratio - batch_num_ratio * batch_size_ratio)
+                        ]
                         drop = np.append(drop_full, drop)
                     drop = drop.reshape(-1, 1)
                     w = np.full_like(drop, ratio * self.base_im_h)
@@ -165,8 +156,7 @@ class RatioSampler(Sampler):
                     batch_ratio.append(drop.tolist())
                     batch_list += batch_ratio
             else:
-                print(self.rank, num_ratio, ratio * self.base_im_h,
-                      batch_size_ratio)
+                print(self.rank, num_ratio, ratio * self.base_im_h, batch_size_ratio)
                 ratio_ids = ratio_ids.reshape(-1, 1)
                 w = np.full_like(ratio_ids, ratio * self.base_im_h)
                 h = np.full_like(ratio_ids, self.base_im_h)

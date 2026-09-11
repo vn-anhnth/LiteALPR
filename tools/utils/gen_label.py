@@ -17,23 +17,19 @@ def gen_det_label(root_path, input_dir, out_label):
         for label_file in os.listdir(input_dir):
             img_path = os.path.join(root_path, label_file[3:-4] + ".jpg")
             label = []
-            with open(
-                    os.path.join(input_dir, label_file), "r",
-                    encoding="utf-8-sig") as f:
+            with open(os.path.join(input_dir, label_file), "r", encoding="utf-8-sig") as f:
                 for line in f:
-                    tmp = line.strip("\n\r").replace("\xef\xbb\xbf",
-                                                     "").split(",")
+                    tmp = line.strip("\n\r").replace("\xef\xbb\xbf", "").split(",")
                     points = tmp[:8]
                     s = []
                     for i in range(0, len(points), 2):
-                        b = points[i:i + 2]
+                        b = points[i : i + 2]
                         b = [int(t) for t in b]
                         s.append(b)
                     result = {"transcription": tmp[8], "points": s}
                     label.append(result)
 
-            out_file.write(img_path + "\t" + json.dumps(
-                label, ensure_ascii=False) + "\n")
+            out_file.write(img_path + "\t" + json.dumps(label, ensure_ascii=False) + "\n")
 
 
 if __name__ == "__main__":
@@ -42,22 +38,23 @@ if __name__ == "__main__":
         "--mode",
         type=str,
         default="rec",
-        help="Generate rec_label or det_label, can be set rec or det", )
+        help="Generate rec_label or det_label, can be set rec or det",
+    )
     parser.add_argument(
         "--root_path",
         type=str,
         default=".",
-        help="The root directory of images.Only takes effect when mode=det ", )
+        help="The root directory of images.Only takes effect when mode=det ",
+    )
     parser.add_argument(
         "--input_path",
         type=str,
         default=".",
-        help="Input_label or input path to be converted", )
+        help="Input_label or input path to be converted",
+    )
     parser.add_argument(
-        "--output_label",
-        type=str,
-        default="out_label.txt",
-        help="Output file name")
+        "--output_label", type=str, default="out_label.txt", help="Output file name"
+    )
 
     args = parser.parse_args()
     if args.mode == "rec":

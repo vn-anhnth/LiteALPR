@@ -7,7 +7,6 @@ from litealpr.rec.modeling.common import DropPath, Identity, Mlp
 
 
 class ConvBNLayer(nn.Module):
-
     def __init__(
         self,
         in_channels,
@@ -40,7 +39,6 @@ class ConvBNLayer(nn.Module):
 
 
 class Attention(nn.Module):
-
     def __init__(
         self,
         dim,
@@ -62,8 +60,7 @@ class Attention(nn.Module):
 
     def forward(self, x):
         B, N, _ = x.shape
-        qkv = self.qkv(x).reshape(B, N, 3, self.num_heads,
-                                  self.head_dim).permute(2, 0, 3, 1, 4)
+        qkv = self.qkv(x).reshape(B, N, 3, self.num_heads, self.head_dim).permute(2, 0, 3, 1, 4)
         q, k, v = qkv.unbind(0)
         attn = q @ k.transpose(-2, -1) * self.scale
         attn = attn.softmax(dim=-1)
@@ -76,7 +73,6 @@ class Attention(nn.Module):
 
 
 class Block(nn.Module):
-
     def __init__(
         self,
         dim,
@@ -118,21 +114,33 @@ class Block(nn.Module):
 
 
 class FlattenBlockRe2D(Block):
-
-    def __init__(self,
-                 dim,
-                 num_heads,
-                 mlp_ratio=4,
-                 qkv_bias=False,
-                 qk_scale=None,
-                 drop=0,
-                 attn_drop=0,
-                 drop_path=0,
-                 act_layer=nn.GELU,
-                 norm_layer=nn.LayerNorm,
-                 eps=0.000001):
-        super().__init__(dim, num_heads, mlp_ratio, qkv_bias, qk_scale, drop,
-                         attn_drop, drop_path, act_layer, norm_layer, eps)
+    def __init__(
+        self,
+        dim,
+        num_heads,
+        mlp_ratio=4,
+        qkv_bias=False,
+        qk_scale=None,
+        drop=0,
+        attn_drop=0,
+        drop_path=0,
+        act_layer=nn.GELU,
+        norm_layer=nn.LayerNorm,
+        eps=0.000001,
+    ):
+        super().__init__(
+            dim,
+            num_heads,
+            mlp_ratio,
+            qkv_bias,
+            qk_scale,
+            drop,
+            attn_drop,
+            drop_path,
+            act_layer,
+            norm_layer,
+            eps,
+        )
 
     def forward(self, x):
         B, C, H, W = x.shape
@@ -143,7 +151,6 @@ class FlattenBlockRe2D(Block):
 
 
 class ConvBlock(nn.Module):
-
     def __init__(
         self,
         dim,
@@ -160,11 +167,12 @@ class ConvBlock(nn.Module):
         super().__init__()
         mlp_hidden_dim = int(dim * mlp_ratio)
         self.norm1 = norm_layer(dim, eps=eps)
-        self.mixer = nn.Sequential(*[
-            nn.Conv2d(
-                dim, dim, kernel_size, 1, kernel_size // 2, groups=num_heads)
-            for i in range(num_conv)
-        ])
+        self.mixer = nn.Sequential(
+            *[
+                nn.Conv2d(dim, dim, kernel_size, 1, kernel_size // 2, groups=num_heads)
+                for i in range(num_conv)
+            ]
+        )
         self.drop_path = DropPath(drop_path) if drop_path > 0.0 else Identity()
         self.norm2 = norm_layer(dim, eps=eps)
         self.mlp = Mlp(
@@ -184,13 +192,11 @@ class ConvBlock(nn.Module):
 
 
 class FlattenTranspose(nn.Module):
-
     def forward(self, x):
         return x.flatten(2).transpose(1, 2)
 
 
 class SubSample2D(nn.Module):
-
     def __init__(
         self,
         in_channels,
@@ -200,11 +206,7 @@ class SubSample2D(nn.Module):
         if stride is None:
             stride = [2, 1]
         super().__init__()
-        self.conv = nn.Conv2d(in_channels,
-                              out_channels,
-                              kernel_size=3,
-                              stride=stride,
-                              padding=1)
+        self.conv = nn.Conv2d(in_channels, out_channels, kernel_size=3, stride=stride, padding=1)
         self.norm = nn.LayerNorm(out_channels)
 
     def forward(self, x, sz):
@@ -217,7 +219,6 @@ class SubSample2D(nn.Module):
 
 
 class SubSample1D(nn.Module):
-
     def __init__(
         self,
         in_channels,
@@ -227,11 +228,7 @@ class SubSample1D(nn.Module):
         if stride is None:
             stride = [2, 1]
         super().__init__()
-        self.conv = nn.Conv2d(in_channels,
-                              out_channels,
-                              kernel_size=3,
-                              stride=stride,
-                              padding=1)
+        self.conv = nn.Conv2d(in_channels, out_channels, kernel_size=3, stride=stride, padding=1)
         self.norm = nn.LayerNorm(out_channels)
 
     def forward(self, x, sz):
@@ -244,33 +241,33 @@ class SubSample1D(nn.Module):
 
 
 class IdentitySize(nn.Module):
-
     def forward(self, x, sz):
         return x, sz
 
 
 class SVTRStage(nn.Module):
-
-    def __init__(self,
-                 dim=64,
-                 out_dim=256,
-                 depth=3,
-                 mixer=['Local'] * 3,
-                 kernel_sizes=[3] * 3,
-                 sub_k=None,
-                 num_heads=2,
-                 mlp_ratio=4,
-                 qkv_bias=True,
-                 qk_scale=None,
-                 drop_rate=0.0,
-                 attn_drop_rate=0.0,
-                 drop_path=[0.1] * 3,
-                 norm_layer=nn.LayerNorm,
-                 act=nn.GELU,
-                 eps=1e-6,
-                 num_conv=[2] * 3,
-                 downsample=None,
-                 **kwargs):
+    def __init__(
+        self,
+        dim=64,
+        out_dim=256,
+        depth=3,
+        mixer=["Local"] * 3,
+        kernel_sizes=[3] * 3,
+        sub_k=None,
+        num_heads=2,
+        mlp_ratio=4,
+        qkv_bias=True,
+        qk_scale=None,
+        drop_rate=0.0,
+        attn_drop_rate=0.0,
+        drop_path=[0.1] * 3,
+        norm_layer=nn.LayerNorm,
+        act=nn.GELU,
+        eps=1e-6,
+        num_conv=[2] * 3,
+        downsample=None,
+        **kwargs,
+    ):
         if sub_k is None:
             sub_k = [2, 1]
         super().__init__()
@@ -278,25 +275,28 @@ class SVTRStage(nn.Module):
 
         self.blocks = nn.Sequential()
         for i in range(depth):
-            if mixer[i] == 'Conv':
+            if mixer[i] == "Conv":
                 self.blocks.append(
-                    ConvBlock(dim=dim,
-                              kernel_size=kernel_sizes[i],
-                              num_heads=num_heads,
-                              mlp_ratio=mlp_ratio,
-                              drop=drop_rate,
-                              act_layer=act,
-                              drop_path=drop_path[i],
-                              norm_layer=norm_layer,
-                              eps=eps,
-                              num_conv=num_conv[i]))
+                    ConvBlock(
+                        dim=dim,
+                        kernel_size=kernel_sizes[i],
+                        num_heads=num_heads,
+                        mlp_ratio=mlp_ratio,
+                        drop=drop_rate,
+                        act_layer=act,
+                        drop_path=drop_path[i],
+                        norm_layer=norm_layer,
+                        eps=eps,
+                        num_conv=num_conv[i],
+                    )
+                )
             else:
-                if mixer[i] == 'Global':
+                if mixer[i] == "Global":
                     block = Block
-                elif mixer[i] == 'FGlobal':
+                elif mixer[i] == "FGlobal":
                     block = Block
                     self.blocks.append(FlattenTranspose())
-                elif mixer[i] == 'FGlobalRe2D':
+                elif mixer[i] == "FGlobalRe2D":
                     block = FlattenBlockRe2D
                 self.blocks.append(
                     block(
@@ -311,10 +311,11 @@ class SVTRStage(nn.Module):
                         drop_path=drop_path[i],
                         norm_layer=norm_layer,
                         eps=eps,
-                    ))
+                    )
+                )
 
         if downsample:
-            if mixer[-1] == 'Conv' or mixer[-1] == 'FGlobalRe2D':
+            if mixer[-1] == "Conv" or mixer[-1] == "FGlobalRe2D":
                 self.downsample = SubSample2D(dim, out_dim, stride=sub_k)
             else:
                 self.downsample = SubSample1D(dim, out_dim, stride=sub_k)
@@ -329,37 +330,37 @@ class SVTRStage(nn.Module):
 
 
 class ADDPosEmbed(nn.Module):
-
     def __init__(self, feat_max_size=None, embed_dim=768):
         if feat_max_size is None:
             feat_max_size = [8, 32]
         super().__init__()
         pos_embed = torch.zeros(
-            [1, feat_max_size[0] * feat_max_size[1], embed_dim],
-            dtype=torch.float32)
+            [1, feat_max_size[0] * feat_max_size[1], embed_dim], dtype=torch.float32
+        )
         trunc_normal_(pos_embed, mean=0, std=0.02)
         self.pos_embed = nn.Parameter(
-            pos_embed.transpose(1, 2).reshape(1, embed_dim, feat_max_size[0],
-                                              feat_max_size[1]),
+            pos_embed.transpose(1, 2).reshape(1, embed_dim, feat_max_size[0], feat_max_size[1]),
             requires_grad=True,
         )
 
     def forward(self, x):
         sz = x.shape[2:]
-        x = x + self.pos_embed[:, :, :sz[0], :sz[1]]
+        x = x + self.pos_embed[:, :, : sz[0], : sz[1]]
         return x
 
 
 class POPatchEmbed(nn.Module):
     """Image to Patch Embedding."""
 
-    def __init__(self,
-                 in_channels=3,
-                 feat_max_size=None,
-                 embed_dim=768,
-                 use_pos_embed=False,
-                 flatten=False,
-                 bias=False):
+    def __init__(
+        self,
+        in_channels=3,
+        feat_max_size=None,
+        embed_dim=768,
+        use_pos_embed=False,
+        flatten=False,
+        bias=False,
+    ):
         if feat_max_size is None:
             feat_max_size = [8, 32]
         super().__init__()
@@ -395,7 +396,6 @@ class POPatchEmbed(nn.Module):
 
 
 class LastStage(nn.Module):
-
     def __init__(self, in_channels, out_channels, last_drop, out_char_num=0):
         super().__init__()
         self.last_conv = nn.Linear(in_channels, out_channels, bias=False)
@@ -412,7 +412,6 @@ class LastStage(nn.Module):
 
 
 class Feat2D(nn.Module):
-
     def __init__(self):
         super().__init__()
 
@@ -423,33 +422,34 @@ class Feat2D(nn.Module):
 
 
 class SVTRv2LNConvTwo33(nn.Module):
-
-    def __init__(self,
-                 max_sz=None,
-                 in_channels=3,
-                 out_channels=192,
-                 depths=None,
-                 dims=None,
-                 mixer=None,
-                 use_pos_embed=True,
-                 sub_k=None,
-                 num_heads=None,
-                 mlp_ratio=4,
-                 qkv_bias=True,
-                 qk_scale=None,
-                 drop_rate=0.0,
-                 last_drop=0.1,
-                 attn_drop_rate=0.0,
-                 drop_path_rate=0.1,
-                 norm_layer=nn.LayerNorm,
-                 act=nn.GELU,
-                 last_stage=False,
-                 feat2d=False,
-                 eps=1e-6,
-                 num_convs=None,
-                 kernel_sizes=None,
-                 pope_bias=False,
-                 **kwargs):
+    def __init__(
+        self,
+        max_sz=None,
+        in_channels=3,
+        out_channels=192,
+        depths=None,
+        dims=None,
+        mixer=None,
+        use_pos_embed=True,
+        sub_k=None,
+        num_heads=None,
+        mlp_ratio=4,
+        qkv_bias=True,
+        qk_scale=None,
+        drop_rate=0.0,
+        last_drop=0.1,
+        attn_drop_rate=0.0,
+        drop_path_rate=0.1,
+        norm_layer=nn.LayerNorm,
+        act=nn.GELU,
+        last_stage=False,
+        feat2d=False,
+        eps=1e-6,
+        num_convs=None,
+        kernel_sizes=None,
+        pope_bias=False,
+        **kwargs,
+    ):
         if kernel_sizes is None:
             kernel_sizes = [[3] * 3, [3] * 3 + [3] * 3, [3] * 3]
         if num_convs is None:
@@ -459,7 +459,7 @@ class SVTRv2LNConvTwo33(nn.Module):
         if sub_k is None:
             sub_k = [[1, 1], [2, 1], [1, 1]]
         if mixer is None:
-            mixer = [['Conv'] * 3, ['Conv'] * 3 + ['Global'] * 3, ['Global'] * 3]
+            mixer = [["Conv"] * 3, ["Conv"] * 3 + ["Global"] * 3, ["Global"] * 3]
         if dims is None:
             dims = [64, 128, 256]
         if depths is None:
@@ -471,15 +471,16 @@ class SVTRv2LNConvTwo33(nn.Module):
         self.num_features = dims[-1]
 
         feat_max_size = [max_sz[0] // 4, max_sz[1] // 4]
-        self.pope = POPatchEmbed(in_channels=in_channels,
-                                 feat_max_size=feat_max_size,
-                                 embed_dim=dims[0],
-                                 use_pos_embed=use_pos_embed,
-                                 flatten=mixer[0][0] != 'Conv',
-                                 bias=pope_bias)
+        self.pope = POPatchEmbed(
+            in_channels=in_channels,
+            feat_max_size=feat_max_size,
+            embed_dim=dims[0],
+            use_pos_embed=use_pos_embed,
+            flatten=mixer[0][0] != "Conv",
+            bias=pope_bias,
+        )
 
-        dpr = np.linspace(0, drop_path_rate,
-                          sum(depths))  # stochastic depth decay rule
+        dpr = np.linspace(0, drop_path_rate, sum(depths))  # stochastic depth decay rule
 
         self.stages = nn.ModuleList()
         for i_stage in range(num_stages):
@@ -489,8 +490,8 @@ class SVTRv2LNConvTwo33(nn.Module):
                 depth=depths[i_stage],
                 mixer=mixer[i_stage],
                 kernel_sizes=kernel_sizes[i_stage]
-                if len(kernel_sizes[i_stage]) == len(mixer[i_stage]) else [3] *
-                len(mixer[i_stage]),
+                if len(kernel_sizes[i_stage]) == len(mixer[i_stage])
+                else [3] * len(mixer[i_stage]),
                 sub_k=sub_k[i_stage],
                 num_heads=num_heads[i_stage],
                 mlp_ratio=mlp_ratio,
@@ -498,13 +499,14 @@ class SVTRv2LNConvTwo33(nn.Module):
                 qk_scale=qk_scale,
                 drop=drop_rate,
                 attn_drop=attn_drop_rate,
-                drop_path=dpr[sum(depths[:i_stage]):sum(depths[:i_stage + 1])],
+                drop_path=dpr[sum(depths[:i_stage]) : sum(depths[: i_stage + 1])],
                 norm_layer=norm_layer,
                 act=act,
                 downsample=i_stage != num_stages - 1,
                 eps=eps,
-                num_conv=num_convs[i_stage] if len(num_convs[i_stage]) == len(
-                    mixer[i_stage]) else [2] * len(mixer[i_stage]),
+                num_conv=num_convs[i_stage]
+                if len(num_convs[i_stage]) == len(mixer[i_stage])
+                else [2] * len(mixer[i_stage]),
             )
             self.stages.append(stage)
 
@@ -512,8 +514,7 @@ class SVTRv2LNConvTwo33(nn.Module):
         self.last_stage = last_stage
         if last_stage:
             self.out_channels = out_channels
-            self.stages.append(
-                LastStage(self.num_features, out_channels, last_drop))
+            self.stages.append(LastStage(self.num_features, out_channels, last_drop))
         if feat2d:
             self.stages.append(Feat2D())
         self.apply(self._init_weights)
@@ -527,11 +528,11 @@ class SVTRv2LNConvTwo33(nn.Module):
             zeros_(m.bias)
             ones_(m.weight)
         if isinstance(m, nn.Conv2d):
-            kaiming_normal_(m.weight, mode='fan_out', nonlinearity='relu')
+            kaiming_normal_(m.weight, mode="fan_out", nonlinearity="relu")
 
     @torch.jit.ignore
     def no_weight_decay(self):
-        return {'patch_embed', 'downsample', 'pos_embed'}
+        return {"patch_embed", "downsample", "pos_embed"}
 
     def forward(self, x):
         if len(x.shape) == 5:

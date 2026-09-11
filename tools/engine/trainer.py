@@ -15,105 +15,93 @@ from tools.utils.logging import get_logger
 from tools.utils.stats import TrainingStats
 from tools.utils.utility import AverageMeter
 
-__all__ = ['Trainer']
+__all__ = ["Trainer"]
 
 import torch.distributed as dist
 
-rank = int(os.environ.get('RANK', 0))  # torchrun provides RANK
+rank = int(os.environ.get("RANK", 0))  # torchrun provides RANK
 
 
 def is_main_process():
-    return (not dist.is_available() or not dist.is_initialized() or rank == 0)
+    return not dist.is_available() or not dist.is_initialized() or rank == 0
 
 
 def get_parameter_number(model):
     total_num = sum(p.numel() for p in model.parameters())
-    trainable_num = sum(p.numel() for p in model.parameters()
-                        if p.requires_grad)
-    return {'Total': total_num, 'Trainable': trainable_num}
+    trainable_num = sum(p.numel() for p in model.parameters() if p.requires_grad)
+    return {"Total": total_num, "Trainable": trainable_num}
 
 
 class Trainer:
-
-    def __init__(self, cfg, mode='train', task='rec'):
+    def __init__(self, cfg, mode="train", task="rec"):
         self.cfg = cfg.cfg
         self.task = task
-        self.local_rank = (int(os.environ['LOCAL_RANK'])
-                           if 'LOCAL_RANK' in os.environ else 0)
-        self.set_device(self.cfg['Global']['device'])
+        self.local_rank = int(os.environ["LOCAL_RANK"]) if "LOCAL_RANK" in os.environ else 0
+        self.set_device(self.cfg["Global"]["device"])
         mode = mode.lower()
         assert mode in [
-            'train_eval',
-            'train',
-            'eval',
-            'test',
-        ], 'mode should be train, eval and test'
-        if torch.cuda.device_count() > 1 and 'train' in mode:
-            torch.distributed.init_process_group(backend='nccl')
+            "train_eval",
+            "train",
+            "eval",
+            "test",
+        ], "mode should be train, eval and test"
+        if torch.cuda.device_count() > 1 and "train" in mode:
+            torch.distributed.init_process_group(backend="nccl")
             torch.cuda.set_device(self.device)
-            self.cfg['Global']['distributed'] = True
+            self.cfg["Global"]["distributed"] = True
         else:
-            self.cfg['Global']['distributed'] = False
+            self.cfg["Global"]["distributed"] = False
             self.local_rank = 0
 
-        self.cfg['Global']['output_dir'] = self.cfg['Global'].get(
-            'output_dir', 'output')
-        os.makedirs(self.cfg['Global']['output_dir'], exist_ok=True)
+        self.cfg["Global"]["output_dir"] = self.cfg["Global"].get("output_dir", "output")
+        os.makedirs(self.cfg["Global"]["output_dir"], exist_ok=True)
 
         self.writer = None
-        if is_main_process(
-        ) and self.cfg['Global']['use_tensorboard'] and 'train' in mode:
+        if is_main_process() and self.cfg["Global"]["use_tensorboard"] and "train" in mode:
             import wandb
             from torch.utils.tensorboard import SummaryWriter
-            wandb.init(project='demo-sync-tb',
-                       name=self.cfg['Global'].get('run_name',
-                                                   'log_wandb_litealpr'),
-                       sync_tensorboard=True)
 
-            self.writer = SummaryWriter(self.cfg['Global']['output_dir'])
+            wandb.init(
+                project="demo-sync-tb",
+                name=self.cfg["Global"].get("run_name", "log_wandb_litealpr"),
+                sync_tensorboard=True,
+            )
+
+            self.writer = SummaryWriter(self.cfg["Global"]["output_dir"])
 
         self.logger = get_logger(
-            'rec' if task == 'rec' else 'det',
-            os.path.join(self.cfg['Global']['output_dir'], 'train.log')
-            if 'train' in mode else None,
+            "rec" if task == "rec" else "det",
+            os.path.join(self.cfg["Global"]["output_dir"], "train.log")
+            if "train" in mode
+            else None,
         )
 
         cfg.print_cfg(self.logger.info)
 
-        if self.cfg['Global']['device'] == 'gpu' and self.device.type == 'cpu':
-            self.logger.info('cuda is not available, auto switch to cpu')
+        if self.cfg["Global"]["device"] == "gpu" and self.device.type == "cpu":
+            self.logger.info("cuda is not available, auto switch to cpu")
 
-        self.set_random_seed(self.cfg['Global'].get('seed', 48))
+        self.set_random_seed(self.cfg["Global"].get("seed", 48))
 
         # build data loader
         self.train_dataloader = None
-        if 'train' in mode:
+        if "train" in mode:
             if is_main_process():
-                cfg.save(
-                    os.path.join(self.cfg['Global']['output_dir'],
-                                 'config.yml'), self.cfg)
-            self.train_dataloader = build_dataloader(self.cfg,
-                                                     'Train',
-                                                     self.logger,
-                                                     task=task)
-            self.logger.info(
-                f'train dataloader has {len(self.train_dataloader)} iters')
+                cfg.save(os.path.join(self.cfg["Global"]["output_dir"], "config.yml"), self.cfg)
+            self.train_dataloader = build_dataloader(self.cfg, "Train", self.logger, task=task)
+            self.logger.info(f"train dataloader has {len(self.train_dataloader)} iters")
         self.valid_dataloader = None
-        if 'eval' in mode and self.cfg['Eval']:
+        if "eval" in mode and self.cfg["Eval"]:
             try:
-                self.valid_dataloader = build_dataloader(self.cfg,
-                                                        'Eval',
-                                                        self.logger,
-                                                        task=task)
-                self.logger.info(
-                    f'valid dataloader has {len(self.valid_dataloader)} iters')
+                self.valid_dataloader = build_dataloader(self.cfg, "Eval", self.logger, task=task)
+                self.logger.info(f"valid dataloader has {len(self.valid_dataloader)} iters")
             except Exception as e:
-                self.logger.info(f'valid dataloader build failed: {e}')
+                self.logger.info(f"valid dataloader build failed: {e}")
                 self.valid_dataloader = None
 
-        if task == 'rec':
+        if task == "rec":
             self._init_rec_model()
-        elif task == 'det':
+        elif task == "det":
             self._init_det_model()
         else:
             raise NotImplementedError
@@ -121,45 +109,44 @@ class Trainer:
         self.logger.info(get_parameter_number(model=self.model))
         self.model = self.model.to(self.device)
 
-        use_sync_bn = self.cfg['Global'].get('use_sync_bn', False)
+        use_sync_bn = self.cfg["Global"].get("use_sync_bn", False)
         if use_sync_bn:
-            self.model = torch.nn.SyncBatchNorm.convert_sync_batchnorm(
-                self.model)
-            self.logger.info('convert_sync_batchnorm')
-        self.accumulation_steps = self.cfg['Global'].get(
-            'accumulation_steps', 1)
+            self.model = torch.nn.SyncBatchNorm.convert_sync_batchnorm(self.model)
+            self.logger.info("convert_sync_batchnorm")
+        self.accumulation_steps = self.cfg["Global"].get("accumulation_steps", 1)
         from litealpr.rec.optimizer import build_optimizer
+
         self.optimizer, self.lr_scheduler = None, None
-        epochs = self.cfg['Global']['epoch_num']
+        epochs = self.cfg["Global"]["epoch_num"]
         try:
             step_each_epoch = len(self.train_dataloader)
         except TypeError:
             # Handle IterableDataset
-            step_each_epoch = self.cfg['Global'].get('total_iter_steps', 100000)
+            step_each_epoch = self.cfg["Global"].get("total_iter_steps", 100000)
         if self.train_dataloader is not None:
             # build optim
             self.optimizer, self.lr_scheduler = build_optimizer(
-                self.cfg['Optimizer'],
-                self.cfg['LRScheduler'],
+                self.cfg["Optimizer"],
+                self.cfg["LRScheduler"],
                 epochs=epochs,
                 step_each_epoch=step_each_epoch,
                 model=self.model,
             )
-        self.grad_clip_val = self.cfg['Global'].get('grad_clip_val', 0)
+        self.grad_clip_val = self.cfg["Global"].get("grad_clip_val", 0)
 
-        self.status = load_ckpt(self.model, self.cfg, self.optimizer,
-                                self.lr_scheduler)
+        self.status = load_ckpt(self.model, self.cfg, self.optimizer, self.lr_scheduler)
 
-        if self.cfg['Global']['distributed']:
+        if self.cfg["Global"]["distributed"]:
             self.model = torch.nn.parallel.DistributedDataParallel(
-                self.model, [self.local_rank], find_unused_parameters=False)
+                self.model, [self.local_rank], find_unused_parameters=False
+            )
 
         # amp
-        self.scaler = (torch.cuda.amp.GradScaler() if self.cfg['Global'].get(
-            'use_amp', False) else None)
+        self.scaler = (
+            torch.cuda.amp.GradScaler() if self.cfg["Global"].get("use_amp", False) else None
+        )
 
-        self.logger.info(
-            f'run with torch {torch.__version__} and device {self.device}')
+        self.logger.info(f"run with torch {torch.__version__} and device {self.device}")
 
     def _init_rec_model(self):
         from litealpr.rec.losses import build_loss as build_rec_loss
@@ -171,42 +158,44 @@ class Trainer:
 
         # build post process
         self.post_process_class = build_rec_post_process(
-            self.cfg['PostProcess'], self.cfg['Global'])
+            self.cfg["PostProcess"], self.cfg["Global"]
+        )
         # build model
         # for rec algorithm
-        self.use_transformers = self.cfg['Global'].get('use_transformers',
-                                                       False)
+        self.use_transformers = self.cfg["Global"].get("use_transformers", False)
         if self.use_transformers:
-            if self.cfg['Architecture']['algorithm'] == 'UniRec':
+            if self.cfg["Architecture"]["algorithm"] == "UniRec":
                 from litealpr.rec.modeling.unirec_modeling.configuration_unirec import (
                     UniRecConfig,
                 )
                 from litealpr.rec.modeling.unirec_modeling.modeling_unirec import (
                     UniRecForConditionalGenerationNew,
                 )
-                cfg_vlm = UniRecConfig.from_pretrained(
-                    self.cfg['Global']['vlm_ocr_config'])
-                cfg_vlm._attn_implementation = 'flash_attention_2'
+
+                cfg_vlm = UniRecConfig.from_pretrained(self.cfg["Global"]["vlm_ocr_config"])
+                cfg_vlm._attn_implementation = "flash_attention_2"
                 # cfg_vlm._attn_implementation = "eager"
                 # cfg_vlm._attn_implementation = "sdpa"
                 self.model = UniRecForConditionalGenerationNew(config=cfg_vlm)
-            elif self.cfg['Architecture']['algorithm'] == 'CMER':
+            elif self.cfg["Architecture"]["algorithm"] == "CMER":
                 from litealpr.rec.modeling.cmer_modeling.modeling_cmer import (
                     CMER,
                     CMERConfig,
                 )
+
                 cfg_model = CMERConfig(
-                    self.cfg['Architecture']['vision_config'],
-                    self.cfg['Architecture']['decoder_config'])
+                    self.cfg["Architecture"]["vision_config"],
+                    self.cfg["Architecture"]["decoder_config"],
+                )
                 self.model = CMER(config=cfg_model)
         else:
             char_num = self.post_process_class.get_character_num()
-            self.cfg['Architecture']['Decoder']['out_channels'] = char_num
-            self.model = build_rec_model(self.cfg['Architecture'])
+            self.cfg["Architecture"]["Decoder"]["out_channels"] = char_num
+            self.model = build_rec_model(self.cfg["Architecture"])
         # build loss
-        self.loss_class = build_rec_loss(self.cfg['Loss'])
+        self.loss_class = build_rec_loss(self.cfg["Loss"])
         # build metric
-        self.eval_class = build_rec_metric(self.cfg['Metric'])
+        self.eval_class = build_rec_metric(self.cfg["Metric"])
 
     def _init_det_model(self):
         from litealpr.det.losses import build_loss as build_det_loss
@@ -218,20 +207,21 @@ class Trainer:
 
         # build post process
         self.post_process_class = build_det_post_process(
-            self.cfg['PostProcess'], self.cfg['Global'])
+            self.cfg["PostProcess"], self.cfg["Global"]
+        )
         # build detmodel
-        self.model = build_det_model(self.cfg['Architecture'])
+        self.model = build_det_model(self.cfg["Architecture"])
         # build loss
-        self.loss_class = build_det_loss(self.cfg['Loss'])
+        self.loss_class = build_det_loss(self.cfg["Loss"])
         # build metric
-        self.eval_class = build_det_metric(self.cfg['Metric'])
+        self.eval_class = build_det_metric(self.cfg["Metric"])
 
     def load_params(self, params):
         self.model.load_state_dict(params)
 
     def set_random_seed(self, seed):
         torch.manual_seed(seed)  # Set random seed for CPU
-        if self.device.type == 'cuda':
+        if self.device.type == "cuda":
             torch.backends.cudnn.benchmark = False
             torch.cuda.manual_seed(seed)  # Set random seed for current GPU
             torch.cuda.manual_seed_all(seed)  # Set random seed for all GPUs
@@ -239,62 +229,63 @@ class Trainer:
         np.random.seed(seed)
 
     def set_device(self, device):
-        if device == 'gpu' and torch.cuda.is_available():
-            device = torch.device(f'cuda:{self.local_rank}')
+        if device == "gpu" and torch.cuda.is_available():
+            device = torch.device(f"cuda:{self.local_rank}")
         else:
-            device = torch.device('cpu')
+            device = torch.device("cpu")
         self.device = device
 
     def train(self):
-        cal_metric_during_train = self.cfg['Global'].get(
-            'cal_metric_during_train', False)
-        log_smooth_window = self.cfg['Global']['log_smooth_window']
-        epoch_num = self.cfg['Global']['epoch_num']
-        print_batch_step = self.cfg['Global']['print_batch_step']
-        eval_epoch_step = self.cfg['Global'].get('eval_epoch_step', 1)
+        cal_metric_during_train = self.cfg["Global"].get("cal_metric_during_train", False)
+        log_smooth_window = self.cfg["Global"]["log_smooth_window"]
+        epoch_num = self.cfg["Global"]["epoch_num"]
+        print_batch_step = self.cfg["Global"]["print_batch_step"]
+        eval_epoch_step = self.cfg["Global"].get("eval_epoch_step", 1)
 
         start_eval_epoch = 0
         if self.valid_dataloader is not None:
-            if type(eval_epoch_step) == list and len(eval_epoch_step) >= 2:
+            if isinstance(eval_epoch_step, list) and len(eval_epoch_step) >= 2:
                 start_eval_epoch = eval_epoch_step[0]
                 eval_epoch_step = eval_epoch_step[1]
                 if len(self.valid_dataloader) == 0:
                     start_eval_epoch = 1e111
                     self.logger.info(
-                        'No Images in eval dataset, evaluation during training will be disabled'
+                        "No Images in eval dataset, evaluation during training will be disabled"
                     )
                 self.logger.info(
-                    f'During the training process, after the {start_eval_epoch}th epoch, '
-                    f'an evaluation is run every {eval_epoch_step} epoch')
+                    f"During the training process, after the {start_eval_epoch}th epoch, "
+                    f"an evaluation is run every {eval_epoch_step} epoch"
+                )
         else:
             start_eval_epoch = 1e111
 
-        eval_batch_step = self.cfg['Global']['eval_batch_step']
+        eval_batch_step = self.cfg["Global"]["eval_batch_step"]
 
-        global_step = self.status.get('global_step', 0)
+        global_step = self.status.get("global_step", 0)
 
         start_eval_step = 0
-        if type(eval_batch_step) == list and len(eval_batch_step) >= 2:
+        if isinstance(eval_batch_step, list) and len(eval_batch_step) >= 2:
             start_eval_step = eval_batch_step[0]
             eval_batch_step = eval_batch_step[1]
             if self.valid_dataloader is not None and len(self.valid_dataloader) == 0:
                 self.logger.info(
-                    'No Images in eval dataset, evaluation during training '
-                    'will be disabled')
+                    "No Images in eval dataset, evaluation during training will be disabled"
+                )
                 start_eval_step = 1e111
             self.logger.info(
-                f'During the training process, after the {start_eval_step}th iteration, '
-                f'an evaluation is run every {eval_batch_step} iterations')
+                f"During the training process, after the {start_eval_step}th iteration, "
+                f"an evaluation is run every {eval_batch_step} iterations"
+            )
 
-        save_epoch_step = self.cfg['Global'].get('save_epoch_step', [0, 1])
+        save_epoch_step = self.cfg["Global"].get("save_epoch_step", [0, 1])
         start_save_epoch = save_epoch_step[0]
         save_epoch_step = save_epoch_step[1]
 
-        start_epoch = self.status.get('epoch', 1)
-        self.best_metric = self.status.get('metrics', {})
+        start_epoch = self.status.get("epoch", 1)
+        self.best_metric = self.status.get("metrics", {})
         if self.eval_class.main_indicator not in self.best_metric:
             self.best_metric[self.eval_class.main_indicator] = 0
-        train_stats = TrainingStats(log_smooth_window, ['lr'])
+        train_stats = TrainingStats(log_smooth_window, ["lr"])
         self.model.train()
 
         total_samples = 0
@@ -302,55 +293,50 @@ class Trainer:
         train_batch_cost = 0.0
         reader_start = time.time()
         eta_meter = AverageMeter()
-        save_iter_step = self.cfg['Global'].get('save_iter_step',
-                                                [10e10, 2000])
+        save_iter_step = self.cfg["Global"].get("save_iter_step", [10e10, 2000])
         start_save_iter = save_iter_step[0]
         save_iter_step = save_iter_step[1]
 
-        if self.cfg['Global'].get('resume_from_iter',
-                                  False):  # for unirec resume training
-            if self.cfg['Global']['checkpoints'] is None:
-                raise ValueError(
-                    'resume_from_iter is True, but checkpoints is None')
+        if self.cfg["Global"].get("resume_from_iter", False):  # for unirec resume training
+            if self.cfg["Global"]["checkpoints"] is None:
+                raise ValueError("resume_from_iter is True, but checkpoints is None")
             start_epoch = start_epoch - 1
             self.resume_iter = global_step
-            iter_model_file_name = os.path.basename(
-                self.cfg['Global']['checkpoints'])
-            last_whole_epoch_global_step = int(iter_model_file_name.split('_')[1])
+            iter_model_file_name = os.path.basename(self.cfg["Global"]["checkpoints"])
+            last_whole_epoch_global_step = int(iter_model_file_name.split("_")[1])
             global_step = last_whole_epoch_global_step
-            self.cfg['Train']['sampler'][
-                'resume_iter'] = self.resume_iter - last_whole_epoch_global_step
+            self.cfg["Train"]["sampler"]["resume_iter"] = (
+                self.resume_iter - last_whole_epoch_global_step
+            )
 
         last_whole_epoch_global_step = 0
         for epoch in range(start_epoch, epoch_num + 1):
-            if self.cfg['Global'].get('resume_from_iter',
-                                          False):  # for unirec resume training
-                if 'sampler' in self.cfg['Train']:
-                    self.cfg['Train']['sampler']['resume_iter'] = 0
-            if hasattr(self.train_dataloader, 'dataset') and self.train_dataloader.dataset is not None:
+            if self.cfg["Global"].get("resume_from_iter", False):  # for unirec resume training
+                if "sampler" in self.cfg["Train"]:
+                    self.cfg["Train"]["sampler"]["resume_iter"] = 0
+            if (
+                hasattr(self.train_dataloader, "dataset")
+                and self.train_dataloader.dataset is not None
+            ):
                 if self.train_dataloader.dataset.need_reset and epoch > 1:
-                    self.train_dataloader = build_dataloader(self.cfg,
-                                                            'Train',
-                                                            self.logger,
-                                                            epoch=epoch,
-                                                            task=self.task)
+                    self.train_dataloader = build_dataloader(
+                        self.cfg, "Train", self.logger, epoch=epoch, task=self.task
+                    )
 
             for idx, batch in enumerate(self.train_dataloader):
-                if self.cfg['Global'].get('resume_from_iter',
-                                          False):  # for unirec resume training
+                if self.cfg["Global"].get("resume_from_iter", False):  # for unirec resume training
                     if global_step != self.resume_iter:
                         global_step += 1
-                        if is_main_process(
-                        ) and global_step % print_batch_step == 0:
+                        if is_main_process() and global_step % print_batch_step == 0:
                             self.logger.info(
-                                f'skip iter {global_step}, resume from iter {self.resume_iter}'
+                                f"skip iter {global_step}, resume from iter {self.resume_iter}"
                             )
                         continue
                     else:
                         global_step += 1
-                        self.cfg['Global']['resume_from_iter'] = False
+                        self.cfg["Global"]["resume_from_iter"] = False
                         self.logger.info(
-                            f'resume from iter {self.resume_iter}, start training from iter {global_step}'
+                            f"resume from iter {self.resume_iter}, start training from iter {global_step}"
                         )
                         continue
 
@@ -359,47 +345,43 @@ class Trainer:
                 train_reader_cost += time.time() - reader_start
                 # use amp
                 if self.scaler:
-                    with torch.amp.autocast(device_type=self.device.type,
-                                            dtype=torch.bfloat16):
+                    with torch.amp.autocast(device_type=self.device.type, dtype=torch.bfloat16):
                         if self.use_transformers:
                             inputs = {
-                                'pixel_values': batch_tensor[0],
-                                'input_ids': None,
-                                'attention_mask': None,
-                                'labels': batch_tensor[1],
-                                'length': batch_tensor[2]
+                                "pixel_values": batch_tensor[0],
+                                "input_ids": None,
+                                "attention_mask": None,
+                                "labels": batch_tensor[1],
+                                "length": batch_tensor[2],
                             }
                             preds = self.model(**inputs)
                         else:
-                            preds = self.model(batch_tensor[0],
-                                               data=batch_tensor[1:])
+                            preds = self.model(batch_tensor[0], data=batch_tensor[1:])
                         loss = self.loss_class(preds, batch_tensor)
-                        loss['loss'] = loss['loss'] / self.accumulation_steps
-                    self.scaler.scale(loss['loss']).backward()
+                        loss["loss"] = loss["loss"] / self.accumulation_steps
+                    self.scaler.scale(loss["loss"]).backward()
                     if (global_step + 1) % self.accumulation_steps == 0:
                         if self.grad_clip_val > 0:
                             self.scaler.unscale_(self.optimizer)
                             torch.nn.utils.clip_grad_norm_(
-                                self.model.parameters(),
-                                max_norm=self.grad_clip_val)
+                                self.model.parameters(), max_norm=self.grad_clip_val
+                            )
                         self.scaler.step(self.optimizer)
                         self.scaler.update()
                         self.optimizer.zero_grad(set_to_none=True)
                 else:
                     preds = self.model(batch_tensor[0], data=batch_tensor[1:])
                     loss = self.loss_class(preds, batch_tensor)
-                    avg_loss = loss['loss']
+                    avg_loss = loss["loss"]
                     avg_loss.backward()
                     if self.grad_clip_val > 0:
                         torch.nn.utils.clip_grad_norm_(
-                            self.model.parameters(),
-                            max_norm=self.grad_clip_val)
+                            self.model.parameters(), max_norm=self.grad_clip_val
+                        )
                     self.optimizer.step()
 
                 if cal_metric_during_train:  # only rec and cls need
-                    post_result = self.post_process_class(preds,
-                                                          batch_numpy,
-                                                          training=True)
+                    post_result = self.post_process_class(preds, batch_numpy, training=True)
                     self.eval_class(post_result, batch_numpy, training=True)
                     metric = self.eval_class.get_metric()
                     train_stats.update(metric)
@@ -413,54 +395,60 @@ class Trainer:
                 try:
                     self.lr_scheduler.step()
                 except Exception as e:
-                    self.logger.info(
-                        f'lr_scheduler step error, {e}, please check your config'
-                    )
+                    self.logger.info(f"lr_scheduler step error, {e}, please check your config")
 
-                loss['loss'] = loss['loss'] * self.accumulation_steps
+                loss["loss"] = loss["loss"] * self.accumulation_steps
                 # logger
                 stats = {
-                    k: float(v)
-                    if v.shape == [] else v.detach().cpu().numpy().mean()
+                    k: float(v) if v.shape == [] else v.detach().cpu().numpy().mean()
                     for k, v in loss.items()
                 }
-                stats['lr'] = self.lr_scheduler.get_last_lr()[0]
+                stats["lr"] = self.lr_scheduler.get_last_lr()[0]
                 train_stats.update(stats)
 
                 if self.writer is not None:
                     for k, v in train_stats.get().items():
-                        self.writer.add_scalar(f'TRAIN/{k}', v, global_step)
+                        self.writer.add_scalar(f"TRAIN/{k}", v, global_step)
 
                 if is_main_process() and (
                     (global_step > 0 and global_step % print_batch_step == 0)
-                        or (idx >= len(self.train_dataloader) - 1)):
+                    or (idx >= len(self.train_dataloader) - 1)
+                ):
                     logs = train_stats.log()
 
                     eta_sec = (
-                        (epoch_num + 1 - epoch) * len(self.train_dataloader) -
-                        idx - 1) * eta_meter.avg
-                    eta_sec_format = str(
-                        datetime.timedelta(seconds=int(eta_sec)))
+                        (epoch_num + 1 - epoch) * len(self.train_dataloader) - idx - 1
+                    ) * eta_meter.avg
+                    eta_sec_format = str(datetime.timedelta(seconds=int(eta_sec)))
                     strs = (
-                        f'epoch: [{epoch}/{epoch_num}], global_step: {global_step}, {logs}, '
-                        f'avg_reader_cost: {train_reader_cost / print_batch_step:.5f} s, '
-                        f'avg_batch_cost: {train_batch_cost / print_batch_step:.5f} s, '
-                        f'avg_samples: {total_samples / print_batch_step}, '
-                        f'ips: {total_samples / train_batch_cost:.5f} samples/s, '
-                        f'eta: {eta_sec_format}')
+                        f"epoch: [{epoch}/{epoch_num}], global_step: {global_step}, {logs}, "
+                        f"avg_reader_cost: {train_reader_cost / print_batch_step:.5f} s, "
+                        f"avg_batch_cost: {train_batch_cost / print_batch_step:.5f} s, "
+                        f"avg_samples: {total_samples / print_batch_step}, "
+                        f"ips: {total_samples / train_batch_cost:.5f} samples/s, "
+                        f"eta: {eta_sec_format}"
+                    )
                     self.logger.info(strs)
                     total_samples = 0
                     train_reader_cost = 0.0
                     train_batch_cost = 0.0
                 reader_start = time.time()
                 # eval iter step
-                if self.valid_dataloader is not None and is_main_process() and (global_step > start_eval_step and
-                                          (global_step - start_eval_step) %
-                                          eval_batch_step == 0):
+                if (
+                    self.valid_dataloader is not None
+                    and is_main_process()
+                    and (
+                        global_step > start_eval_step
+                        and (global_step - start_eval_step) % eval_batch_step == 0
+                    )
+                ):
                     self.eval_step(global_step, epoch)
                 # save iter step
-                if is_main_process(
-                ) and global_step > start_save_iter and global_step % save_iter_step == 0:
+                if (
+                    is_main_process()
+                    and global_step > start_save_iter
+                    and global_step % save_iter_step == 0
+                ):
                     save_ckpt(
                         self.model,
                         self.cfg,
@@ -470,35 +458,42 @@ class Trainer:
                         global_step,
                         self.best_metric,
                         is_best=False,
-                        prefix=
-                        f'iter_{last_whole_epoch_global_step}_{global_step}')
+                        prefix=f"iter_{last_whole_epoch_global_step}_{global_step}",
+                    )
 
             # eval epoch step
-            if self.valid_dataloader is not None and is_main_process() and epoch > start_eval_epoch and (
-                    epoch - start_eval_epoch) % eval_epoch_step == 0:
+            if (
+                self.valid_dataloader is not None
+                and is_main_process()
+                and epoch > start_eval_epoch
+                and (epoch - start_eval_epoch) % eval_epoch_step == 0
+            ):
                 self.eval_step(global_step, epoch)
 
             if is_main_process():
-                save_ckpt(self.model,
-                          self.cfg,
-                          self.optimizer,
-                          self.lr_scheduler,
-                          epoch,
-                          global_step,
-                          self.best_metric,
-                          is_best=False,
-                          prefix=None)
-                if epoch > start_save_epoch and (
-                        epoch - start_save_epoch) % save_epoch_step == 0:
-                    save_ckpt(self.model,
-                              self.cfg,
-                              self.optimizer,
-                              self.lr_scheduler,
-                              epoch,
-                              global_step,
-                              self.best_metric,
-                              is_best=False,
-                              prefix='epoch_' + str(epoch))
+                save_ckpt(
+                    self.model,
+                    self.cfg,
+                    self.optimizer,
+                    self.lr_scheduler,
+                    epoch,
+                    global_step,
+                    self.best_metric,
+                    is_best=False,
+                    prefix=None,
+                )
+                if epoch > start_save_epoch and (epoch - start_save_epoch) % save_epoch_step == 0:
+                    save_ckpt(
+                        self.model,
+                        self.cfg,
+                        self.optimizer,
+                        self.lr_scheduler,
+                        epoch,
+                        global_step,
+                        self.best_metric,
+                        is_best=False,
+                        prefix="epoch_" + str(epoch),
+                    )
             last_whole_epoch_global_step = global_step
         best_str = f"best metric, {', '.join([f'{k}: {v}' for k, v in self.best_metric.items()])}"
         self.logger.info(best_str)
@@ -516,30 +511,33 @@ class Trainer:
         if self.writer is not None:
             for k, v in cur_metric.items():
                 if isinstance(v, (float, int)):
-                    self.writer.add_scalar(f'EVAL/{k}', v,
-                                           global_step)
+                    self.writer.add_scalar(f"EVAL/{k}", v, global_step)
 
-        if (cur_metric[self.eval_class.main_indicator] >=
-                self.best_metric[self.eval_class.main_indicator]):
+        if (
+            cur_metric[self.eval_class.main_indicator]
+            >= self.best_metric[self.eval_class.main_indicator]
+        ):
             self.best_metric.update(cur_metric)
-            self.best_metric['best_epoch'] = epoch
+            self.best_metric["best_epoch"] = epoch
 
             if self.writer is not None:
                 self.writer.add_scalar(
-                    f'EVAL/best_{self.eval_class.main_indicator}',
+                    f"EVAL/best_{self.eval_class.main_indicator}",
                     self.best_metric[self.eval_class.main_indicator],
                     global_step,
                 )
 
-            save_ckpt(self.model,
-                      self.cfg,
-                      self.optimizer,
-                      self.lr_scheduler,
-                      epoch,
-                      global_step,
-                      self.best_metric,
-                      is_best=True,
-                      prefix=None)
+            save_ckpt(
+                self.model,
+                self.cfg,
+                self.optimizer,
+                self.lr_scheduler,
+                epoch,
+                global_step,
+                self.best_metric,
+                is_best=True,
+                prefix=None,
+            )
         best_str = f"best metric, {', '.join([f'{k}: {v}' for k, v in self.best_metric.items()])}"
         self.logger.info(best_str)
 
@@ -550,7 +548,7 @@ class Trainer:
             total_time = 0.0
             pbar = tqdm(
                 total=len(self.valid_dataloader),
-                desc='eval model:',
+                desc="eval model:",
                 position=0,
                 leave=True,
             )
@@ -560,10 +558,8 @@ class Trainer:
                 batch_numpy = [t.numpy() for t in batch]
                 start = time.time()
                 if self.scaler:
-                    with torch.cuda.amp.autocast(
-                            enabled=self.device.type == 'cuda'):
-                        preds = self.model(batch_tensor[0],
-                                           data=batch_tensor[1:])
+                    with torch.cuda.amp.autocast(enabled=self.device.type == "cuda"):
+                        preds = self.model(batch_tensor[0], data=batch_tensor[1:])
                 else:
                     preds = self.model(batch_tensor[0], data=batch_tensor[1:])
 
@@ -581,7 +577,7 @@ class Trainer:
 
         pbar.close()
         self.model.train()
-        metric['fps'] = total_frame / total_time
+        metric["fps"] = total_frame / total_time
         return metric
 
     def test_dataloader(self):
@@ -593,10 +589,9 @@ class Trainer:
                 if count % 1 == 0:
                     batch_time = time.time() - starttime
                     starttime = time.time()
-                    self.logger.info(
-                        f'reader: {count}, {data[0].shape}, {batch_time}')
-        except:
+                    self.logger.info(f"reader: {count}, {data[0].shape}, {batch_time}")
+        except Exception:
             import traceback
 
             self.logger.info(traceback.format_exc())
-        self.logger.info(f'finish reader: {count}, Success!')
+        self.logger.info(f"finish reader: {count}, Success!")

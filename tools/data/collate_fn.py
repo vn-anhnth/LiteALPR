@@ -69,22 +69,24 @@ class DyMaskCollator:
         _bs, channel = len(batch), batch[0][0].shape[0]
         proper_items = []
         for item in batch:
-            if item[0].shape[1] * max_width > 1600 * 320 or item[0].shape[
-                    2] * max_height > 1600 * 320:
+            if (
+                item[0].shape[1] * max_width > 1600 * 320
+                or item[0].shape[2] * max_height > 1600 * 320
+            ):
                 continue
             max_height = max(max_height, item[0].shape[1])
             max_width = max(max_width, item[0].shape[2])
             max_length = max(max_length, len(item[1]))
             proper_items.append(item)
 
-        images, image_masks = np.zeros(
-            (len(proper_items), channel, max_height, max_width),
-            dtype='float32'), np.zeros(
-                (len(proper_items), 1, max_height, max_width), dtype='float32')
-        labels, label_masks = np.zeros((len(proper_items), max_length),
-                                       dtype='int64'), np.zeros(
-                                           (len(proper_items), max_length),
-                                           dtype='int64')
+        images, image_masks = (
+            np.zeros((len(proper_items), channel, max_height, max_width), dtype="float32"),
+            np.zeros((len(proper_items), 1, max_height, max_width), dtype="float32"),
+        )
+        labels, label_masks = (
+            np.zeros((len(proper_items), max_length), dtype="int64"),
+            np.zeros((len(proper_items), max_length), dtype="int64"),
+        )
 
         for i in range(len(proper_items)):
             _, h, w = proper_items[i][0].shape

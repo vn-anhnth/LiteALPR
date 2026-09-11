@@ -16,29 +16,29 @@ class BaseRecLabelEncode:
         lower=False,
     ):
         self.max_text_len = max_text_length
-        self.beg_str = 'sos'
-        self.end_str = 'eos'
+        self.beg_str = "sos"
+        self.end_str = "eos"
         self.lower = lower
         self.reverse = False
         if character_dict_path is None:
             logger = get_logger()
             logger.warning(
-                'The character_dict_path is None, model can only recognize number and lower letters'
+                "The character_dict_path is None, model can only recognize number and lower letters"
             )
-            self.character_str = '0123456789abcdefghijklmnopqrstuvwxyz'
+            self.character_str = "0123456789abcdefghijklmnopqrstuvwxyz"
             dict_character = list(self.character_str)
             self.lower = True
         else:
             self.character_str = []
-            with open(character_dict_path, 'rb') as fin:
+            with open(character_dict_path, "rb") as fin:
                 lines = fin.readlines()
                 for line in lines:
-                    line = line.decode('utf-8').strip('\n').strip('\r\n')
+                    line = line.decode("utf-8").strip("\n").strip("\r\n")
                     self.character_str.append(line)
             if use_space_char:
-                self.character_str.append(' ')
+                self.character_str.append(" ")
             dict_character = list(self.character_str)
-            if 'arabic' in character_dict_path:
+            if "arabic" in character_dict_path:
                 self.reverse = True
         dict_character = self.add_special_char(dict_character)
         self.dict = {}
@@ -48,19 +48,19 @@ class BaseRecLabelEncode:
 
     def label_reverse(self, text):
         text_re = []
-        c_current = ''
+        c_current = ""
         for c in text:
-            if not bool(re.search('[a-zA-Z0-9 :*./%+١٢٣٤٥٦٧٨٩٠-]', c)):
-                if c_current != '':
+            if not bool(re.search("[a-zA-Z0-9 :*./%+١٢٣٤٥٦٧٨٩٠-]", c)):
+                if c_current != "":
                     text_re.append(c_current)
                 text_re.append(c)
-                c_current = ''
+                c_current = ""
             else:
                 c_current += c
-        if c_current != '':
+        if c_current != "":
             text_re.append(c_current)
 
-        return ''.join(text_re[::-1])
+        return "".join(text_re[::-1])
 
     def add_special_char(self, dict_character):
         return dict_character
@@ -92,32 +92,27 @@ class BaseRecLabelEncode:
 class CTCLabelEncode(BaseRecLabelEncode):
     """Convert between text-label and text-index."""
 
-    def __init__(self,
-                 max_text_length,
-                 character_dict_path=None,
-                 use_space_char=False,
-                 **kwargs):
-        super().__init__(max_text_length, character_dict_path,
-                             use_space_char)
-        self.is_reverse = kwargs.get('is_reverse', False)
+    def __init__(self, max_text_length, character_dict_path=None, use_space_char=False, **kwargs):
+        super().__init__(max_text_length, character_dict_path, use_space_char)
+        self.is_reverse = kwargs.get("is_reverse", False)
 
     def __call__(self, data):
-        text = data['label']
+        text = data["label"]
         if self.reverse and self.is_reverse:  # for arabic rec
             text = self.label_reverse(text)
         text = self.encode(text)
         if text is None:
             return None
-        data['length'] = np.array(len(text))
+        data["length"] = np.array(len(text))
         text = text + [0] * (self.max_text_len - len(text))
-        data['label'] = np.array(text)
+        data["label"] = np.array(text)
 
         label = [0] * len(self.character)
         for x in text:
             label[x] += 1
-        data['label_ace'] = np.array(label)
+        data["label_ace"] = np.array(label)
         return data
 
     def add_special_char(self, dict_character):
-        dict_character = ['blank'] + dict_character
+        dict_character = ["blank"] + dict_character
         return dict_character

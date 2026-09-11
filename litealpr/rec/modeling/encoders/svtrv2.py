@@ -7,7 +7,6 @@ from litealpr.rec.modeling.common import DropPath, Identity, Mlp
 
 
 class ConvBNLayer(nn.Module):
-
     def __init__(
         self,
         in_channels,
@@ -40,7 +39,6 @@ class ConvBNLayer(nn.Module):
 
 
 class ConvMixer(nn.Module):
-
     def __init__(
         self,
         dim,
@@ -58,7 +56,6 @@ class ConvMixer(nn.Module):
 
 
 class ConvMlp(nn.Module):
-
     def __init__(
         self,
         in_features,
@@ -86,7 +83,6 @@ class ConvMlp(nn.Module):
 
 
 class Attention(nn.Module):
-
     def __init__(
         self,
         dim,
@@ -108,8 +104,7 @@ class Attention(nn.Module):
 
     def forward(self, x, mask=None):
         B, N, _ = x.shape
-        qkv = self.qkv(x).reshape(B, N, 3, self.num_heads,
-                                  self.head_dim).permute(2, 0, 3, 1, 4)
+        qkv = self.qkv(x).reshape(B, N, 3, self.num_heads, self.head_dim).permute(2, 0, 3, 1, 4)
         q, k, v = qkv.unbind(0)
         attn = q @ k.transpose(-2, -1) * self.scale
         if mask is not None:
@@ -124,12 +119,11 @@ class Attention(nn.Module):
 
 
 class Block(nn.Module):
-
     def __init__(
         self,
         dim,
         num_heads,
-        mixer='Global',
+        mixer="Global",
         local_k=None,
         mlp_ratio=4.0,
         qkv_bias=False,
@@ -145,7 +139,7 @@ class Block(nn.Module):
             local_k = [7, 11]
         super().__init__()
         mlp_hidden_dim = int(dim * mlp_ratio)
-        if mixer == 'Global' or mixer == 'Local':
+        if mixer == "Global" or mixer == "Local":
             self.norm1 = norm_layer(dim, eps=eps)
             self.mixer = Attention(
                 dim,
@@ -162,16 +156,15 @@ class Block(nn.Module):
                 act_layer=act_layer,
                 drop=drop,
             )
-        elif mixer == 'Conv':
+        elif mixer == "Conv":
             self.norm1 = nn.BatchNorm2d(dim)
             self.mixer = ConvMixer(dim, num_heads=num_heads, local_k=local_k)
             self.norm2 = nn.BatchNorm2d(dim)
-            self.mlp = ConvMlp(in_features=dim,
-                               hidden_features=mlp_hidden_dim,
-                               act_layer=act_layer,
-                               drop=drop)
+            self.mlp = ConvMlp(
+                in_features=dim, hidden_features=mlp_hidden_dim, act_layer=act_layer, drop=drop
+            )
         else:
-            raise TypeError('The mixer must be one of [Global, Local, Conv]')
+            raise TypeError("The mixer must be one of [Global, Local, Conv]")
 
         self.drop_path = DropPath(drop_path) if drop_path > 0.0 else Identity()
 
@@ -182,33 +175,33 @@ class Block(nn.Module):
 
 
 class FlattenTranspose(nn.Module):
-
     def forward(self, x, mask=None):
         return x.flatten(2).transpose(1, 2)
 
 
 class SVTRStage(nn.Module):
-
-    def __init__(self,
-                 feat_maxSize=None,
-                 dim=64,
-                 out_dim=256,
-                 depth=3,
-                 mixer=['Local'] * 3,
-                 local_k=None,
-                 sub_k=None,
-                 num_heads=2,
-                 mlp_ratio=4,
-                 qkv_bias=True,
-                 qk_scale=None,
-                 drop_rate=0.0,
-                 attn_drop_rate=0.0,
-                 drop_path=[0.1] * 3,
-                 norm_layer=nn.LayerNorm,
-                 act=nn.GELU,
-                 eps=1e-6,
-                 downsample=None,
-                 **kwargs):
+    def __init__(
+        self,
+        feat_maxSize=None,
+        dim=64,
+        out_dim=256,
+        depth=3,
+        mixer=["Local"] * 3,
+        local_k=None,
+        sub_k=None,
+        num_heads=2,
+        mlp_ratio=4,
+        qkv_bias=True,
+        qk_scale=None,
+        drop_rate=0.0,
+        attn_drop_rate=0.0,
+        drop_path=[0.1] * 3,
+        norm_layer=nn.LayerNorm,
+        act=nn.GELU,
+        eps=1e-6,
+        downsample=None,
+        **kwargs,
+    ):
         if sub_k is None:
             sub_k = [2, 1]
         if local_k is None:
@@ -218,17 +211,16 @@ class SVTRStage(nn.Module):
         super().__init__()
         self.dim = dim
 
-        conv_block_num = sum([1 if mix == 'Conv' else 0 for mix in mixer])
+        conv_block_num = sum([1 if mix == "Conv" else 0 for mix in mixer])
         if conv_block_num == depth:
             self.mask = None
             conv_block_num = 0
             if downsample:
                 self.sub_norm = nn.BatchNorm2d(out_dim, eps=eps)
         else:
-            if 'Local' in mixer:
-                mask = self.get_max2d_mask(feat_maxSize[0], feat_maxSize[1],
-                                           local_k)
-                self.register_buffer('mask', mask)
+            if "Local" in mixer:
+                mask = self.get_max2d_mask(feat_maxSize[0], feat_maxSize[1], local_k)
+                self.register_buffer("mask", mask)
             else:
                 self.mask = None
             if downsample:
@@ -250,30 +242,23 @@ class SVTRStage(nn.Module):
                     drop_path=drop_path[i],
                     norm_layer=norm_layer,
                     eps=eps,
-                ))
+                )
+            )
             if i == conv_block_num - 1:
                 self.blocks.append(FlattenTranspose())
 
         if downsample:
-            self.downsample = nn.Conv2d(dim,
-                                        out_dim,
-                                        kernel_size=3,
-                                        stride=sub_k,
-                                        padding=1)
+            self.downsample = nn.Conv2d(dim, out_dim, kernel_size=3, stride=sub_k, padding=1)
         else:
             self.downsample = None
 
     def get_max2d_mask(self, H, W, local_k):
         hk, wk = local_k
-        mask = torch.ones(H * W,
-                          H + hk - 1,
-                          W + wk - 1,
-                          dtype=torch.float32,
-                          requires_grad=False)
+        mask = torch.ones(H * W, H + hk - 1, W + wk - 1, dtype=torch.float32, requires_grad=False)
         for h in range(H):
             for w in range(W):
-                mask[h * W + w, h:h + hk, w:w + wk] = 0.0
-        mask = mask[:, hk // 2:H + hk // 2, wk // 2:W + wk // 2]  # .flatten(1)
+                mask[h * W + w, h : h + hk, w : w + wk] = 0.0
+        mask = mask[:, hk // 2 : H + hk // 2, wk // 2 : W + wk // 2]  # .flatten(1)
         mask[mask >= 1] = -np.inf
         return mask.reshape(H, W, H, W)
 
@@ -285,10 +270,10 @@ class SVTRStage(nn.Module):
         offet_h = H1 - 2 * h_slice
         w_slice = W1 // 2
         offet_w = W1 - 2 * w_slice
-        mask1 = self.mask[:h_slice + offet_h, :w_slice, :H1, :W1]
-        mask2 = self.mask[:h_slice + offet_h, -w_slice:, :H1, -W1:]
-        mask3 = self.mask[-h_slice:, :(w_slice + offet_w), -H1:, :W1]
-        mask4 = self.mask[-h_slice:, -(w_slice + offet_w):, -H1:, -W1:]
+        mask1 = self.mask[: h_slice + offet_h, :w_slice, :H1, :W1]
+        mask2 = self.mask[: h_slice + offet_h, -w_slice:, :H1, -W1:]
+        mask3 = self.mask[-h_slice:, : (w_slice + offet_w), -H1:, :W1]
+        mask4 = self.mask[-h_slice:, -(w_slice + offet_w) :, -H1:, -W1:]
 
         mask_top = torch.concat([mask1, mask2], 1)
         mask_bott = torch.concat([mask3, mask4], 1)
@@ -319,12 +304,9 @@ class SVTRStage(nn.Module):
 class POPatchEmbed(nn.Module):
     """Image to Patch Embedding."""
 
-    def __init__(self,
-                 in_channels=3,
-                 feat_max_size=None,
-                 embed_dim=768,
-                 use_pos_embed=False,
-                 flatten=False):
+    def __init__(
+        self, in_channels=3, feat_max_size=None, embed_dim=768, use_pos_embed=False, flatten=False
+    ):
         if feat_max_size is None:
             feat_max_size = [8, 32]
         super().__init__()
@@ -352,13 +334,11 @@ class POPatchEmbed(nn.Module):
         self.flatten = flatten
         if use_pos_embed:
             pos_embed = torch.zeros(
-                [1, feat_max_size[0] * feat_max_size[1], embed_dim],
-                dtype=torch.float32)
+                [1, feat_max_size[0] * feat_max_size[1], embed_dim], dtype=torch.float32
+            )
             trunc_normal_(pos_embed, mean=0, std=0.02)
             self.pos_embed = nn.Parameter(
-                pos_embed.transpose(1,
-                                    2).reshape(1, embed_dim, feat_max_size[0],
-                                               feat_max_size[1]),
+                pos_embed.transpose(1, 2).reshape(1, embed_dim, feat_max_size[0], feat_max_size[1]),
                 requires_grad=True,
             )
 
@@ -366,37 +346,38 @@ class POPatchEmbed(nn.Module):
         x = self.patch_embed(x)
         sz = x.shape[2:]
         if self.use_pos_embed:
-            x = x + self.pos_embed[:, :, :sz[0], :sz[1]]
+            x = x + self.pos_embed[:, :, : sz[0], : sz[1]]
         if self.flatten:
             x = x.flatten(2).transpose(1, 2)
         return x, sz
 
 
 class SVTRv2(nn.Module):
-
-    def __init__(self,
-                 max_sz=None,
-                 in_channels=3,
-                 out_channels=192,
-                 depths=None,
-                 dims=None,
-                 mixer=None,
-                 use_pos_embed=True,
-                 local_k=None,
-                 sub_k=None,
-                 num_heads=None,
-                 mlp_ratio=4,
-                 qkv_bias=True,
-                 qk_scale=None,
-                 drop_rate=0.0,
-                 last_drop=0.1,
-                 attn_drop_rate=0.0,
-                 drop_path_rate=0.1,
-                 norm_layer=nn.LayerNorm,
-                 act=nn.GELU,
-                 last_stage=False,
-                 eps=1e-6,
-                 **kwargs):
+    def __init__(
+        self,
+        max_sz=None,
+        in_channels=3,
+        out_channels=192,
+        depths=None,
+        dims=None,
+        mixer=None,
+        use_pos_embed=True,
+        local_k=None,
+        sub_k=None,
+        num_heads=None,
+        mlp_ratio=4,
+        qkv_bias=True,
+        qk_scale=None,
+        drop_rate=0.0,
+        last_drop=0.1,
+        attn_drop_rate=0.0,
+        drop_path_rate=0.1,
+        norm_layer=nn.LayerNorm,
+        act=nn.GELU,
+        last_stage=False,
+        eps=1e-6,
+        **kwargs,
+    ):
         if num_heads is None:
             num_heads = [2, 4, 8]
         if sub_k is None:
@@ -404,7 +385,7 @@ class SVTRv2(nn.Module):
         if local_k is None:
             local_k = [[7, 11], [7, 11], [-1, -1]]
         if mixer is None:
-            mixer = [['Local'] * 3, ['Local'] * 3 + ['Global'] * 3, ['Global'] * 3]
+            mixer = [["Local"] * 3, ["Local"] * 3 + ["Global"] * 3, ["Global"] * 3]
         if dims is None:
             dims = [64, 128, 256]
         if depths is None:
@@ -416,14 +397,15 @@ class SVTRv2(nn.Module):
         self.num_features = dims[-1]
 
         feat_max_size = [max_sz[0] // 4, max_sz[1] // 4]
-        self.pope = POPatchEmbed(in_channels=in_channels,
-                                 feat_max_size=feat_max_size,
-                                 embed_dim=dims[0],
-                                 use_pos_embed=use_pos_embed,
-                                 flatten=mixer[0][0] != 'Conv')
+        self.pope = POPatchEmbed(
+            in_channels=in_channels,
+            feat_max_size=feat_max_size,
+            embed_dim=dims[0],
+            use_pos_embed=use_pos_embed,
+            flatten=mixer[0][0] != "Conv",
+        )
 
-        dpr = np.linspace(0, drop_path_rate,
-                          sum(depths))  # stochastic depth decay rule
+        dpr = np.linspace(0, drop_path_rate, sum(depths))  # stochastic depth decay rule
 
         self.stages = nn.ModuleList()
         for i_stage in range(num_stages):
@@ -441,7 +423,7 @@ class SVTRv2(nn.Module):
                 qk_scale=qk_scale,
                 drop=drop_rate,
                 attn_drop=attn_drop_rate,
-                drop_path=dpr[sum(depths[:i_stage]):sum(depths[:i_stage + 1])],
+                drop_path=dpr[sum(depths[:i_stage]) : sum(depths[: i_stage + 1])],
                 norm_layer=norm_layer,
                 act=act,
                 downsample=i_stage != num_stages - 1,
@@ -450,16 +432,14 @@ class SVTRv2(nn.Module):
             self.stages.append(stage)
             feat_max_size = [
                 feat_max_size[0] // sub_k[i_stage][0],
-                feat_max_size[1] // sub_k[i_stage][1]
+                feat_max_size[1] // sub_k[i_stage][1],
             ]
 
         self.out_channels = self.num_features
         self.last_stage = last_stage
         if last_stage:
             self.out_channels = out_channels
-            self.last_conv = nn.Linear(self.num_features,
-                                       self.out_channels,
-                                       bias=False)
+            self.last_conv = nn.Linear(self.num_features, self.out_channels, bias=False)
             self.hardswish = nn.Hardswish()
             self.dropout = nn.Dropout(p=last_drop)
         self.apply(self._init_weights)
@@ -473,11 +453,11 @@ class SVTRv2(nn.Module):
             zeros_(m.bias)
             ones_(m.weight)
         if isinstance(m, nn.Conv2d):
-            kaiming_normal_(m.weight, mode='fan_out', nonlinearity='relu')
+            kaiming_normal_(m.weight, mode="fan_out", nonlinearity="relu")
 
     @torch.jit.ignore
     def no_weight_decay(self):
-        return {'patch_embed', 'downsample', 'pos_embed'}
+        return {"patch_embed", "downsample", "pos_embed"}
 
     def forward(self, x):
         x, sz = self.pope(x)

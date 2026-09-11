@@ -28,16 +28,12 @@ def Time():
 class TrainingStats:
     def __init__(self, window_size, stats_keys):
         self.window_size = window_size
-        self.smoothed_losses_and_metrics = {
-            key: SmoothedValue(window_size)
-            for key in stats_keys
-        }
+        self.smoothed_losses_and_metrics = {key: SmoothedValue(window_size) for key in stats_keys}
 
     def update(self, stats):
         for k, v in stats.items():
             if k not in self.smoothed_losses_and_metrics:
-                self.smoothed_losses_and_metrics[k] = SmoothedValue(
-                    self.window_size)
+                self.smoothed_losses_and_metrics[k] = SmoothedValue(self.window_size)
             self.smoothed_losses_and_metrics[k].add_value(v)
 
     def get(self, extras=None):

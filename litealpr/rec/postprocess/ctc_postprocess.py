@@ -7,24 +7,24 @@ class BaseRecLabelDecode:
     """Convert between text-label and text-index."""
 
     def __init__(self, character_dict_path=None, use_space_char=False):
-        self.beg_str = 'sos'
-        self.end_str = 'eos'
+        self.beg_str = "sos"
+        self.end_str = "eos"
         self.reverse = False
         self.character_str = []
 
         if character_dict_path is None:
-            self.character_str = '0123456789abcdefghijklmnopqrstuvwxyz'
+            self.character_str = "0123456789abcdefghijklmnopqrstuvwxyz"
             dict_character = list(self.character_str)
         else:
-            with open(character_dict_path, 'rb') as fin:
+            with open(character_dict_path, "rb") as fin:
                 lines = fin.readlines()
                 for line in lines:
-                    line = line.decode('utf-8').strip('\n').strip('\r\n')
+                    line = line.decode("utf-8").strip("\n").strip("\r\n")
                     self.character_str.append(line)
             if use_space_char:
-                self.character_str.append(' ')
+                self.character_str.append(" ")
             dict_character = list(self.character_str)
-            if 'arabic' in character_dict_path:
+            if "arabic" in character_dict_path:
                 self.reverse = True
 
         dict_character = self.add_special_char(dict_character)
@@ -35,19 +35,19 @@ class BaseRecLabelDecode:
 
     def pred_reverse(self, pred):
         pred_re = []
-        c_current = ''
+        c_current = ""
         for c in pred:
-            if not bool(re.search('[a-zA-Z0-9 :*./%+-]', c)):
-                if c_current != '':
+            if not bool(re.search("[a-zA-Z0-9 :*./%+-]", c)):
+                if c_current != "":
                     pred_re.append(c_current)
                 pred_re.append(c)
-                c_current = ''
+                c_current = ""
             else:
                 c_current += c
-        if c_current != '':
+        if c_current != "":
             pred_re.append(c_current)
 
-        return ''.join(pred_re[::-1])
+        return "".join(pred_re[::-1])
 
     def add_special_char(self, dict_character):
         return dict_character
@@ -60,15 +60,11 @@ class BaseRecLabelDecode:
         for batch_idx in range(batch_size):
             selection = np.ones(len(text_index[batch_idx]), dtype=bool)
             if is_remove_duplicate:
-                selection[1:] = text_index[batch_idx][1:] != text_index[
-                    batch_idx][:-1]
+                selection[1:] = text_index[batch_idx][1:] != text_index[batch_idx][:-1]
             for ignored_token in ignored_tokens:
                 selection &= text_index[batch_idx] != ignored_token
 
-            char_list = [
-                self.character[text_id]
-                for text_id in text_index[batch_idx][selection]
-            ]
+            char_list = [self.character[text_id] for text_id in text_index[batch_idx][selection]]
             if text_prob is not None:
                 conf_list = text_prob[batch_idx][selection]
             else:
@@ -76,7 +72,7 @@ class BaseRecLabelDecode:
             if len(conf_list) == 0:
                 conf_list = [0]
 
-            text = ''.join(char_list)
+            text = "".join(char_list)
 
             if self.reverse:  # for arabic rec
                 text = self.pred_reverse(text)
@@ -94,16 +90,12 @@ class BaseRecLabelDecode:
 class CTCLabelDecode(BaseRecLabelDecode):
     """Convert between text-label and text-index."""
 
-    def __init__(self,
-                 character_dict_path=None,
-                 use_space_char=False,
-                 **kwargs):
-        super().__init__(character_dict_path,
-                                             use_space_char)
+    def __init__(self, character_dict_path=None, use_space_char=False, **kwargs):
+        super().__init__(character_dict_path, use_space_char)
 
     def __call__(self, preds, batch=None, **kwargs):
         # preds = preds['res']
-        if hasattr(preds, 'detach'):
+        if hasattr(preds, "detach"):
             preds = preds.detach().cpu().float().numpy()
         preds_idx = preds.argmax(axis=2)
         preds_prob = preds.max(axis=2)
@@ -114,5 +106,5 @@ class CTCLabelDecode(BaseRecLabelDecode):
         return text, label
 
     def add_special_char(self, dict_character):
-        dict_character = ['blank'] + dict_character
+        dict_character = ["blank"] + dict_character
         return dict_character

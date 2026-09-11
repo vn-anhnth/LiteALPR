@@ -1,10 +1,11 @@
-import unittest
-import numpy as np
 import os
 import sys
+import unittest
+
+import numpy as np
 
 # Ensure repo root is on path
-root_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
+root_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
 if root_dir not in sys.path:
     sys.path.insert(0, root_dir)
 
@@ -15,7 +16,7 @@ class TestLiteALPRPipeline(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         # Initialize pipeline on CPU for smoke test
-        cls.alpr = LiteALPR(device='cpu')
+        cls.alpr = LiteALPR(device="cpu")
 
     def test_pipeline_inference(self):
         # Create a synthetic plate image (white background with black dummy block)
@@ -36,5 +37,5 @@ class TestLiteALPRPipeline(unittest.TestCase):
         self.assertIsInstance(results, list)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     unittest.main()

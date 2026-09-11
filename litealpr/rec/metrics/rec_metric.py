@@ -7,8 +7,8 @@ from rapidfuzz.distance import Levenshtein
 def match_ss(ss1, ss2):
     s1_len = len(ss1)
     for c_i in range(s1_len):
-        if ss1[c_i:] == ss2[:s1_len - c_i]:
-            return ss2[s1_len - c_i:]
+        if ss1[c_i:] == ss2[: s1_len - c_i]:
+            return ss2[s1_len - c_i :]
     return ss2
 
 
@@ -23,24 +23,24 @@ def stream_match(text):
     s_start = s_list[0][:-1]
     s_new = s_start
     for s_i in range(1, s_n):
-        s_start = match_ss(
-            s_start, s_list[s_i][1:-1] if s_i < s_n - 1 else s_list[s_i][1:])
+        s_start = match_ss(s_start, s_list[s_i][1:-1] if s_i < s_n - 1 else s_list[s_i][1:])
         s_new += s_start
     return s_new, sum(conf_list) / bs
 
 
 class RecMetric:
-
-    def __init__(self,
-                 main_indicator='acc',
-                 is_filter=False,
-                 is_lower=True,
-                 ignore_space=True,
-                 stream=False,
-                 with_ratio=False,
-                 max_len=25,
-                 max_ratio=4,
-                 **kwargs):
+    def __init__(
+        self,
+        main_indicator="acc",
+        is_filter=False,
+        is_lower=True,
+        ignore_space=True,
+        stream=False,
+        with_ratio=False,
+        max_len=25,
+        max_ratio=4,
+        **kwargs,
+    ):
         self.main_indicator = main_indicator
         self.is_filter = is_filter
         self.is_lower = is_lower
@@ -53,17 +53,10 @@ class RecMetric:
         self.reset()
 
     def _normalize_text(self, text):
-        text = ''.join(
-            filter(lambda x: x in (string.digits + string.ascii_letters),
-                   text))
+        text = "".join(filter(lambda x: x in (string.digits + string.ascii_letters), text))
         return text
 
-    def __call__(self,
-                 pred_label,
-                 batch=None,
-                 training=False,
-                 *args,
-                 **kwargs):
+    def __call__(self, pred_label, batch=None, training=False, *args, **kwargs):
         if self.with_ratio and not training:
             return self.eval_all_metric(pred_label, batch)
         else:
@@ -81,20 +74,20 @@ class RecMetric:
                 assert len(labels) == 1
                 pred, _ = stream_match(preds)
             if self.ignore_space:
-                pred = pred.replace(' ', '')
-                target = target.replace(' ', '')
+                pred = pred.replace(" ", "")
+                target = target.replace(" ", "")
             if self.is_filter:
                 pred = self._normalize_text(pred)
                 target = self._normalize_text(target)
             if self.is_lower:
                 pred = pred.lower()
                 target = target.lower()
-            
+
             # For CER: absolute Levenshtein distance
             ed = Levenshtein.distance(pred, target)
             total_edit_dis += ed
             total_char_len += len(target)
-            
+
             norm_edit_dis += Levenshtein.normalized_distance(pred, target)
             if pred == target:
                 correct_num += 1
@@ -104,11 +97,11 @@ class RecMetric:
         self.norm_edit_dis += norm_edit_dis
         self.total_edit_dis += total_edit_dis
         self.total_char_len += total_char_len
-        
+
         return {
-            'acc': correct_num / (all_num + self.eps),
-            'norm_edit_dis': 1 - norm_edit_dis / (all_num + self.eps),
-            'cer': total_edit_dis / (total_char_len + self.eps),
+            "acc": correct_num / (all_num + self.eps),
+            "norm_edit_dis": 1 - norm_edit_dis / (all_num + self.eps),
+            "cer": total_edit_dis / (total_char_len + self.eps),
         }
 
     def eval_all_metric(self, pred_label, batch=None, *args, **kwargs):
@@ -142,8 +135,8 @@ class RecMetric:
                 correct_num_lower += 1
 
             if self.ignore_space:
-                pred = pred.replace(' ', '')
-                target = target.replace(' ', '')
+                pred = pred.replace(" ", "")
+                target = target.replace(" ", "")
             if pred == target:
                 correct_num_ignore_space += 1
 
@@ -159,15 +152,14 @@ class RecMetric:
             if self.is_lower:
                 pred = pred.lower()
                 target = target.lower()
-                
+
             ed = Levenshtein.distance(pred, target)
             total_edit_dis += ed
             total_char_len += len(target)
-            
+
             dis = Levenshtein.normalized_distance(pred, target)
             norm_edit_dis += dis
-            ratio_i = ratio[all_num] - 1 if ratio[
-                all_num] < self.max_ratio else self.max_ratio - 1
+            ratio_i = ratio[all_num] - 1 if ratio[all_num] < self.max_ratio else self.max_ratio - 1
             len_i = max(0, min(self.max_len, len(target)) - 1)
             if pred == target:
                 correct_num += 1
@@ -190,19 +182,17 @@ class RecMetric:
         self.total_edit_dis += total_edit_dis
         self.total_char_len += total_char_len
         self.each_len_num = self.each_len_num + np.array(each_len_num)
-        self.each_len_correct_num = self.each_len_correct_num + np.array(
-            each_len_correct_num)
-        self.each_len_norm_edit_dis = self.each_len_norm_edit_dis + np.array(
-            each_len_norm_edit_dis)
+        self.each_len_correct_num = self.each_len_correct_num + np.array(each_len_correct_num)
+        self.each_len_norm_edit_dis = self.each_len_norm_edit_dis + np.array(each_len_norm_edit_dis)
         self.each_ratio_num = self.each_ratio_num + np.array(each_ratio_num)
-        self.each_ratio_correct_num = self.each_ratio_correct_num + np.array(
-            each_ratio_correct_num)
+        self.each_ratio_correct_num = self.each_ratio_correct_num + np.array(each_ratio_correct_num)
         self.each_ratio_norm_edit_dis = self.each_ratio_norm_edit_dis + np.array(
-            each_ratio_norm_edit_dis)
+            each_ratio_norm_edit_dis
+        )
         return {
-            'acc': correct_num / (all_num + self.eps),
-            'norm_edit_dis': 1 - norm_edit_dis / (all_num + self.eps),
-            'cer': total_edit_dis / (total_char_len + self.eps),
+            "acc": correct_num / (all_num + self.eps),
+            "norm_edit_dis": 1 - norm_edit_dis / (all_num + self.eps),
+            "cer": total_edit_dis / (total_char_len + self.eps),
         }
 
     def get_metric(self, training=False):
@@ -213,56 +203,51 @@ class RecMetric:
         cer = self.total_edit_dis / (self.total_char_len + self.eps)
         num_samples = self.all_num
         self.reset()
-        return {
-            'acc': acc,
-            'norm_edit_dis': norm_edit_dis,
-            'cer': cer,
-            'num_samples': num_samples
-        }
+        return {"acc": acc, "norm_edit_dis": norm_edit_dis, "cer": cer, "num_samples": num_samples}
 
     def get_all_metric(self):
         acc = 1.0 * self.correct_num / (self.all_num + self.eps)
         acc_real = 1.0 * self.correct_num_real / (self.all_num + self.eps)
         acc_lower = 1.0 * self.correct_num_lower / (self.all_num + self.eps)
-        acc_ignore_space = 1.0 * self.correct_num_ignore_space / (
-            self.all_num + self.eps)
-        acc_ignore_space_lower = 1.0 * self.correct_num_ignore_space_lower / (
-            self.all_num + self.eps)
-        acc_ignore_space_symbol = 1.0 * self.correct_num_ignore_space_symbol / (
-            self.all_num + self.eps)
+        acc_ignore_space = 1.0 * self.correct_num_ignore_space / (self.all_num + self.eps)
+        acc_ignore_space_lower = (
+            1.0 * self.correct_num_ignore_space_lower / (self.all_num + self.eps)
+        )
+        acc_ignore_space_symbol = (
+            1.0 * self.correct_num_ignore_space_symbol / (self.all_num + self.eps)
+        )
 
         norm_edit_dis = 1 - self.norm_edit_dis / (self.all_num + self.eps)
         cer = self.total_edit_dis / (self.total_char_len + self.eps)
         num_samples = self.all_num
-        each_len_acc = (self.each_len_correct_num /
-                        (self.each_len_num + self.eps)).tolist()
-        each_len_norm_edit_dis = (1 -
-                                  ((self.each_len_norm_edit_dis) /
-                                   ((self.each_len_num) + self.eps))).tolist()
+        each_len_acc = (self.each_len_correct_num / (self.each_len_num + self.eps)).tolist()
+        each_len_norm_edit_dis = (
+            1 - ((self.each_len_norm_edit_dis) / ((self.each_len_num) + self.eps))
+        ).tolist()
         each_len_num = self.each_len_num.tolist()
-        each_ratio_acc = (self.each_ratio_correct_num /
-                          (self.each_ratio_num + self.eps)).tolist()
-        each_ratio_norm_edit_dis = (1 - ((self.each_ratio_norm_edit_dis) / (
-            (self.each_ratio_num) + self.eps))).tolist()
+        each_ratio_acc = (self.each_ratio_correct_num / (self.each_ratio_num + self.eps)).tolist()
+        each_ratio_norm_edit_dis = (
+            1 - ((self.each_ratio_norm_edit_dis) / ((self.each_ratio_num) + self.eps))
+        ).tolist()
         each_ratio_num = self.each_ratio_num.tolist()
         self.reset()
         return {
-            'acc': acc,
-            'acc_real': acc_real,
-            'acc_lower': acc_lower,
-            'acc_ignore_space': acc_ignore_space,
-            'acc_ignore_space_lower': acc_ignore_space_lower,
-            'acc_ignore_space_symbol': acc_ignore_space_symbol,
-            'acc_ignore_space_lower_symbol': acc,
-            'each_len_num': each_len_num,
-            'each_len_acc': each_len_acc,
-            'each_len_norm_edit_dis': each_len_norm_edit_dis,
-            'each_ratio_num': each_ratio_num,
-            'each_ratio_acc': each_ratio_acc,
-            'each_ratio_norm_edit_dis': each_ratio_norm_edit_dis,
-            'norm_edit_dis': norm_edit_dis,
-            'cer': cer,
-            'num_samples': num_samples
+            "acc": acc,
+            "acc_real": acc_real,
+            "acc_lower": acc_lower,
+            "acc_ignore_space": acc_ignore_space,
+            "acc_ignore_space_lower": acc_ignore_space_lower,
+            "acc_ignore_space_symbol": acc_ignore_space_symbol,
+            "acc_ignore_space_lower_symbol": acc,
+            "each_len_num": each_len_num,
+            "each_len_acc": each_len_acc,
+            "each_len_norm_edit_dis": each_len_norm_edit_dis,
+            "each_ratio_num": each_ratio_num,
+            "each_ratio_acc": each_ratio_acc,
+            "each_ratio_norm_edit_dis": each_ratio_norm_edit_dis,
+            "norm_edit_dis": norm_edit_dis,
+            "cer": cer,
+            "num_samples": num_samples,
         }
 
     def reset(self):
@@ -278,10 +263,7 @@ class RecMetric:
         self.correct_num_ignore_space_symbol = 0
         self.each_len_num = np.array([0 for _ in range(self.max_len)])
         self.each_len_correct_num = np.array([0 for _ in range(self.max_len)])
-        self.each_len_norm_edit_dis = np.array(
-            [0. for _ in range(self.max_len)])
+        self.each_len_norm_edit_dis = np.array([0.0 for _ in range(self.max_len)])
         self.each_ratio_num = np.array([0 for _ in range(self.max_ratio)])
-        self.each_ratio_correct_num = np.array(
-            [0 for _ in range(self.max_ratio)])
-        self.each_ratio_norm_edit_dis = np.array(
-            [0. for _ in range(self.max_ratio)])
+        self.each_ratio_correct_num = np.array([0 for _ in range(self.max_ratio)])
+        self.each_ratio_norm_edit_dis = np.array([0.0 for _ in range(self.max_ratio)])

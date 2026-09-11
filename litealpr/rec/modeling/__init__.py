@@ -2,7 +2,7 @@ import copy
 
 from .base_recognizer import BaseRecognizer
 
-__all__ = ['build_model']
+__all__ = ["build_model"]
 
 
 def build_model(config):

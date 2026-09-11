@@ -81,6 +81,7 @@ def load_ckpt(model, cfg, optimizer=None, lr_scheduler=None, logger=None):
 def load_pretrained_params(model, pretrained_model, logger):
     if pretrained_model.endswith(".safetensors"):
         from safetensors.torch import load_file
+
         logger.info(f"Loading weights from safetensors: {pretrained_model}")
         checkpoint = load_file(pretrained_model)
     else:
@@ -97,4 +98,3 @@ def load_pretrained_params(model, pretrained_model, logger):
     for name in model_keys:
         if name not in state_dict:
             logger.info(f"{name} is not in pretrained model")
-

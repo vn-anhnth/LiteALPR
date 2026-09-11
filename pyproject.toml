@@ -60,3 +60,32 @@ include = ["litealpr*"]
 
 [tool.setuptools.package-data]
 "*" = ["*.txt", "*.yml", "*.yaml"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py38"
+exclude = [
+    ".git",
+    "__pycache__",
+    "build",
+    "dist",
+    "*.egg-info",
+    "dataset",
+    "weights",
+]
+
+[tool.ruff.lint]
+select = [
+    "E",   # pycodestyle errors
+    "W",   # pycodestyle warnings
+    "F",   # pyflakes
+    "I",   # isort
+]
+ignore = [
+    "E501",  # line too long (handled by formatter)
+    "E741",  # ambiguous variable name
+    "E402",  # module level import not at top of file (needed for sys.path manipulation)
+]
+
+[tool.ruff.lint.isort]
+known-first-party = ["litealpr"]

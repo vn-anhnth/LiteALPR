@@ -10,7 +10,7 @@
 
 🚀 **LiteALPR** is an accurate, extremely fast, and flexible End-to-End License Plate Recognition library.
 
-Unlike traditional ALPR systems that rely on heavy architectures, LiteALPR introduces structural improvements designed specifically for high-throughput applications. Our framework achieves ultra-fast inference speeds without sacrificing accuracy on blurry or degraded license plates through two major architectural optimizations.
+Unlike traditional ALPR (Automatic License Plate Recognition) systems that rely on heavy architectures, LiteALPR introduces structural improvements designed specifically for high-throughput applications. Our framework achieves ultra-fast inference speeds without sacrificing accuracy on blurry or degraded license plates through two major architectural optimizations.
 
 ## 🧩 LiteALPR Pipeline
 The framework is structured as a highly optimized two-stage sequential pipeline:
@@ -66,7 +66,7 @@ from litealpr import LiteALPR
 model = LiteALPR()
 
 # Read the plate
-results = model.read('sample.jpg')
+results = model.read("sample.jpg")
 
 for res in results:
     print(f"Plate Text: {res['text']} | Confidence: {res['score']:.4f}")
@@ -78,7 +78,7 @@ If you only need to locate the license plates without reading the text:
 ```python
 # Disable the recognition model
 model = LiteALPR(use_rec=False)
-boxes = model.detect('sample.jpg')
+boxes = model.detect("sample.jpg")
 print("Detected boxes:", boxes)
 ```
 
@@ -92,7 +92,7 @@ from litealpr import LiteALPR
 model = LiteALPR(use_det=False)
 
 # Pass either image path directly or loaded numpy array
-text, score = model.recognize('sample_crop.jpg')
+text, score = model.recognize("sample_crop.jpg")
 print(f"Text: {text} | Confidence: {score:.4f}")
 ```
 
@@ -103,13 +103,13 @@ LiteALPR seamlessly supports both **ONNX Runtime** (recommended for ultra-fast d
 # Option A: Load optimized ONNX models (Ultra-Fast)
 model = LiteALPR(
     det_model_path="/path/to/your/yolov8n_efficient/best.onnx",
-    rec_model_path="/path/to/your/svtr26_tiny/best.onnx"
+    rec_model_path="/path/to/your/svtr26_tiny/best.onnx",
 )
 
 # Option B: Load native PyTorch checkpoints (.pt / .pth)
 model = LiteALPR(
     det_model_path="/path/to/your/yolov8n_efficient/best.pt",
-    rec_model_path="/path/to/your/svtr26_tiny/best.pth"
+    rec_model_path="/path/to/your/svtr26_tiny/best.pth",
 )
 ```
 > **Note:** The pipeline automatically detects the file format based on extension (`.onnx` vs `.pt`/`.pth`) and initializes the corresponding execution backend.
