@@ -47,7 +47,7 @@ By integrating these specialized components, **LiteALPR** delivers unmatched pro
 # Standard installation (CPU inference)
 pip install litealpr
 
-# With NVIDIA GPU acceleration (CUDA)
+# With GPU acceleration (CUDA)
 pip install litealpr[gpu]
 ```
 
@@ -115,7 +115,7 @@ model = LiteALPR(
 > **Note:** The pipeline automatically detects the file format based on extension (`.onnx` vs `.pt`/`.pth`) and initializes the corresponding execution backend.
 
 ### 5. Selecting Execution Device (CPU vs GPU)
-By default, LiteALPR automatically chooses `cuda:0` if an NVIDIA GPU is detected, and falls back to `cpu` otherwise. You can explicitly select the device using the `device` parameter:
+By default, LiteALPR automatically chooses `cuda:0` if an GPU is detected, and falls back to `cpu` otherwise. You can explicitly select the device using the `device` parameter:
 
 ```python
 # Force execution on CPU

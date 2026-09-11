@@ -10,4 +10,3 @@ huggingface-hub<=0.31
 onnx>=1.13.0
 onnxruntime>=1.13.0
 onnxslim>=0.1.0
-
