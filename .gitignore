@@ -40,3 +40,5 @@ pretrained_models/
 *.pt
 *.pth
 *.safetensors
+
+test_performance/

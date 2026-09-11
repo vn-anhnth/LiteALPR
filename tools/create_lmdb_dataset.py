@@ -97,28 +97,38 @@ def createDataset(data_list, outputPath, checkValid=True):
     print('Created dataset with %d samples' % nSamples)
 
 
+import argparse
+
+def parse_args():
+    parser = argparse.ArgumentParser(description='Create LMDB dataset for ALPR character recognition')
+    parser.add_argument('--data_dir', type=str, default='./dataset/rec',
+                        help='Root directory of the dataset images and labels')
+    parser.add_argument('--label_files', nargs='+', default=['train_labels.txt', 'val_labels.txt', 'test_labels.txt'],
+                        help='List of label files inside data_dir')
+    parser.add_argument('--output_dir', type=str, default='./dataset/rec/lmdb_data',
+                        help='Directory to save output LMDB databases')
+    parser.add_argument('--max_len', type=int, default=800,
+                        help='Maximum character length filter')
+    return parser.parse_args()
+
+
 if __name__ == '__main__':
-    data_dir = './dataset/rec'
+    args = parse_args()
+    data_dir = args.data_dir
+    save_path_root = args.output_dir
 
-    label_file_list = [
-        os.path.join(data_dir, 'train_labels.txt'),
-        os.path.join(data_dir, 'val_labels.txt'),
-        os.path.join(data_dir, 'test_labels.txt')
-    ]
-    save_path_root = os.path.join(data_dir, 'lmdb_data')
-
-    for data_list in label_file_list:
-        file_name = os.path.basename(data_list).split('.')[0].replace('_labels', '')
+    for label_file in args.label_files:
+        data_list_path = os.path.join(data_dir, label_file) if not os.path.isabs(label_file) else label_file
+        file_name = os.path.basename(data_list_path).split('.')[0].replace('_labels', '')
         save_path = os.path.join(save_path_root, file_name)
 
         # Check if the text file exists
-        if not os.path.exists(data_list):
-            print(f"File not found: {data_list}. Skipping...")
+        if not os.path.exists(data_list_path):
+            print(f"File not found: {data_list_path}. Skipping...")
             continue
 
         os.makedirs(save_path, exist_ok=True)
         print(f"Creating LMDB dataset at: {save_path}")
 
-        train_data_list = get_datalist(data_dir, data_list, 800)
-
+        train_data_list = get_datalist(data_dir, data_list_path, args.max_len)
         createDataset(train_data_list, save_path)

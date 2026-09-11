@@ -8,7 +8,7 @@ class EfficientRCTCDecoder(nn.Module):
     """
     def __init__(self,
                  in_channels,
-                 out_channels=6625,
+                 out_channels=38,
                  bottleneck_channels=128,
                  return_feats=False,
                  **kwargs):

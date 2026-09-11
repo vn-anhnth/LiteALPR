@@ -41,38 +41,52 @@ class LiteALPR:
 
         self.det_model = None
         self.rec_model = None
+        self.rec_session = None
+        self.rec_input_name = None
         self.post_process_class = None
 
-        # 1. Initialize DET (YOLO)
+        # 1. Initialize DET (YOLO ONNX by default)
         if use_det:
             if det_model_path is None:
-                det_model_path = download_from_hf("yolov8n_efficient/best.pt")
+                det_model_path = download_from_hf("yolov8n_efficient/best.onnx")
 
             print(f"[LiteALPR] Loading Detection Model: {det_model_path}")
-            self.det_model = YOLO(det_model_path)
-            self.det_model.to(self.device)
-            self.det_model.fuse()
+            if str(det_model_path).endswith('.onnx'):
+                self.det_model = YOLO(det_model_path, task='detect')
+            else:
+                self.det_model = YOLO(det_model_path)
+                self.det_model.to(self.device)
+                self.det_model.fuse()
 
-        # 2. Initialize REC (SVTR26)
+        # 2. Initialize REC (SVTR26 ONNX by default)
         if use_rec:
             if rec_model_path is None:
-                rec_model_path = download_from_hf("svtr26_tiny/best.pth")
+                rec_model_path = download_from_hf("svtr26_tiny/best.onnx")
 
             print(f"[LiteALPR] Loading Recognition Model: {rec_model_path}")
-            checkpoint = torch.load(rec_model_path, map_location='cpu')
-            cfg = checkpoint['config']
-
-            # Monkey patch the dictionary path
             dict_path = os.path.join(os.path.dirname(__file__), 'license_plate_dict.txt')
-            cfg['Global']['character_dict_path'] = dict_path
 
-            self.post_process_class = build_post_process(cfg['PostProcess'], cfg['Global'])
-            cfg['Architecture']['Decoder']['out_channels'] = self.post_process_class.get_character_num()
+            if str(rec_model_path).endswith('.onnx'):
+                import onnxruntime as ort
+                from litealpr.rec.postprocess.ctc_postprocess import CTCLabelDecode
+                self.post_process_class = CTCLabelDecode(character_dict_path=dict_path, use_space_char=False)
 
-            self.rec_model = build_model(cfg['Architecture'])
-            self.rec_model.load_state_dict(checkpoint['state_dict'], strict=True)
-            self.rec_model.to(self.device)
-            self.rec_model.eval()
+                providers = ['CUDAExecutionProvider', 'CPUExecutionProvider'] if 'cuda' in str(self.device) else ['CPUExecutionProvider']
+                self.rec_session = ort.InferenceSession(str(rec_model_path), providers=providers)
+                self.rec_input_name = self.rec_session.get_inputs()[0].name
+                self.rec_model = True  # Flag to indicate model is loaded
+            else:
+                checkpoint = torch.load(rec_model_path, map_location='cpu')
+                cfg = checkpoint['config']
+                cfg['Global']['character_dict_path'] = dict_path
+
+                self.post_process_class = build_post_process(cfg['PostProcess'], cfg['Global'])
+                cfg['Architecture']['Decoder']['out_channels'] = self.post_process_class.get_character_num()
+
+                self.rec_model = build_model(cfg['Architecture'])
+                self.rec_model.load_state_dict(checkpoint['state_dict'], strict=True)
+                self.rec_model.to(self.device)
+                self.rec_model.eval()
 
         if self.det_model or self.rec_model:
             print("[LiteALPR] Models loaded successfully!")
@@ -123,7 +137,8 @@ class LiteALPR:
         if isinstance(img, str):
             img = cv2.imread(img)
 
-        det_results = self.det_model(img, verbose=False, conf=conf_thresh)[0]
+        device_arg = 0 if 'cuda' in str(self.device) else 'cpu'
+        det_results = self.det_model(img, verbose=False, conf=conf_thresh, device=device_arg)[0]
         boxes = det_results.boxes.data.cpu().numpy() # [x1, y1, x2, y2, conf, cls]
 
         results = []
@@ -140,12 +155,24 @@ class LiteALPR:
         if self.rec_model is None:
             raise ValueError("Recognition model not loaded! Initialize with rec_model_path.")
 
+        if isinstance(crop_img, str):
+            crop_img = cv2.imread(crop_img)
+            if crop_img is None:
+                raise ValueError(f"Could not read image: {crop_img}")
+
         if crop_img.size == 0:
             return "", 0.0
 
         tensor = self._preprocess_crop(crop_img)
-        with torch.no_grad():
-            preds = self.rec_model(tensor)
+
+        if self.rec_session is not None:
+            # ONNX Runtime Inference
+            input_numpy = tensor.detach().cpu().numpy()
+            preds = self.rec_session.run(None, {self.rec_input_name: input_numpy})[0]
+        else:
+            # PyTorch Model Inference
+            with torch.no_grad():
+                preds = self.rec_model(tensor)
 
         post_result = self.post_process_class(preds)
         text, score = post_result[0]
@@ -159,9 +186,12 @@ class LiteALPR:
         if self.det_model is None or self.rec_model is None:
             raise ValueError("End-to-End read() requires BOTH det_model_path and rec_model_path to be loaded.")
 
-        img = cv2.imread(image_path)
-        if img is None:
-            raise ValueError(f"Could not read image: {image_path}")
+        if isinstance(image_path, str):
+            img = cv2.imread(image_path)
+            if img is None:
+                raise ValueError(f"Could not read image: {image_path}")
+        else:
+            img = image_path
 
         boxes = self.detect(img, conf_thresh)
         final_results = []

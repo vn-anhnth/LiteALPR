@@ -31,10 +31,10 @@ setup(
     description='Accurate and Efficient General OCR System',
     long_description=read_file('README.md'),
     long_description_content_type='text/markdown',
-    author='vn-anhnth',
-    author_email='anhlone3@gmail.com',
+    author='Anh Nguyen',
+    author_email='anhnth.25ai@ou.edu.vn',
     url='https://github.com/vn-anhnth/LiteALPR',
-    license='Apache License 2.0',
+    license='GNU Affero General Public License v3.0 (AGPL-3.0)',
 
     # Package configuration
     packages=find_packages(include=['litealpr', 'litealpr.*']),
@@ -43,10 +43,15 @@ setup(
         'opencv-python<=5.0.0.93',
         'PyYAML<=6.0.3',
         'huggingface-hub<=0.31',
+        'onnxruntime',
         'torch>=1.7.0',
         'torchvision',
         'ultralytics<=8.3.99',
     ],
+    extras_require={
+        'gpu': ['onnxruntime-gpu>=1.13.0'],
+        'dev': ['pytest', 'black', 'flake8'],
+    },
     include_package_data=True,
 
     # Python version requirement
@@ -57,7 +62,7 @@ setup(
         'Development Status :: 4 - Beta',
         'Intended Audience :: Developers',
         'Intended Audience :: Science/Research',
-        'License :: OSI Approved :: Apache Software License',
+        'License :: OSI Approved :: GNU Affero General Public License v3 (AGPLv3)',
         'Programming Language :: Python :: 3.8',
         'Programming Language :: Python :: 3.9',
         'Programming Language :: Python :: 3.10',

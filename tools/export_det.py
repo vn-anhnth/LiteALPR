@@ -36,29 +36,21 @@ def main():
     output_name = f"best_{args.imgsz}.onnx"
     save_path = os.path.join(output_dir, output_name)
 
-    # Export using legacy PyTorch ONNX exporter
-    print(f"[INFO] Exporting to ONNX (imgsz={args.imgsz}, opset={opset_version}, FP32, dynamo=False)...")
-    torch.onnx.export(
-        model,
-        dummy_input,
-        save_path,
-        export_params=True,
-        opset_version=opset_version,
-        do_constant_folding=True,
-        input_names=["input"],
-        output_names=["output"],
-        dynamic_axes=None,
-        dynamo=False,
+    print(f"[INFO] Exporting to ONNX (imgsz={args.imgsz}, opset={opset_version}, FP32)...")
+    exported_path = yolo.export(
+        format="onnx",
+        imgsz=args.imgsz,
+        opset=opset_version,
+        dynamic=False,
+        simplify=True
     )
 
-    # Verify ONNX
-    print("[INFO] Checking ONNX model...")
-    model_onnx = onnx.load(save_path)
-    onnx.checker.check_model(model_onnx)
-    actual_opset = model_onnx.opset_import[0].version
+    # Ultralytics exports as best.onnx; rename to save_path (e.g. best_416.onnx)
+    if os.path.exists(save_path):
+        os.remove(save_path)
+    os.replace(exported_path, save_path)
 
     print("[INFO] ONNX export successful!")
-    print(f"[INFO] ONNX opset: {actual_opset}")
     print(f"[INFO] ONNX model: {save_path}")
 
 

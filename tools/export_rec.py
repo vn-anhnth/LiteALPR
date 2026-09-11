@@ -54,7 +54,7 @@ def main():
         dynamic_axes = {'input': {0: 'batch_size', 2: 'height', 3: 'width'}, 'output': {0: 'batch_size', 1: 'width'}}
 
     # Export using legacy PyTorch ONNX exporter
-    print(f"[INFO] Exporting to ONNX (input={args.imgH}x{args.imgW}, opset={opset_version}, FP32, dynamic={args.dynamic}, dynamo=False)...")
+    print(f"[INFO] Exporting to ONNX (input={args.imgH}x{args.imgW}, opset={opset_version}, FP32, dynamic={args.dynamic})...")
     torch.onnx.export(
         model,
         dummy_input,
@@ -64,8 +64,7 @@ def main():
         do_constant_folding=True,
         input_names=['input'],
         output_names=['output'],
-        dynamic_axes=dynamic_axes,
-        dynamo=False
+        dynamic_axes=dynamic_axes
     )
 
     # Verify ONNX

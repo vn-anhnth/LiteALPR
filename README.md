@@ -44,7 +44,11 @@ By integrating these specialized components, **LiteALPR** delivers unmatched pro
 ## 🛠 Installation
 
 ```bash
+# Standard installation (CPU inference)
 pip install litealpr
+
+# With NVIDIA GPU acceleration (CUDA)
+pip install litealpr[gpu]
 ```
 
 *(Note: To use the auto-download feature for pre-trained weights, please ensure `huggingface_hub` is installed).*
@@ -81,22 +85,47 @@ print("Detected boxes:", boxes)
 ### 3. Flexible API: Recognize Only
 If you already have a cropped image of a license plate and just want to read the characters:
 ```python
+import cv2
+from litealpr import LiteALPR
+
 # Disable the detection model
 model = LiteALPR(use_det=False)
 
-crop_img = cv2.imread('sample_crop.jpg')
-text, score = model.recognize(crop_img)
-print(f"Text: {text} (Score: {score})")
+# Pass either image path directly or loaded numpy array
+text, score = model.recognize('sample_crop.jpg')
+print(f"Text: {text} | Confidence: {score:.4f}")
 ```
 
 ### 4. Using Custom Local Weights
-If you have fine-tuned your own models or downloaded the weights locally, you can easily load them:
+LiteALPR seamlessly supports both **ONNX Runtime** (recommended for ultra-fast deployment) and **PyTorch** checkpoints (`.pt` / `.pth`):
+
 ```python
+# Option A: Load optimized ONNX models (Ultra-Fast)
+model = LiteALPR(
+    det_model_path="/path/to/your/yolov8n_efficient/best.onnx",
+    rec_model_path="/path/to/your/svtr26_tiny/best.onnx"
+)
+
+# Option B: Load native PyTorch checkpoints (.pt / .pth)
 model = LiteALPR(
     det_model_path="/path/to/your/yolov8n_efficient/best.pt",
     rec_model_path="/path/to/your/svtr26_tiny/best.pth"
 )
 ```
+> **Note:** The pipeline automatically detects the file format based on extension (`.onnx` vs `.pt`/`.pth`) and initializes the corresponding execution backend.
+
+### 5. Selecting Execution Device (CPU vs GPU)
+By default, LiteALPR automatically chooses `cuda:0` if an NVIDIA GPU is detected, and falls back to `cpu` otherwise. You can explicitly select the device using the `device` parameter:
+
+```python
+# Force execution on CPU
+model = LiteALPR(device="cpu")
+
+# Explicitly use GPU (CUDA)
+model = LiteALPR(device="cuda:0")
+```
+* When using `device="cuda:0"` with ONNX models, LiteALPR utilizes `CUDAExecutionProvider`. Ensure `onnxruntime-gpu` is installed (`pip install litealpr[gpu]`).
+* When using `device="cpu"`, LiteALPR seamlessly utilizes `CPUExecutionProvider` across all stages.
 
 ## 🏋️ Training & Evaluation
 
@@ -223,4 +252,4 @@ python tools/export_rec.py -m output/rec/svtr26_tiny/train/best.pth --save_path 
 - **Datasets**: Our evaluation utilizes datasets from [Brazil (RodoSol-ALPR)](https://github.com/raysonlaroca/rodosol-alpr-dataset), [China (CBLPRD-330k)](https://github.com/SunlifeV/CBLPRD-330k), and [Vietnam](https://www.kaggle.com/datasets/duydieunguyen/licenseplates) public collections alongside self-collected traffic footage. We sincerely thank the original authors of these datasets for advancing the ALPR research community.
 
 ## 📧 Contact
-For any questions or issues, please open an issue or contact: `anhlone3@gmail.com`.
+For any questions or issues, please open an issue or contact: `anhnth.25ai@ou.edu.vn`.
