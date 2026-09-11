@@ -1,0 +1,23 @@
+cff-version: 1.2.0
+message: "If you use this software, please cite it as below."
+authors:
+- family-names: "Nguyen"
+  given-names: "Anh"
+  orcid: "https://orcid.org/0009-0006-2692-5708"
+- family-names: "Hoang"
+  given-names: "Vinh Truong"
+  orcid: "https://orcid.org/0000-0002-3464-3894"
+title: "LiteALPR: An ultra-fast and accurate open-source license plate recognition library"
+version: 0.1.4
+date-released: 2026-09-11
+url: "https://github.com/vn-anhnth/LiteALPR"
+preferred-citation:
+  type: article
+  authors:
+  - family-names: "Nguyen"
+    given-names: "Anh"
+  - family-names: "Hoang"
+    given-names: "Vinh Truong"
+  title: "LiteALPR: An ultra-fast and accurate open-source license plate recognition library"
+  journal: "SoftwareX"
+  year: 2026
