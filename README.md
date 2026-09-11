@@ -254,5 +254,8 @@ python tools/export_rec.py -m output/rec/svtr26_tiny/train/best.pth --save_path 
   - Read the [SVTRv2 Paper](https://arxiv.org/html/2411.15858v1)
 - **Datasets**: Our evaluation utilizes datasets from [Brazil (RodoSol-ALPR)](https://github.com/raysonlaroca/rodosol-alpr-dataset), [China (CBLPRD-330k)](https://github.com/SunlifeV/CBLPRD-330k), and [Vietnam](https://www.kaggle.com/datasets/duydieunguyen/licenseplates) public collections alongside self-collected traffic footage. We sincerely thank the original authors of these datasets for advancing the ALPR research community.
 
+## 📜 License
+This project is open-sourced under the [GNU Affero General Public License v3.0 (AGPL-3.0)](LICENSE).
+
 ## 📧 Contact
 For any questions or issues, please open an issue or contact: `anhnth.25ai@ou.edu.vn`.
