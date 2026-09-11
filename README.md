@@ -12,6 +12,34 @@
 
 Unlike traditional ALPR (Automatic License Plate Recognition) systems that rely on heavy architectures, LiteALPR introduces structural improvements designed specifically for high-throughput applications. Our framework achieves ultra-fast inference speeds without sacrificing accuracy on blurry or degraded license plates through two major architectural optimizations.
 
+---
+
+## 📑 Table of Contents
+
+- [🧩 LiteALPR Pipeline](#-litealpr-pipeline)
+  - [1. YOLOv8n-Efficient for Fast Detection](#1-yolov8n-efficient-for-fast-detection)
+  - [2. SVTR26-Tiny for Lightning-Fast Recognition](#2-svtr26-tiny-for-lightning-fast-recognition)
+- [🛠 Installation](#-installation)
+- [⚡ Quick Start](#-quick-start)
+  - [1. End-to-End Recognition (Detect & Read)](#1-end-to-end-recognition-detect--read)
+  - [2. Flexible API: Detect Only](#2-flexible-api-detect-only)
+  - [3. Flexible API: Recognize Only](#3-flexible-api-recognize-only)
+  - [4. Using Custom Local Weights](#4-using-custom-local-weights)
+  - [5. Selecting Execution Device (CPU vs GPU)](#5-selecting-execution-device-cpu-vs-gpu)
+- [🏋️ Training & Evaluation](#️-training--evaluation)
+  - [0. Environment Setup](#0-environment-setup)
+  - [1. Model Weights Preparation](#1-model-weights-preparation)
+  - [2. Data Preparation (Create LMDB)](#2-data-preparation-create-lmdb)
+  - [3. Training (Det & Rec)](#3-training-det--rec)
+  - [4. Evaluation (Validation)](#4-evaluation-validation)
+  - [5. Batch Inference](#5-batch-inference)
+  - [6. Export to ONNX](#6-export-to-onnx)
+- [🤝 Acknowledgements](#-acknowledgements)
+- [📜 License](#-license)
+- [📧 Contact](#-contact)
+
+---
+
 ## 🧩 LiteALPR Pipeline
 The framework is structured as a highly optimized two-stage sequential pipeline:
 
