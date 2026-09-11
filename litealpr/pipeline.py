@@ -50,7 +50,7 @@ class LiteALPR:
         # 1. Initialize DET (YOLO ONNX by default)
         if use_det:
             if det_model_path is None:
-                det_model_path = download_from_hf("yolov8n_efficient/best.onnx")
+                det_model_path = download_from_hf("yolov8n_efficient/best_416.onnx")
 
             print(f"[LiteALPR] Loading Detection Model: {det_model_path}")
             if str(det_model_path).endswith(".onnx"):
