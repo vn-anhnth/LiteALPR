@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "litealpr"
-version = "0.1.1"
+version = "0.1.2"
 description = "Accurate and Efficient General OCR System for License Plates"
 readme = "README.md"
 requires-python = ">=3.8"
@@ -13,12 +13,20 @@ authors = [
     {name = "Anh Nguyen", email = "anhnth.25ai@ou.edu.vn"}
 ]
 keywords = [
+    "alpr",
     "ocr",
-    "license plate recognition",
+    "automatic-license-plate-recognition",
+    "automatic-number-plate-recognition",
+    "computer-vision",
+    "license-plate-recognition",
+    "onnxruntime",
+    "plate-recognition",
     "yolov8",
+    "python",
+    "litealpr",
+    "plate-detection",
+    "realtime",
     "svtr",
-    "deep learning",
-    "computer vision"
 ]
 classifiers = [
     "Development Status :: 4 - Beta",
@@ -39,10 +47,12 @@ dependencies = [
     "torch>=1.7.0",
     "torchvision",
     "ultralytics<=8.3.99",
-    "onnxruntime",
 ]
 
 [project.optional-dependencies]
+cpu = [
+    "onnxruntime>=1.13.0",
+]
 gpu = [
     "onnxruntime-gpu>=1.13.0",
 ]

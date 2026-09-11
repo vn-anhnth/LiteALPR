@@ -24,7 +24,7 @@ def get_version():
         for line in f:
             if line.startswith("__version__"):
                 return line.split("=")[1].strip().strip('"').strip("'")
-    return "0.1.1"
+    return "0.1.2"
 
 
 setup(
@@ -40,16 +40,16 @@ setup(
     # Package configuration
     packages=find_packages(include=["litealpr", "litealpr.*"]),
     install_requires=[
-        "numpy<2.0",
+        "numpy",
         "opencv-python<=5.0.0.93",
         "PyYAML<=6.0.3",
         "huggingface-hub<=0.31",
-        "onnxruntime",
         "torch>=1.7.0",
         "torchvision",
         "ultralytics<=8.3.99",
     ],
     extras_require={
+        "cpu": ["onnxruntime>=1.13.0"],
         "gpu": ["onnxruntime-gpu>=1.13.0"],
         "dev": ["pytest", "black", "flake8"],
     },
@@ -71,7 +71,7 @@ setup(
         "Topic :: Software Development :: Libraries :: Python Modules",
     ],
     # Keywords
-    keywords="ocr, optical character recognition, text detection, text recognition, document parsing, deep learning, computer vision",
+    keywords="alpr, ocr, automatic-license-plate-recognition, automatic-number-plate-recognition, computer-vision, license-plate-recognition, onnxruntime, plate-recognition, yolov8, python, litealpr, plate-detection, realtime, svtr",
     # Project URLs
     project_urls={
         "Bug Reports": "https://github.com/vn-anhnth/LiteALPR/issues",

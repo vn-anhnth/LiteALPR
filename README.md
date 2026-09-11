@@ -73,7 +73,7 @@ By integrating these specialized components, **LiteALPR** delivers unmatched pro
 
 ```bash
 # Standard installation (CPU inference)
-pip install litealpr
+pip install litealpr[cpu]
 
 # With GPU acceleration (CUDA)
 pip install litealpr[gpu]

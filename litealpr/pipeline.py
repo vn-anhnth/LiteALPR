@@ -31,6 +31,31 @@ def download_from_hf(filename):
         )
 
 
+def ensure_onnxruntime(device):
+    """Ensure onnxruntime or onnxruntime-gpu is available, auto-installing CPU version if missing."""
+    try:
+        import onnxruntime as ort
+
+        return ort
+    except ImportError:
+        is_cuda = "cuda" in str(device)
+        pkg = "onnxruntime-gpu" if is_cuda else "onnxruntime"
+        print(f"[LiteALPR] {pkg} not found. Attempting automatic installation...")
+        import subprocess
+
+        try:
+            subprocess.check_call([sys.executable, "-m", "pip", "install", pkg])
+            import onnxruntime as ort
+
+            return ort
+        except Exception as e:
+            msg = (
+                f"\n[LiteALPR] Failed to auto-install {pkg} ({e}).\n"
+                f"Please manually run: pip install {'litealpr[gpu]' if is_cuda else 'litealpr[cpu]'}"
+            )
+            raise ImportError(msg) from e
+
+
 class LiteALPR:
     def __init__(
         self, use_det=True, use_rec=True, det_model_path=None, rec_model_path=None, device=None
@@ -69,7 +94,7 @@ class LiteALPR:
             dict_path = os.path.join(os.path.dirname(__file__), "license_plate_dict.txt")
 
             if str(rec_model_path).endswith(".onnx"):
-                import onnxruntime as ort
+                ort = ensure_onnxruntime(self.device)
 
                 from litealpr.rec.postprocess.ctc_postprocess import CTCLabelDecode
 
