@@ -21,11 +21,10 @@ Unlike traditional ALPR (Automatic License Plate Recognition) systems that rely 
   - [2. SVTR26-Tiny for Lightning-Fast Recognition](#2-svtr26-tiny-for-lightning-fast-recognition)
 - [🛠 Installation](#-installation)
 - [⚡ Quick Start](#-quick-start)
-  - [1. End-to-End Recognition (Detect & Read)](#1-end-to-end-recognition-detect--read)
+  - [1. End-to-End Recognition (CPU & GPU)](#1-end-to-end-recognition-cpu--gpu)
   - [2. Flexible API: Detect Only](#2-flexible-api-detect-only)
   - [3. Flexible API: Recognize Only](#3-flexible-api-recognize-only)
   - [4. Using Custom Local Weights](#4-using-custom-local-weights)
-  - [5. Selecting Execution Device (CPU vs GPU)](#5-selecting-execution-device-cpu-vs-gpu)
 - [🏋️ Training & Evaluation](#️-training--evaluation)
   - [0. Environment Setup](#0-environment-setup)
   - [1. Model Weights Preparation](#1-model-weights-preparation)
@@ -86,21 +85,26 @@ pip install litealpr[gpu]  # CUDA GPU acceleration
 
 LiteALPR automatically downloads the best pre-trained models from our HuggingFace repository the first time you run it. You don't need to manually configure any paths!
 
-### 1. End-to-End Recognition (Detect & Read)
+### 1. End-to-End Recognition (CPU & GPU)
 
 ```python
 from litealpr import LiteALPR
 
-# Initialize (auto-downloads weights if not found)
+# Option A: Automatic device selection (GPU if available, else CPU)
 model = LiteALPR()
 
-# Read the plate
+# Option B: Explicitly select target execution device
+# model = LiteALPR(device="cpu")     # Force CPU execution
+# model = LiteALPR(device="cuda:0")  # CUDA GPU acceleration
+
+# Read the license plate (auto-downloads pre-trained weights if not found)
 results = model.read("sample.jpg")
 
 for res in results:
     print(f"Plate Text: {res['text']} | Confidence: {res['score']:.4f}")
     print(f"Bounding Box: {res['box']}")
 ```
+> **Device Selection:** By default, LiteALPR uses `device="cuda:0"` if a GPU is available, and seamlessly falls back to `device="cpu"` otherwise. When using GPU acceleration with ONNX models, ensure `litealpr[gpu]` is installed (`pip install litealpr[gpu]`).
 
 ### 2. Flexible API: Detect Only
 If you only need to locate the license plates without reading the text:
@@ -142,19 +146,6 @@ model = LiteALPR(
 )
 ```
 > **Note:** The pipeline automatically detects the file format based on extension (`.onnx` vs `.pt`/`.pth`) and initializes the corresponding execution backend.
-
-### 5. Selecting Execution Device (CPU vs GPU)
-By default, LiteALPR automatically chooses `cuda:0` if an GPU is detected, and falls back to `cpu` otherwise. You can explicitly select the device using the `device` parameter:
-
-```python
-# Force execution on CPU
-model = LiteALPR(device="cpu")
-
-# Explicitly use GPU (CUDA)
-model = LiteALPR(device="cuda:0")
-```
-* When using `device="cuda:0"` with ONNX models, LiteALPR utilizes `CUDAExecutionProvider`. Ensure `onnxruntime-gpu` is installed (`pip install litealpr[gpu]`).
-* When using `device="cpu"`, LiteALPR seamlessly utilizes `CPUExecutionProvider` across all stages.
 
 ## 🏋️ Training & Evaluation
 
