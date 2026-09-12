@@ -72,14 +72,15 @@ By integrating these specialized components, **LiteALPR** delivers unmatched pro
 ## 🛠 Installation
 
 ```bash
-# Standard installation (CPU inference)
-pip install litealpr[cpu]
+# Standard installation (auto-detects & configures runtime at first run)
+pip install litealpr
 
-# With GPU acceleration (CUDA)
-pip install litealpr[gpu]
+# Or explicitly specify your target runtime environment:
+pip install litealpr[cpu]  # CPU inference
+pip install litealpr[gpu]  # CUDA GPU acceleration
 ```
 
-*(Note: To use the auto-download feature for pre-trained weights, please ensure `huggingface_hub` is installed).*
+*(Note: When using standard `pip install litealpr`, LiteALPR automatically detects your device hardware and configures the corresponding ONNX Runtime execution engine and Hugging Face pre-trained weights upon initial execution).*
 
 ## ⚡ Quick Start
 

@@ -32,15 +32,16 @@ def download_from_hf(filename):
 
 
 def ensure_onnxruntime(device):
-    """Ensure onnxruntime or onnxruntime-gpu is available, auto-installing CPU version if missing."""
+    """Ensure onnxruntime or onnxruntime-gpu is available, auto-installing if missing."""
     try:
         import onnxruntime as ort
 
         return ort
     except ImportError:
         is_cuda = "cuda" in str(device)
-        pkg = "onnxruntime-gpu" if is_cuda else "onnxruntime"
-        print(f"[LiteALPR] {pkg} not found. Attempting automatic installation...")
+        pkg = "onnxruntime-gpu>=1.13.0" if is_cuda else "onnxruntime>=1.13.0"
+        pkg_name = "onnxruntime-gpu" if is_cuda else "onnxruntime"
+        print(f"[LiteALPR] {pkg_name} not found. Attempting automatic installation ({pkg})...")
         import subprocess
 
         try:
