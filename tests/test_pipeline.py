@@ -114,6 +114,35 @@ class TestLiteALPRPipeline(unittest.TestCase):
         results = alpr_onnx.read(dummy_img)
         self.assertIsInstance(results, list)
 
+    def test_detect_only_mode(self):
+        # Test use_rec=False
+        alpr_det = LiteALPR(use_rec=False, device="cpu")
+        dummy_img = np.ones((640, 640, 3), dtype=np.uint8) * 255
+        boxes = alpr_det.detect(dummy_img)
+        self.assertIsInstance(boxes, list)
+        self.assertIsNone(alpr_det.rec_model)
+
+        # Calling read() or recognize() when recognition model is missing must raise ValueError
+        with self.assertRaises(ValueError):
+            alpr_det.recognize(np.ones((32, 128, 3), dtype=np.uint8))
+        with self.assertRaises(ValueError):
+            alpr_det.read(dummy_img)
+
+    def test_recognize_only_mode(self):
+        # Test use_det=False
+        alpr_rec = LiteALPR(use_det=False, device="cpu")
+        dummy_crop = np.ones((32, 128, 3), dtype=np.uint8) * 255
+        text, score = alpr_rec.recognize(dummy_crop)
+        self.assertIsInstance(text, str)
+        self.assertIsInstance(score, float)
+        self.assertIsNone(alpr_rec.det_model)
+
+        # Calling read() or detect() when detection model is missing must raise ValueError
+        with self.assertRaises(ValueError):
+            alpr_rec.detect(np.ones((640, 640, 3), dtype=np.uint8))
+        with self.assertRaises(ValueError):
+            alpr_rec.read(dummy_crop)
+
 
 if __name__ == "__main__":
     unittest.main()

@@ -45,3 +45,4 @@ pretrained_models/
 *.safetensors
 
 test_performance/
+site/

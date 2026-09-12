@@ -1,6 +1,7 @@
 # LiteALPR
 
 [![PyPI version](https://badge.fury.io/py/litealpr.svg)](https://pypi.org/project/litealpr/)
+[![Documentation](https://img.shields.io/badge/docs-mkdocs--material-blue.svg)](https://vn-anhnth.github.io/LiteALPR/)
 
 <p align="center">
   <img src="https://raw.githubusercontent.com/vn-anhnth/LiteALPR/main/docs/figures/intro1.png" width="350">

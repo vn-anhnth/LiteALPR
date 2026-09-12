@@ -1,0 +1,38 @@
+name: Deploy Docs
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.10"
+
+      - name: Configure Git Credentials
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+      - name: Install documentation dependencies
+        run: |
+          pip install mkdocs-material mike
+
+      - name: Fetch gh-pages branch
+        run: |
+          git fetch origin gh-pages --depth=1 || true
+
+      - name: Deploy versioned docs with Mike
+        run: |
+          mike deploy --push --update-aliases 0.1.4 latest
+          mike set-default --push latest
