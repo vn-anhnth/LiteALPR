@@ -745,10 +745,11 @@
 </table>
 <h3 id="key-improvements">Key Improvements</h3>
 <ul>
-<li>Reduces parameter count from <strong>3.01M</strong> down to <strong>2.00M</strong> (33.5% reduction).</li>
+<li>Reduces parameter count from <strong>3.01M</strong> down to <strong>2.00M</strong> (<strong>33.5% reduction</strong>).</li>
 <li>Reduces computational complexity from <strong>8.19 GFLOPs</strong> down to <strong>5.69 GFLOPs</strong>.</li>
-<li>Accelerates CPU detection latency from <strong>40.92 ms</strong> to <strong>17.45 ms</strong> (<strong>2.35× speedup</strong>).</li>
-<li>Preserves high localization precision: <strong>99.45% mAP@50</strong> and <strong>88.41% mAP@50-95</strong>.</li>
+<li>Latency on NVIDIA RTX 3060: <strong>~9.02 ms</strong> (down from ~10.02 ms in baseline, <strong>1.11× faster</strong>).</li>
+<li>Latency on AMD Ryzen 5 CPU: <strong>~17.45 ms</strong> (down from ~40.92 ms in baseline, <strong>2.35× faster</strong>).</li>
+<li>Preserves high localization precision: <strong>99.45% <span class="arithmatex">\(\text{mAP}_{50}\)</span></strong> and <strong>88.41% <span class="arithmatex">\(\text{mAP}_{50-95}\)</span></strong>.</li>
 </ul>
 <hr />
 <h2 id="2-svtr26-tiny-for-lightning-fast-recognition">2. SVTR26-Tiny for Lightning-Fast Recognition</h2>
@@ -785,10 +786,10 @@
 </table>
 <h3 id="benchmark-impact">Benchmark Impact</h3>
 <ul>
-<li>Model size: <strong>4.22M parameters</strong> (down from 5.11M in baseline SVTRv2).</li>
-<li>Latency on NVIDIA RTX 3060: <strong>5.03 ms</strong>.</li>
-<li>Latency on AMD Ryzen 5 CPU: <strong>8.32 ms</strong> (down from 19.82 ms, <strong>2.38× faster</strong>).</li>
-<li>Sequence Accuracy: <strong>89.15%</strong> with Character Error Rate (CER) of <strong>3.28%</strong>.</li>
+<li>Model size: <strong>4.22M parameters</strong> (down from <strong>5.11M</strong> in baseline SVTRv2, <strong>17.4% reduction</strong>).</li>
+<li>Latency on NVIDIA RTX 3060: <strong>~5.03 ms</strong> (down from ~5.85 ms in baseline, <strong>1.16× faster</strong>).</li>
+<li>Latency on AMD Ryzen 5 CPU: <strong>~8.32 ms</strong> (down from ~10.84 ms in baseline, <strong>1.30× faster</strong>).</li>
+<li>Sequence Accuracy: <strong>89.15%</strong> with Character Error Rate (CER) of <strong>3.28%</strong> (compared to 88.25% accuracy and 3.56% CER in baseline).</li>
 </ul>
 
 
