@@ -81,6 +81,8 @@ print(f"Plate Text: {text} | Confidence: {score:.4f}")
 
 ## 4. Custom Local Models & Backends
 
+> **Note:** To download the pre-trained `.onnx` weights manually for offline usage, you can fetch them directly from our [HuggingFace Repository](https://huggingface.co/anhone3/LiteALPR/tree/main).
+
 LiteALPR automatically supports both **ONNX Runtime** and **PyTorch** checkpoints based on the file extension:
 
 ### Using ONNX Models (Recommended)

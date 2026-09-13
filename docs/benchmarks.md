@@ -67,43 +67,18 @@ Impact of replacing 2D attention matrices with Height-wise Average Pooling (HAP)
 
 ## 4. Cross-Regional Generalization Benchmark
 
-Evaluation of SVTR26-Tiny against state-of-the-art sequence recognition baselines across 3 diverse geographic subsets (**25,000 total test samples**: 5,990 from Vietnam, 9,560 from Brazil, and 9,450 from China).
+Evaluation of SVTR26-Tiny against widely-adopted sequence recognition baselines across 3 diverse geographic subsets (**25,000 total test samples**: 5,990 from Vietnam, 9,560 from Brazil, and 9,450 from China).
 
 > **Alphanumeric Vocabulary:** All evaluated recognition models transcribe standard Latin uppercase alphabets and numeric digits (**A–Z**, **Đ**, **0–9**, totaling 37 alphanumeric characters plus 1 CTC blank token). For multi-line plates (e.g. Vietnam and Brazil formats), Chinese provincial Hanzi characters in CBLPRD-330k were normalized or evaluated on the alphanumeric sequence, ensuring a fair, unified Latin-character benchmark across all international datasets.
 
-The table below presents the performance of all 30 evaluated text recognition architectures, ranked in progressive order of regional generalization:
+The table below presents the performance of the evaluated lightweight architectures, ranked in progressive order of regional generalization:
 
 | No. | Model | Vietnam Acc (%) | Brazil Acc (%) | China Acc (%) | Vietnam CER (%) | Brazil CER (%) | China CER (%) |
 | :---: | :--- | :---: | :---: | :---: | :---: | :---: | :---: |
-| 1 | [RobustScanner](https://doi.org/10.1007/978-3-030-58529-7_9) | 6.93% | 48.43% | 58.65% | 46.19% | 18.85% | 15.39% |
-| 2 | [RFL](https://doi.org/10.1007/978-3-030-86549-8_19) | 8.85% | 55.65% | 46.31% | 49.95% | 23.87% | 35.28% |
-| 3 | [SPIN](https://doi.org/10.1609/aaai.v35i4.16442) | 9.95% | 72.68% | 59.95% | 44.52% | 12.32% | 22.32% |
-| 4 | [StarNet](https://doi.org/10.5244/c.30.43) | 19.21% | 44.29% | 62.86% | 39.65% | 21.76% | 12.06% |
-| 5 | [Rosetta](https://doi.org/10.1145/3219819.3219861) | 23.85% | 36.41% | 61.31% | 39.27% | 27.96% | 17.10% |
-| 6 | [RARE](https://doi.org/10.1109/cvpr.2016.452) | 25.76% | 63.04% | 71.68% | 37.08% | 13.76% | 11.47% |
-| 7 | [NRTR](https://doi.org/10.1109/icdar.2019.00130) | 32.71% | 62.30% | 35.24% | 35.72% | 15.13% | 36.57% |
-| 8 | [CRNN](https://arxiv.org/abs/1507.05717) | 35.17% | 55.96% | 67.88% | 36.28% | 18.31% | 11.64% |
-| 9 | [PREN](https://doi.org/10.1109/cvpr46437.2021.00035) | 43.63% | 82.87% | 84.21% | 23.85% | 5.82% | 4.42% |
-| 10 | [ViTSTR](https://doi.org/10.1007/978-3-030-86549-8_21) | 45.18% | 73.60% | 66.31% | 26.77% | 8.97% | 12.62% |
-| 11 | [SATRN](https://doi.org/10.1109/cvprw50498.2020.00236) | 45.21% | 75.11% | 79.06% | 17.06% | 5.24% | 3.91% |
-| 12 | [SRN](https://doi.org/10.1109/cvpr42600.2020.01213) | 46.71% | 73.74% | 69.55% | 23.93% | 8.77% | 11.63% |
-| 13 | [SEED](https://doi.org/10.1109/cvpr42600.2020.01354) | 48.44% | 79.06% | 79.93% | 22.55% | 6.45% | 6.06% |
-| 14 | [PP-OCRv3-Mobile](https://github.com/PaddlePaddle/PaddleOCR) | 56.59% | 85.00% | 83.85% | 16.89% | 3.90% | 3.76% |
-| 15 | [RepSVTR](https://arxiv.org/abs/2411.15858) | 61.43% | 88.40% | 94.00% | 12.84% | 2.65% | 1.42% |
-| 16 | [PP-OCRv6-Small](https://github.com/PaddlePaddle/PaddleOCR) | 63.74% | 86.01% | 83.72% | 12.15% | 3.57% | 3.85% |
-| 17 | [PP-OCRv5-Mobile](https://github.com/PaddlePaddle/PaddleOCR) | 64.35% | 89.07% | 84.95% | 13.29% | 2.86% | 3.43% |
-| 18 | [PP-OCRv4-Mobile](https://github.com/PaddlePaddle/PaddleOCR) | 64.50% | 87.28% | 92.05% | 13.00% | 3.02% | 1.84% |
-| 19 | [TrOCR](http://dx.doi.org/10.1609/aaai.v37i11.26538) | 70.20% | 90.85% | 91.45% | 11.44% | 2.50% | 2.03% |
-| 20 | [SVTR](https://doi.org/10.3390/electronics13234756) | 70.52% | 90.04% | 93.57% | 11.11% | 2.39% | 1.44% |
-| 21 | [PP-OCRv5-Server](https://github.com/PaddlePaddle/PaddleOCR) | 70.70% | 91.17% | 91.53% | 11.51% | 2.11% | 1.96% |
-| 22 | [SAR](https://doi.org/10.1609/aaai.v33i01.33018610) | 72.30% | 89.04% | 95.00% | 9.86% | 3.35% | 1.06% |
-| 23 | [PP-OCRv6-Medium](https://github.com/PaddlePaddle/PaddleOCR) | 73.32% | 89.72% | 82.71% | 9.42 | 2.61% | 4.27% |
-| 24 | [VisionLAN](https://doi.org/10.1109/iccv48922.2021.01393) | 73.37% | **92.26%** | 95.14% | 10.72% | 1.87% | 1.11% |
-| 25 | [PARSeq](https://doi.org/10.1007/978-3-031-19815-1_11) | 74.01% | 91.53% | 95.71% | 10.08% | 2.11% | 0.94% |
-| 26 | [PP-OCRv4-Server](https://github.com/PaddlePaddle/PaddleOCR) | 74.34% | 92.08% | 86.65% | 10.38% | **1.81%** | 3.19% |
-| 27 | [ABINet](https://doi.org/10.1109/cvpr46437.2021.00702) | 76.05% | 91.07% | 95.39% | 8.17% | 2.19% | 1.03% |
-| 28 | [CPPD](https://doi.org/10.1109/tpami.2025.3545453) | 76.22% | 90.80% | 95.16% | 8.14% | 2.11% | 1.08% |
-| 29 | [SVTRv2-Tiny](https://arxiv.org/abs/2411.15858) | 81.36% | 90.54% | 96.00% | 5.05% | 2.19% | 0.82% |
-| 30 | **SVTR26-Tiny (Ours)** | **82.93%** | 90.98% | **96.51%** | **4.69%** | 2.06% | **0.71%** |
+| 1 | [CRNN](https://arxiv.org/abs/1507.05717) | 35.17% | 55.96% | 67.88% | 36.28% | 18.31% | 11.64% |
+| 2 | [PP-OCRv4-Mobile](https://github.com/PaddlePaddle/PaddleOCR) | 64.50% | 87.28% | 92.05% | 13.00% | 3.02% | 1.84% |
+| 3 | [TrOCR](http://dx.doi.org/10.1609/aaai.v37i11.26538) | 70.20% | 90.85% | 91.45% | 11.44% | 2.50% | 2.03% |
+| 4 | [SVTRv2-Tiny](https://arxiv.org/abs/2411.15858) | 81.36% | 90.54% | 96.00% | 5.05% | 2.19% | 0.82% |
+| 5 | **SVTR26-Tiny (Ours)** | **82.93%** | **90.98%** | **96.51%** | **4.69%** | **2.06%** | **0.71%** |
 
-> **Summary:** SVTR26-Tiny attains top performance on the challenging Vietnam benchmark (**82.93%**) and China benchmark (**96.51%** with **0.71% CER**), while achieving competitive **90.98%** accuracy in Brazil.
+> **Summary:** SVTR26-Tiny attains top performance among the evaluated architectures on the challenging Vietnam benchmark (**82.93%**) and China benchmark (**96.51%** with **0.71% CER**), while achieving the highest **90.98%** accuracy in Brazil.

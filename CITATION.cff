@@ -8,7 +8,7 @@ authors:
   given-names: "Vinh Truong"
   orcid: "https://orcid.org/0000-0002-3464-3894"
 title: "LiteALPR: An ultra-fast and accurate open-source license plate recognition library"
-version: 0.1.5
+version: 0.1.6
 date-released: 2026-09-13
 url: "https://github.com/vn-anhnth/LiteALPR"
 preferred-citation:
