@@ -738,8 +738,8 @@
 <th style="text-align: center;">GFLOPs</th>
 <th style="text-align: center;">GPU Latency (ms)</th>
 <th style="text-align: center;">CPU Latency (ms)</th>
-<th style="text-align: center;">mAP@50 (%)</th>
-<th style="text-align: center;">mAP@50-95 (%)</th>
+<th style="text-align: center;"><span class="arithmatex">\(\text{mAP}_{50}\)</span> (%)</th>
+<th style="text-align: center;"><span class="arithmatex">\(\text{mAP}_{50-95}\)</span> (%)</th>
 </tr>
 </thead>
 <tbody>
@@ -782,7 +782,7 @@
 </tbody>
 </table>
 <blockquote>
-<p>Replacing C2f with C3Ghost across both backbone and head achieves a <strong>2.35× speedup on CPU</strong> (<span class="arithmatex">\(40.92 \rightarrow 17.45\text{ ms}\)</span>) and <strong>33.5% parameter reduction</strong> (<span class="arithmatex">\(3.01\text{M} \rightarrow 2.00\text{M}\)</span>) with <strong>zero accuracy drop</strong> (maintains 99.45% mAP@50).</p>
+<p>Replacing C2f with C3Ghost across both backbone and head achieves a <strong>2.35× speedup on CPU</strong> (<span class="arithmatex">\(40.92 \rightarrow 17.45\text{ ms}\)</span>) and <strong>33.5% parameter reduction</strong> (<span class="arithmatex">\(3.01\text{M} \rightarrow 2.00\text{M}\)</span>) with <strong>zero accuracy drop</strong> (maintains 99.45% <span class="arithmatex">\(\text{mAP}_{50}\)</span>).</p>
 </blockquote>
 <hr />
 <h2 id="3-recognition-module-ablation-svtr26-tiny">3. Recognition Module Ablation (SVTR26-Tiny)</h2>
@@ -857,7 +857,7 @@
 </tbody>
 </table>
 <blockquote>
-<p>Height-wise Average Pooling (HAP) completely replaces 2D attention matrices, slashing CPU recognition latency from <strong>10.97 ms</strong> down to <strong>8.32 ms</strong> while synthetic degradation training boosts sequence recognition accuracy up to <strong>89.15%</strong> and lowers Character Error Rate (CER) to <strong>3.28%</strong>.</p>
+<p>Height-wise Average Pooling (HAP) completely replaces 2D attention matrices, slashing CPU recognition latency from <strong>10.84 ms</strong> down to <strong>8.32 ms</strong> while maintaining superior sequence recognition accuracy of <strong>89.15%</strong> and lowering Character Error Rate (CER) to <strong>3.28%</strong>.</p>
 </blockquote>
 <hr />
 <h2 id="4-cross-regional-generalization-benchmark">4. Cross-Regional Generalization Benchmark</h2>
