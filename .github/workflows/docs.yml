@@ -34,6 +34,6 @@ jobs:
 
       - name: Deploy versioned docs with Mike
         run: |
-          mike deploy --push 0.1.4
+          mike deploy --push 0.1.5
           mike deploy --push --update-aliases latest
           mike set-default --push latest

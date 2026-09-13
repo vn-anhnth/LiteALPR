@@ -37,13 +37,16 @@ You can install LiteALPR easily with `pip`. Choose the option that fits your dep
 
 ## Hardware Requirements
 
+LiteALPR is designed to be lightweight, running efficiently on both standard CPU environments and GPU accelerators:
+
 | Component | Minimum Specification | Recommended Specification |
 | :--- | :--- | :--- |
-| **OS** | Windows 10/11, Ubuntu 20.04+, macOS | Linux / Windows 64-bit |
+| **Operating System** | Windows 10/11, Ubuntu 20.04+, macOS | Ubuntu 20.04/22.04 LTS, Windows 64-bit |
 | **Python** | Python 3.8+ | Python 3.10 or 3.11 |
-| **CPU** | Dual-core x86_64 / ARM64 | 4+ cores (e.g., AMD Ryzen or Intel Core i5+) |
-| **RAM** | 2 GB | 4 GB+ |
-| **GPU (Optional)** | None (runs fast on CPU) | NVIDIA GPU with CUDA 11.8 / 12.x |
+| **CPU** | Dual-core x86_64 / ARM64 | 4+ cores (Intel Core i5+, AMD Ryzen) |
+| **RAM / Memory** | 2 GB (~350 MB memory footprint during inference) | 4 GB+ |
+| **Storage** | ~100 MB for library and model weights | 1 GB+ (SSD recommended) |
+| **GPU (Optional)** | None (runs smoothly on CPU) | NVIDIA GPU with CUDA 11.8 / 12.x |
 
 ---
 
@@ -58,6 +61,7 @@ model = LiteALPR()
 ```
 
 LiteALPR checks your local cache directory (`~/.cache/huggingface/hub/` or custom paths) for the official ONNX models. If they are not found, it automatically downloads the latest models from our HuggingFace repository:
+
 - **Detection Model**: `yolov8n_efficient/best_416.onnx` (~8.1 MB)
 - **Recognition Model**: `svtr26_tiny/best.onnx` (~17.0 MB)
 

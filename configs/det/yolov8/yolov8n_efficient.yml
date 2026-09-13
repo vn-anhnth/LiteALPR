@@ -41,3 +41,14 @@ head:
   - [-1, 3, C3Ghost, [1024]]  # 21 - P5/32-large
 
   - [[15, 18, 21], 1, Detect, [nc]]  # Detect(P3, P4, P5)
+
+# Global configuration
+Global:
+  pretrained_model: "pretrained_models/det/yolov8n_efficient/best.pt"
+  data: "dataset/det/data.yaml"
+  epochs: 50
+  imgsz: 640
+  batch: 256
+  device: 0  # GPU ID (e.g. 0), or list for multi-GPU (e.g. [0, 1] or more)
+  project: "output/det/yolov8n_efficient"
+  workers: 8

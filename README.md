@@ -158,24 +158,29 @@ To use the training and evaluation tools, clone the repository and install the d
 git clone https://github.com/vn-anhnth/LiteALPR.git
 cd LiteALPR
 
-# Install dependencies (choose CPU or GPU):
-pip install -r requirements.txt        # CPU usage
-# pip install -r requirements-gpu.txt  # For GPU ONNX acceleration
+# Choose based on your runtime environment:
+pip install -r requirements.txt        # CPU environment
+pip install -r requirements-gpu.txt    # GPU ONNX acceleration
 ```
 
 ### 1. Model Weights Preparation
 Before training or evaluation, download the official pre-trained models from our [HuggingFace Repository](https://huggingface.co/anhone3/LiteALPR) and place them in the following structure:
 ```
 LiteALPR/
-├── pretrained_models/
-│   ├── yolov8n_efficient/
-│   │   └── best.pt
-│   └── svtr26_tiny/
-│       └── best.pth
+└── pretrained_models/
+    ├── det/
+    │   └── yolov8n_efficient/
+    │       └── best.pt
+    └── rec/
+        └── svtr26_tiny/
+            └── best.pth
 ```
 You can download them manually or use `wget`:
 ```bash
+# Download Detection pre-trained weights
 wget -O pretrained_models/det/yolov8n_efficient/best.pt https://huggingface.co/anhone3/LiteALPR/resolve/main/yolov8n_efficient/best.pt
+
+# Download Recognition pre-trained weights
 wget -O pretrained_models/rec/svtr26_tiny/best.pth https://huggingface.co/anhone3/LiteALPR/resolve/main/svtr26_tiny/best.pth
 ```
 
@@ -191,23 +196,38 @@ python tools/create_lmdb_dataset.py \
 ### 3. Training (Det & Rec)
 Before training, you must configure your dataset paths, batch sizes, and learning parameters:
 
-**For Detection:**
-Open `tools/train_det.py` and modify the parameters inside the `model.train()` function directly:
-```python
-model.train(
-    data='dataset/det/data.yaml', # Point this to your YOLO data.yaml
-    epochs=50,
-    batch=256,
-    ...
-)
+**For Detection (`configs/det/yolov8/yolov8n_efficient.yml`):**
+Configure your dataset paths, batch sizes, and training hyperparameters under the `Global:` section:
+```yaml
+Global:
+  pretrained_model: "pretrained_models/det/yolov8n_efficient/best.pt"  # or null to train from scratch
+  data: "dataset/det/data.yaml"
+  epochs: 50
+  imgsz: 640
+  batch: 256
+  device: 0  # GPU ID (e.g. 0), or list for multi-GPU (e.g. [0, 1] or more)
+  project: "output/det/yolov8n_efficient"
+  workers: 8
 ```
 
 **For Recognition (`configs/rec/svtr26/svtr26_tiny.yml`):**
+Configure your training hyperparameters under `Global:` and `Train:` sections:
 ```yaml
+Global:
+  device: gpu
+  epoch_num: 150
+  pretrained_model: "./pretrained_models/rec/svtr26_tiny/best.pth"  # or null to train from scratch
+  output_dir: "./output/rec/svtr26_tiny/train"
+
 Train:
   dataset:
     name: RatioDataSetTVResize
     data_dir_list: ['./dataset/rec/lmdb_data/train']
+  sampler:
+    first_bs: &bs 256             # Batch size per GPU
+  loader:
+    batch_size_per_card: *bs
+    num_workers: 4
 
 Eval:
   dataset:
@@ -220,12 +240,12 @@ Once configured, start training:
 > [!TIP]
 > **Pre-trained Models (Fine-tuning)**
 > By default, the training process will load pre-trained weights to speed up convergence. You can change the path or remove it to train from scratch:
-> - **For Detection:** Edit the `.load(...)` path directly inside the `tools/train_det.py` script.
+> - **For Detection:** Edit the `Global.pretrained_model` field inside `configs/det/yolov8/yolov8n_efficient.yml`.
 > - **For Recognition:** Edit the `Global.pretrained_model` field inside your `.yml` config file (e.g., `configs/rec/svtr26/svtr26_tiny.yml`).
 
 ```bash
 # Train Detection Model (YOLOv8)
-# For multi-GPU training, set device to a list of GPU IDs in train_det.py, e.g., device=[0, 1]
+# For multi-GPU training, set device to GPU IDs (e.g. [0, 1] or more) in configs/det/yolov8/yolov8n_efficient.yml
 python tools/train_det.py -c configs/det/yolov8/yolov8n_efficient.yml
 
 # Train Recognition Model (SVTR26)

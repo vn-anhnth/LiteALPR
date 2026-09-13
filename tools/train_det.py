@@ -1,6 +1,7 @@
 import argparse
 import os
 
+import yaml
 from ultralytics import YOLO, settings
 
 project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
@@ -8,32 +9,39 @@ settings.update({"datasets_dir": project_root})
 
 
 def parse_args():
-    parser = argparse.ArgumentParser()
+    parser = argparse.ArgumentParser(description="LiteALPR Detection Training")
     parser.add_argument(
         "-c",
         "--config",
         type=str,
         default="configs/det/yolov8/yolov8n_efficient.yml",
-        help="configuration file to use",
+        help="Path to configuration file",
     )
     return parser.parse_args()
 
 
 def main():
     args = parse_args()
-    model = YOLO(args.config).load("pretrained_models/det/yolov8n_efficient/best.pt")
-    model.train(
-        data=os.path.abspath("dataset/det/data.yaml"),
-        epochs=50,
-        imgsz=640,
-        batch=256,
-        device=0,  # device=[0, 1] for 2 GPUs
-        project="output/det/yolov8n_efficient",
-        workers=8,
-    )
+    config_path = os.path.abspath(args.config)
+
+    with open(config_path, "r", encoding="utf-8") as f:
+        cfg = yaml.safe_load(f)
+
+    train_cfg = cfg.get("Global", cfg.get("Train", {}))
+
+    model = YOLO(config_path)
+
+    pretrained = train_cfg.pop("pretrained_model", None)
+    if pretrained and os.path.isfile(pretrained):
+        model = model.load(pretrained)
+
+    if "data" in train_cfg and not os.path.isabs(train_cfg["data"]):
+        train_cfg["data"] = os.path.abspath(train_cfg["data"])
+
+    model.train(**train_cfg)
 
 
 if __name__ == "__main__":
     # python tools/train_det.py
-    # python tools/train_det.py -c configs/det/yolov8/yolov8n_efficient.yaml
+    # python tools/train_det.py -c configs/det/yolov8/yolov8n_efficient.yml
     main()
