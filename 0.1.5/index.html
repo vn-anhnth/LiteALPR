@@ -646,13 +646,13 @@
 <p>Unlike conventional ALPR systems that rely on computationally expensive models or suffer severe accuracy loss on degraded images, LiteALPR introduces targeted architectural innovations:</p>
 <ol>
 <li><strong>YOLOv8n-Efficient Detector</strong>: Replaces heavy C2f blocks with lightweight C3Ghost modules, reducing parameters to <strong>2.00M</strong> and slashing CPU detection latency by <strong>2.35×</strong> without losing localization accuracy.</li>
-<li><strong>SVTR26-Tiny Recognizer</strong>: Replaces resource-intensive 2D attention decoders with <strong>Height-wise Average Pooling (HAP)</strong>, perfectly aligning with horizontal plate character layouts while accelerating inference to <strong>5.03 ms</strong> on GPU and <strong>8.32 ms</strong> on CPU.</li>
+<li><strong>SVTR26-Tiny Recognizer</strong>: Replaces resource-intensive 2D attention decoders with <strong>Height-wise Average Pooling (HAP)</strong>, perfectly aligning with horizontal plate character layouts while accelerating inference to <strong>~5.03 ms</strong> on GPU and <strong>~8.32 ms</strong> on CPU.</li>
 <li><strong>Robust Degradation Augmentations</strong>: Trained with synthetic motion blur and optical degradation to achieve <strong>89.15% full-sequence accuracy</strong> across multi-national benchmarks (Vietnam, China, Brazil).</li>
 </ol>
 <hr />
 <h2 id="key-highlights">Key Highlights</h2>
 <ul>
-<li>⚡ <strong>Ultra-Fast Throughput</strong>: <strong>66.5 FPS</strong> on an NVIDIA RTX 3060 and <strong>23.4 FPS</strong> on an AMD Ryzen 5 4600G CPU.</li>
+<li>⚡ <strong>Ultra-Fast Throughput</strong>: <strong>~66.5 FPS</strong> on an NVIDIA RTX 3060 and <strong>~23.4 FPS</strong> on an AMD Ryzen 5 4600G CPU.</li>
 <li>🎯 <strong>High Accuracy</strong>: <strong>89.15%</strong> sequence accuracy on challenging real-world plates, compared to only 22.67% from existing lightweight alternatives like <code>fast-alpr</code>.</li>
 <li>📦 <strong>Plug-and-Play Python API</strong>: Simple <code>LiteALPR()</code> pipeline with automatic HuggingFace model weight caching.</li>
 <li>🔄 <strong>Flexible Backends</strong>: Native support for <strong>ONNX Runtime</strong> (CPU &amp; CUDA execution providers) as well as raw PyTorch (<code>.pt</code> / <code>.pth</code>).</li>
@@ -677,7 +677,9 @@
 <li>Check out <a href="getting-started/">Getting Started</a> to install LiteALPR via <code>pip</code>.</li>
 <li>Read about our <a href="pipeline/">Pipeline &amp; Architecture</a> innovations.</li>
 <li>Explore the comprehensive <a href="usage/">Python API &amp; Usage</a> guide.</li>
+<li>Learn how to train custom models in the <a href="training/">Training &amp; Tools</a> guide.</li>
 <li>Review detailed <a href="benchmarks/">Benchmarks</a> on GPU &amp; CPU platforms.</li>
+<li>Cite the project in your research using <a href="citation/">Paper &amp; Citation</a>.</li>
 </ul>
 
 
