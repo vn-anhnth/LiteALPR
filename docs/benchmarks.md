@@ -29,7 +29,7 @@ Comparison against existing state-of-the-art and lightweight open-source ALPR pi
 | | [fast-alpr](https://github.com/ankandrew/fast-alpr) | **5.10 ± 1.18** | **24.02 ± 3.29** | 4.17 ± 2.44 | **33.30 ± 4.92** | **30.1 ± 0.8** | 22.67% |
 | | **LiteALPR (Ours)** | 6.52 ± 3.99 | 34.04 ± 9.32 | 1.80 ± 2.06 | 42.67 ± 8.66 | 23.4 ± 0.2 | **89.15%** |
 
-> **Key Takeaway:** While alternative lightweight pipelines such as [`fast-alpr`](https://github.com/ankandrew/fast-alpr) degrade down to 22.67% accuracy under blur, low light, and tilt angles, LiteALPR preserves **89.15% sequence accuracy** while maintaining ultra-high throughput (**66.5 FPS** on GPU, **23.4 FPS** on CPU).
+> **Key Takeaway:** While alternative lightweight pipelines such as [`fast-alpr`](https://github.com/ankandrew/fast-alpr) degrade down to 22.67% accuracy under blur, low light, and tilt angles, LiteALPR preserves **89.15% sequence accuracy** while maintaining ultra-high throughput (**~66.5 FPS** on GPU, **~23.4 FPS** on CPU).
 
 ---
 
@@ -44,13 +44,13 @@ Impact of progressively replacing C2f blocks with lightweight C3Ghost modules ac
 | Backbone (C3Ghost) | 2.49 | 6.70 | 9.04 ± 0.51 | 19.59 ± 3.38 | **99.45%** | 89.20% |
 | **YOLOv8n-Efficient (Ours)** | **2.00** | **5.69** | **9.02 ± 0.98** | **17.45 ± 1.62** | **99.45%** | 88.41% |
 
-> Replacing C2f with C3Ghost across both backbone and head achieves a **2.35× speedup on CPU** ($40.92 \rightarrow 17.45\text{ ms}$) and **33.5% parameter reduction** ($3.01\text{M} \rightarrow 2.00\text{M}$) with **zero accuracy drop** (maintains 99.45% $\text{mAP}_{50}$).
+> Replacing C2f with C3Ghost across both backbone and head achieves a **2.35× speedup on CPU** (~$40.92 \rightarrow$ ~17.45 ms) and **33.5% parameter reduction** ($3.01\text{M} \rightarrow 2.00\text{M}$) with **zero accuracy drop** (maintains 99.45% $\text{mAP}_{50}$).
 
 ---
 
 ## 3. Recognition Module Ablation (SVTR26-Tiny)
 
-Ablation analysis of decoders (Height-wise Average Pooling) and synthetic degradation training on **25,000 test crops** (containing 50% synthetically degraded plates):
+Impact of replacing 2D attention matrices with Height-wise Average Pooling (HAP) and data synthesis augmentation:
 
 | Decoder Architecture | Synthetic Degradation | Params (M) | GPU Lat. (ms) | CPU Lat. (ms) | Accuracy (%) | CER (%) |
 | :--- | :---: | :---: | :---: | :---: | :---: | :---: |
@@ -61,7 +61,7 @@ Ablation analysis of decoders (Height-wise Average Pooling) and synthetic degrad
 | **HAP (Ours)** | No | **4.22** | 5.29 ± 1.19 | 9.05 ± 1.34 | 86.55% | 4.16% |
 | **HAP + Degrade (Ours)** | **Yes** | **4.22** | **5.03 ± 0.51** | **8.32 ± 0.98** | **89.15%** | **3.28%** |
 
-> Height-wise Average Pooling (HAP) completely replaces 2D attention matrices, slashing CPU recognition latency from **10.84 ms** down to **8.32 ms** while maintaining superior sequence recognition accuracy of **89.15%** and lowering Character Error Rate (CER) to **3.28%**.
+> Height-wise Average Pooling (HAP) completely replaces 2D attention matrices, slashing CPU recognition latency from **~10.84 ms** down to **~8.32 ms** while maintaining superior sequence recognition accuracy of **89.15%** and lowering Character Error Rate (CER) to **3.28%**.
 
 ---
 

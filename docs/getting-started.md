@@ -45,7 +45,6 @@ LiteALPR is designed to be lightweight, running efficiently on both standard CPU
 | **Python** | Python 3.8+ | Python 3.10 or 3.11 |
 | **CPU** | Dual-core x86_64 / ARM64 | 4+ cores (Intel Core i5+, AMD Ryzen) |
 | **RAM / Memory** | 2 GB (~350 MB memory footprint during inference) | 4 GB+ |
-| **Storage** | ~100 MB for library and model weights | 1 GB+ (SSD recommended) |
 | **GPU (Optional)** | None (runs smoothly on CPU) | NVIDIA GPU with CUDA 11.8 / 12.x |
 
 ---
