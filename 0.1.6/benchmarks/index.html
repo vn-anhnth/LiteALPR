@@ -1,0 +1,1006 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="An ultra-fast, robust, and lightweight License Plate Recognition (ALPR) library.">
+      
+      
+        <meta name="author" content="Anh Nguyen">
+      
+      
+        <link rel="canonical" href="https://vn-anhnth.github.io/LiteALPR/0.1.6/benchmarks/">
+      
+      
+        <link rel="prev" href="../training/">
+      
+      
+        <link rel="next" href="../citation/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
+    
+    
+      
+        <title>Benchmarks - LiteALPR Documentation</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.ec1eaa64.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#benchmarks-experimental-results" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+      <div data-md-color-scheme="default" data-md-component="outdated" hidden>
+        
+      </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="LiteALPR Documentation" class="md-header__button md-logo" aria-label="LiteALPR Documentation" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            LiteALPR Documentation
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Benchmarks
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/vn-anhnth/LiteALPR" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    vn-anhnth/LiteALPR
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="LiteALPR Documentation" class="md-nav__button md-logo" aria-label="LiteALPR Documentation" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    LiteALPR Documentation
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/vn-anhnth/LiteALPR" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    vn-anhnth/LiteALPR
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../getting-started/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Getting Started
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../pipeline/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Pipeline & Architecture
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../usage/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Python API & Usage
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../training/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Training & Tools
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Benchmarks
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Benchmarks
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#1-end-to-end-pipeline-performance" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. End-to-End Pipeline Performance
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-detection-module-ablation-yolov8n-efficient" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Detection Module Ablation (YOLOv8n-Efficient)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-recognition-module-ablation-svtr26-tiny" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Recognition Module Ablation (SVTR26-Tiny)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-cross-regional-generalization-benchmark" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Cross-Regional Generalization Benchmark
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../citation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Paper & Citation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#1-end-to-end-pipeline-performance" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. End-to-End Pipeline Performance
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-detection-module-ablation-yolov8n-efficient" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Detection Module Ablation (YOLOv8n-Efficient)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-recognition-module-ablation-svtr26-tiny" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Recognition Module Ablation (SVTR26-Tiny)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-cross-regional-generalization-benchmark" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Cross-Regional Generalization Benchmark
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="benchmarks-experimental-results">Benchmarks &amp; Experimental Results</h1>
+<p>LiteALPR was rigorously benchmarked on a comprehensive multi-national dataset totaling <strong>52,595 images</strong>:</p>
+<ul>
+<li><strong><a href="https://github.com/raysonlaroca/rodosol-alpr-dataset">Brazil (RodoSol-ALPR)</a></strong>: <strong>20,000 images</strong> (with 9,560 evaluated in test set)</li>
+<li><strong><a href="https://github.com/SunlifeV/CBLPRD-330k">China (CBLPRD-330k)</a></strong>: <strong>20,000 images</strong> (with 9,450 evaluated in test set)</li>
+<li><strong><a href="https://www.kaggle.com/datasets/duydieunguyen/licenseplates">Vietnam</a></strong>: <strong>12,595 images</strong> (public dataset + self-collected traffic footage, with 5,990 evaluated in test set)</li>
+</ul>
+<p>For the text recognition task, the full corpus of <strong>52,595 localized plate crops</strong> was used. To simulate challenging real-world environments and ensure the OCR engine's resilience, <strong>half (50%) of these crops were artificially distorted</strong> to emulate out-of-focus optics and high-speed motion blur. The recognition dataset was distributed into:</p>
+<ul>
+<li><strong>Training set</strong>: 25,000 crops</li>
+<li><strong>Validation set</strong>: 2,595 crops</li>
+<li><strong>Test set</strong>: 25,000 crops (comprising 9,560 from Brazil, 9,450 from China, and 5,990 from Vietnam)</li>
+</ul>
+<p>All benchmarks were evaluated in native ONNX FP32 precision, reporting latency and throughput as <span class="arithmatex">\(\text{mean} \pm \text{std}\)</span> evaluated over 1,000 real-world test images or cropped plates across 5 consecutive execution passes.</p>
+<hr />
+<h2 id="1-end-to-end-pipeline-performance">1. End-to-End Pipeline Performance</h2>
+<p>Comparison against existing state-of-the-art and lightweight open-source ALPR pipelines:</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Platform</th>
+<th style="text-align: left;">Model / Pipeline</th>
+<th style="text-align: center;">Pre (ms)</th>
+<th style="text-align: center;">Infer (ms)</th>
+<th style="text-align: center;">Post (ms)</th>
+<th style="text-align: center;">Total (ms)</th>
+<th style="text-align: center;">Throughput (FPS)</th>
+<th style="text-align: center;">Accuracy (%)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><strong>GPU</strong> <em>(RTX 3060 12GB)</em></td>
+<td style="text-align: left;">YOLOv8n + SVTRv2 (Baseline)</td>
+<td style="text-align: center;"><strong>1.54 ± 0.41</strong></td>
+<td style="text-align: center;">12.38 ± 2.43</td>
+<td style="text-align: center;">1.55 ± 0.20</td>
+<td style="text-align: center;">15.84 ± 2.79</td>
+<td style="text-align: center;">63.1 ± 0.7</td>
+<td style="text-align: center;">88.60%</td>
+</tr>
+<tr>
+<td style="text-align: left;"></td>
+<td style="text-align: left;"><a href="https://github.com/ankandrew/fast-alpr">fast-alpr</a></td>
+<td style="text-align: center;">4.58 ± 0.85</td>
+<td style="text-align: center;">15.06 ± 3.27</td>
+<td style="text-align: center;">5.62 ± 2.96</td>
+<td style="text-align: center;">25.27 ± 5.67</td>
+<td style="text-align: center;">40.1 ± 4.3</td>
+<td style="text-align: center;">22.67%</td>
+</tr>
+<tr>
+<td style="text-align: left;"></td>
+<td style="text-align: left;"><strong>LiteALPR (Ours)</strong></td>
+<td style="text-align: center;">1.63 ± 0.40</td>
+<td style="text-align: center;"><strong>11.57 ± 5.87</strong></td>
+<td style="text-align: center;"><strong>1.49 ± 0.12</strong></td>
+<td style="text-align: center;"><strong>15.05 ± 6.01</strong></td>
+<td style="text-align: center;"><strong>66.5 ± 1.8</strong></td>
+<td style="text-align: center;"><strong>89.15%</strong></td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>CPU</strong> <em>(Ryzen 5 4600G)</em></td>
+<td style="text-align: left;">YOLOv8n + SVTRv2 (Baseline)</td>
+<td style="text-align: center;">5.26 ± 3.55</td>
+<td style="text-align: center;">58.53 ± 13.50</td>
+<td style="text-align: center;"><strong>0.95 ± 0.78</strong></td>
+<td style="text-align: center;">65.08 ± 14.28</td>
+<td style="text-align: center;">15.4 ± 0.3</td>
+<td style="text-align: center;">88.60%</td>
+</tr>
+<tr>
+<td style="text-align: left;"></td>
+<td style="text-align: left;"><a href="https://github.com/ankandrew/fast-alpr">fast-alpr</a></td>
+<td style="text-align: center;"><strong>5.10 ± 1.18</strong></td>
+<td style="text-align: center;"><strong>24.02 ± 3.29</strong></td>
+<td style="text-align: center;">4.17 ± 2.44</td>
+<td style="text-align: center;"><strong>33.30 ± 4.92</strong></td>
+<td style="text-align: center;"><strong>30.1 ± 0.8</strong></td>
+<td style="text-align: center;">22.67%</td>
+</tr>
+<tr>
+<td style="text-align: left;"></td>
+<td style="text-align: left;"><strong>LiteALPR (Ours)</strong></td>
+<td style="text-align: center;">6.52 ± 3.99</td>
+<td style="text-align: center;">34.04 ± 9.32</td>
+<td style="text-align: center;">1.80 ± 2.06</td>
+<td style="text-align: center;">42.67 ± 8.66</td>
+<td style="text-align: center;">23.4 ± 0.2</td>
+<td style="text-align: center;"><strong>89.15%</strong></td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p><strong>Key Takeaway:</strong> While alternative lightweight pipelines such as <a href="https://github.com/ankandrew/fast-alpr"><code>fast-alpr</code></a> degrade down to 22.67% accuracy under blur, low light, and tilt angles, LiteALPR preserves <strong>89.15% sequence accuracy</strong> while maintaining ultra-high throughput (<strong>~66.5 FPS</strong> on GPU, <strong>~23.4 FPS</strong> on CPU).</p>
+</blockquote>
+<hr />
+<h2 id="2-detection-module-ablation-yolov8n-efficient">2. Detection Module Ablation (YOLOv8n-Efficient)</h2>
+<p>Impact of progressively replacing C2f blocks with lightweight C3Ghost modules across head and backbone:</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Configuration</th>
+<th style="text-align: center;">Parameters (M)</th>
+<th style="text-align: center;">GFLOPs</th>
+<th style="text-align: center;">GPU Latency (ms)</th>
+<th style="text-align: center;">CPU Latency (ms)</th>
+<th style="text-align: center;"><span class="arithmatex">\(\text{mAP}_{50}\)</span> (%)</th>
+<th style="text-align: center;"><span class="arithmatex">\(\text{mAP}_{50-95}\)</span> (%)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">Baseline YOLOv8n</td>
+<td style="text-align: center;">3.01</td>
+<td style="text-align: center;">8.19</td>
+<td style="text-align: center;">10.02 ± 1.29</td>
+<td style="text-align: center;">40.92 ± 5.44</td>
+<td style="text-align: center;"><strong>99.45%</strong></td>
+<td style="text-align: center;">88.48%</td>
+</tr>
+<tr>
+<td style="text-align: left;">Head (C3Ghost)</td>
+<td style="text-align: center;">2.52</td>
+<td style="text-align: center;">7.19</td>
+<td style="text-align: center;">9.54 ± 1.24</td>
+<td style="text-align: center;">19.69 ± 4.26</td>
+<td style="text-align: center;">99.44%</td>
+<td style="text-align: center;"><strong>89.33%</strong></td>
+</tr>
+<tr>
+<td style="text-align: left;">Backbone (C3Ghost)</td>
+<td style="text-align: center;">2.49</td>
+<td style="text-align: center;">6.70</td>
+<td style="text-align: center;">9.04 ± 0.51</td>
+<td style="text-align: center;">19.59 ± 3.38</td>
+<td style="text-align: center;"><strong>99.45%</strong></td>
+<td style="text-align: center;">89.20%</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>YOLOv8n-Efficient (Ours)</strong></td>
+<td style="text-align: center;"><strong>2.00</strong></td>
+<td style="text-align: center;"><strong>5.69</strong></td>
+<td style="text-align: center;"><strong>9.02 ± 0.98</strong></td>
+<td style="text-align: center;"><strong>17.45 ± 1.62</strong></td>
+<td style="text-align: center;"><strong>99.45%</strong></td>
+<td style="text-align: center;">88.41%</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p>Replacing C2f with C3Ghost across both backbone and head achieves a <strong>2.35× speedup on CPU</strong> (~<span class="arithmatex">\(40.92 \rightarrow\)</span> ~17.45 ms) and <strong>33.5% parameter reduction</strong> (<span class="arithmatex">\(3.01\text{M} \rightarrow 2.00\text{M}\)</span>) with <strong>zero accuracy drop</strong> (maintains 99.45% <span class="arithmatex">\(\text{mAP}_{50}\)</span>).</p>
+</blockquote>
+<hr />
+<h2 id="3-recognition-module-ablation-svtr26-tiny">3. Recognition Module Ablation (SVTR26-Tiny)</h2>
+<p>Impact of replacing 2D attention matrices with Height-wise Average Pooling (HAP) and data synthesis augmentation:</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Decoder Architecture</th>
+<th style="text-align: center;">Synthetic Degradation</th>
+<th style="text-align: center;">Params (M)</th>
+<th style="text-align: center;">GPU Lat. (ms)</th>
+<th style="text-align: center;">CPU Lat. (ms)</th>
+<th style="text-align: center;">Accuracy (%)</th>
+<th style="text-align: center;">CER (%)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">Baseline (Full Attention)</td>
+<td style="text-align: center;">No</td>
+<td style="text-align: center;">5.11</td>
+<td style="text-align: center;">5.55 ± 0.92</td>
+<td style="text-align: center;">10.97 ± 1.26</td>
+<td style="text-align: center;">86.71%</td>
+<td style="text-align: center;">4.13%</td>
+</tr>
+<tr>
+<td style="text-align: left;">Baseline (Full Attention)</td>
+<td style="text-align: center;">Yes</td>
+<td style="text-align: center;">5.11</td>
+<td style="text-align: center;">5.85 ± 0.89</td>
+<td style="text-align: center;">10.84 ± 0.76</td>
+<td style="text-align: center;">88.25%</td>
+<td style="text-align: center;">3.56%</td>
+</tr>
+<tr>
+<td style="text-align: left;">w/o Self-Attention</td>
+<td style="text-align: center;">No</td>
+<td style="text-align: center;">4.33</td>
+<td style="text-align: center;">5.95 ± 1.16</td>
+<td style="text-align: center;">9.79 ± 0.74</td>
+<td style="text-align: center;">85.98%</td>
+<td style="text-align: center;">4.29%</td>
+</tr>
+<tr>
+<td style="text-align: left;">w/o Self-Attention</td>
+<td style="text-align: center;">Yes</td>
+<td style="text-align: center;">4.33</td>
+<td style="text-align: center;">5.58 ± 0.77</td>
+<td style="text-align: center;">9.81 ± 0.73</td>
+<td style="text-align: center;">88.52%</td>
+<td style="text-align: center;">3.48%</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>HAP (Ours)</strong></td>
+<td style="text-align: center;">No</td>
+<td style="text-align: center;"><strong>4.22</strong></td>
+<td style="text-align: center;">5.29 ± 1.19</td>
+<td style="text-align: center;">9.05 ± 1.34</td>
+<td style="text-align: center;">86.55%</td>
+<td style="text-align: center;">4.16%</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>HAP + Degrade (Ours)</strong></td>
+<td style="text-align: center;"><strong>Yes</strong></td>
+<td style="text-align: center;"><strong>4.22</strong></td>
+<td style="text-align: center;"><strong>5.03 ± 0.51</strong></td>
+<td style="text-align: center;"><strong>8.32 ± 0.98</strong></td>
+<td style="text-align: center;"><strong>89.15%</strong></td>
+<td style="text-align: center;"><strong>3.28%</strong></td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p>Height-wise Average Pooling (HAP) completely replaces 2D attention matrices, slashing CPU recognition latency from <strong>~10.84 ms</strong> down to <strong>~8.32 ms</strong> while maintaining superior sequence recognition accuracy of <strong>89.15%</strong> and lowering Character Error Rate (CER) to <strong>3.28%</strong>.</p>
+</blockquote>
+<hr />
+<h2 id="4-cross-regional-generalization-benchmark">4. Cross-Regional Generalization Benchmark</h2>
+<p>Evaluation of SVTR26-Tiny against widely-adopted sequence recognition baselines across 3 diverse geographic subsets (<strong>25,000 total test samples</strong>: 5,990 from Vietnam, 9,560 from Brazil, and 9,450 from China).</p>
+<blockquote>
+<p><strong>Alphanumeric Vocabulary:</strong> All evaluated recognition models transcribe standard Latin uppercase alphabets and numeric digits (<strong>A–Z</strong>, <strong>Đ</strong>, <strong>0–9</strong>, totaling 37 alphanumeric characters plus 1 CTC blank token). For multi-line plates (e.g. Vietnam and Brazil formats), Chinese provincial Hanzi characters in CBLPRD-330k were normalized or evaluated on the alphanumeric sequence, ensuring a fair, unified Latin-character benchmark across all international datasets.</p>
+</blockquote>
+<p>The table below presents the performance of the evaluated lightweight architectures, ranked in progressive order of regional generalization:</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: center;">No.</th>
+<th style="text-align: left;">Model</th>
+<th style="text-align: center;">Vietnam Acc (%)</th>
+<th style="text-align: center;">Brazil Acc (%)</th>
+<th style="text-align: center;">China Acc (%)</th>
+<th style="text-align: center;">Vietnam CER (%)</th>
+<th style="text-align: center;">Brazil CER (%)</th>
+<th style="text-align: center;">China CER (%)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: center;">1</td>
+<td style="text-align: left;"><a href="https://arxiv.org/abs/1507.05717">CRNN</a></td>
+<td style="text-align: center;">35.17%</td>
+<td style="text-align: center;">55.96%</td>
+<td style="text-align: center;">67.88%</td>
+<td style="text-align: center;">36.28%</td>
+<td style="text-align: center;">18.31%</td>
+<td style="text-align: center;">11.64%</td>
+</tr>
+<tr>
+<td style="text-align: center;">2</td>
+<td style="text-align: left;"><a href="https://github.com/PaddlePaddle/PaddleOCR">PP-OCRv4-Mobile</a></td>
+<td style="text-align: center;">64.50%</td>
+<td style="text-align: center;">87.28%</td>
+<td style="text-align: center;">92.05%</td>
+<td style="text-align: center;">13.00%</td>
+<td style="text-align: center;">3.02%</td>
+<td style="text-align: center;">1.84%</td>
+</tr>
+<tr>
+<td style="text-align: center;">3</td>
+<td style="text-align: left;"><a href="http://dx.doi.org/10.1609/aaai.v37i11.26538">TrOCR</a></td>
+<td style="text-align: center;">70.20%</td>
+<td style="text-align: center;">90.85%</td>
+<td style="text-align: center;">91.45%</td>
+<td style="text-align: center;">11.44%</td>
+<td style="text-align: center;">2.50%</td>
+<td style="text-align: center;">2.03%</td>
+</tr>
+<tr>
+<td style="text-align: center;">4</td>
+<td style="text-align: left;"><a href="https://arxiv.org/abs/2411.15858">SVTRv2-Tiny</a></td>
+<td style="text-align: center;">81.36%</td>
+<td style="text-align: center;">90.54%</td>
+<td style="text-align: center;">96.00%</td>
+<td style="text-align: center;">5.05%</td>
+<td style="text-align: center;">2.19%</td>
+<td style="text-align: center;">0.82%</td>
+</tr>
+<tr>
+<td style="text-align: center;">5</td>
+<td style="text-align: left;"><strong>SVTR26-Tiny (Ours)</strong></td>
+<td style="text-align: center;"><strong>82.93%</strong></td>
+<td style="text-align: center;"><strong>90.98%</strong></td>
+<td style="text-align: center;"><strong>96.51%</strong></td>
+<td style="text-align: center;"><strong>4.69%</strong></td>
+<td style="text-align: center;"><strong>2.06%</strong></td>
+<td style="text-align: center;"><strong>0.71%</strong></td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p><strong>Summary:</strong> SVTR26-Tiny attains top performance among the evaluated architectures on the challenging Vietnam benchmark (<strong>82.93%</strong>) and China benchmark (<strong>96.51%</strong> with <strong>0.71% CER</strong>), while achieving the highest <strong>90.98%</strong> accuracy in Brazil.</p>
+</blockquote>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+  <script>var tabs=__md_get("__tabs");if(Array.isArray(tabs))e:for(var set of document.querySelectorAll(".tabbed-set")){var labels=set.querySelector(".tabbed-labels");for(var tab of tabs)for(var label of labels.getElementsByTagName("label"))if(label.innerText.trim()===tab){var input=document.getElementById(label.htmlFor);input.checked=!0;continue e}}</script>
+
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["navigation.indexes", "navigation.top", "search.suggest", "search.highlight", "content.code.copy", "content.tabs.link"], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"provider": "mike"}}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.d7400e89.min.js"></script>
+      
+        <script src="../javascripts/mathjax.js"></script>
+      
+        <script src="https://unpkg.com/mathjax@3/es5/tex-mml-chtml.js"></script>
+      
+    
+  </body>
+</html>
