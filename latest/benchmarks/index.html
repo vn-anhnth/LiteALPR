@@ -725,7 +725,7 @@
 </tbody>
 </table>
 <blockquote>
-<p><strong>Key Takeaway:</strong> While alternative lightweight pipelines such as <a href="https://github.com/ankandrew/fast-alpr"><code>fast-alpr</code></a> degrade down to 22.67% accuracy under blur, low light, and tilt angles, LiteALPR preserves <strong>89.15% sequence accuracy</strong> while maintaining ultra-high throughput (<strong>66.5 FPS</strong> on GPU, <strong>23.4 FPS</strong> on CPU).</p>
+<p><strong>Key Takeaway:</strong> While alternative lightweight pipelines such as <a href="https://github.com/ankandrew/fast-alpr"><code>fast-alpr</code></a> degrade down to 22.67% accuracy under blur, low light, and tilt angles, LiteALPR preserves <strong>89.15% sequence accuracy</strong> while maintaining ultra-high throughput (<strong>~66.5 FPS</strong> on GPU, <strong>~23.4 FPS</strong> on CPU).</p>
 </blockquote>
 <hr />
 <h2 id="2-detection-module-ablation-yolov8n-efficient">2. Detection Module Ablation (YOLOv8n-Efficient)</h2>
@@ -782,11 +782,11 @@
 </tbody>
 </table>
 <blockquote>
-<p>Replacing C2f with C3Ghost across both backbone and head achieves a <strong>2.35× speedup on CPU</strong> (<span class="arithmatex">\(40.92 \rightarrow 17.45\text{ ms}\)</span>) and <strong>33.5% parameter reduction</strong> (<span class="arithmatex">\(3.01\text{M} \rightarrow 2.00\text{M}\)</span>) with <strong>zero accuracy drop</strong> (maintains 99.45% <span class="arithmatex">\(\text{mAP}_{50}\)</span>).</p>
+<p>Replacing C2f with C3Ghost across both backbone and head achieves a <strong>2.35× speedup on CPU</strong> (~<span class="arithmatex">\(40.92 \rightarrow\)</span> ~17.45 ms) and <strong>33.5% parameter reduction</strong> (<span class="arithmatex">\(3.01\text{M} \rightarrow 2.00\text{M}\)</span>) with <strong>zero accuracy drop</strong> (maintains 99.45% <span class="arithmatex">\(\text{mAP}_{50}\)</span>).</p>
 </blockquote>
 <hr />
 <h2 id="3-recognition-module-ablation-svtr26-tiny">3. Recognition Module Ablation (SVTR26-Tiny)</h2>
-<p>Ablation analysis of decoders (Height-wise Average Pooling) and synthetic degradation training on <strong>25,000 test crops</strong> (containing 50% synthetically degraded plates):</p>
+<p>Impact of replacing 2D attention matrices with Height-wise Average Pooling (HAP) and data synthesis augmentation:</p>
 <table>
 <thead>
 <tr>
@@ -857,7 +857,7 @@
 </tbody>
 </table>
 <blockquote>
-<p>Height-wise Average Pooling (HAP) completely replaces 2D attention matrices, slashing CPU recognition latency from <strong>10.84 ms</strong> down to <strong>8.32 ms</strong> while maintaining superior sequence recognition accuracy of <strong>89.15%</strong> and lowering Character Error Rate (CER) to <strong>3.28%</strong>.</p>
+<p>Height-wise Average Pooling (HAP) completely replaces 2D attention matrices, slashing CPU recognition latency from <strong>~10.84 ms</strong> down to <strong>~8.32 ms</strong> while maintaining superior sequence recognition accuracy of <strong>89.15%</strong> and lowering Character Error Rate (CER) to <strong>3.28%</strong>.</p>
 </blockquote>
 <hr />
 <h2 id="4-cross-regional-generalization-benchmark">4. Cross-Regional Generalization Benchmark</h2>
