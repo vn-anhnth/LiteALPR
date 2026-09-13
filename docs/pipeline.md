@@ -39,10 +39,11 @@ This mathematical factorization enables Ghost Convolution to preserve representa
 | ![Original C2f](figures/generate_c2f.png){ width="320" } | ![Proposed C3Ghost](figures/generate_c3ghost.png){ width="320" } |
 
 ### Key Improvements
-- Reduces parameter count from **3.01M** down to **2.00M** (33.5% reduction).
+- Reduces parameter count from **3.01M** down to **2.00M** (**33.5% reduction**).
 - Reduces computational complexity from **8.19 GFLOPs** down to **5.69 GFLOPs**.
-- Accelerates CPU detection latency from **40.92 ms** to **17.45 ms** (**2.35× speedup**).
-- Preserves high localization precision: **99.45% mAP@50** and **88.41% mAP@50-95**.
+- Latency on NVIDIA RTX 3060: **~9.02 ms** (down from ~10.02 ms in baseline, **1.11× faster**).
+- Latency on AMD Ryzen 5 CPU: **~17.45 ms** (down from ~40.92 ms in baseline, **2.35× faster**).
+- Preserves high localization precision: **99.45% $\text{mAP}_{50}$** and **88.41% $\text{mAP}_{50-95}$**.
 
 ---
 
@@ -70,7 +71,7 @@ LiteALPR introduces the **Efficient RCTC Decoder**, replacing the attention modu
 | ![Original Decoder](figures/original_rctc_decoder.png){ width="350" } | ![Efficient Decoder](figures/efficient_rctc_decoder.png){ width="350" } |
 
 ### Benchmark Impact
-- Model size: **4.22M parameters** (down from 5.11M in baseline SVTRv2).
-- Latency on NVIDIA RTX 3060: **5.03 ms**.
-- Latency on AMD Ryzen 5 CPU: **8.32 ms** (down from 19.82 ms, **2.38× faster**).
-- Sequence Accuracy: **89.15%** with Character Error Rate (CER) of **3.28%**.
+- Model size: **4.22M parameters** (down from **5.11M** in baseline SVTRv2, **17.4% reduction**).
+- Latency on NVIDIA RTX 3060: **~5.03 ms** (down from ~5.85 ms in baseline, **1.16× faster**).
+- Latency on AMD Ryzen 5 CPU: **~8.32 ms** (down from ~10.84 ms in baseline, **1.30× faster**).
+- Sequence Accuracy: **89.15%** with Character Error Rate (CER) of **3.28%** (compared to 88.25% accuracy and 3.56% CER in baseline).

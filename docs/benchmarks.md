@@ -37,14 +37,14 @@ Comparison against existing state-of-the-art and lightweight open-source ALPR pi
 
 Impact of progressively replacing C2f blocks with lightweight C3Ghost modules across head and backbone:
 
-| Configuration | Parameters (M) | GFLOPs | GPU Latency (ms) | CPU Latency (ms) | mAP@50 (%) | mAP@50-95 (%) |
+| Configuration | Parameters (M) | GFLOPs | GPU Latency (ms) | CPU Latency (ms) | $\text{mAP}_{50}$ (%) | $\text{mAP}_{50-95}$ (%) |
 | :--- | :---: | :---: | :---: | :---: | :---: | :---: |
 | Baseline YOLOv8n | 3.01 | 8.19 | 10.02 ± 1.29 | 40.92 ± 5.44 | **99.45%** | 88.48% |
 | Head (C3Ghost) | 2.52 | 7.19 | 9.54 ± 1.24 | 19.69 ± 4.26 | 99.44% | **89.33%** |
 | Backbone (C3Ghost) | 2.49 | 6.70 | 9.04 ± 0.51 | 19.59 ± 3.38 | **99.45%** | 89.20% |
 | **YOLOv8n-Efficient (Ours)** | **2.00** | **5.69** | **9.02 ± 0.98** | **17.45 ± 1.62** | **99.45%** | 88.41% |
 
-> Replacing C2f with C3Ghost across both backbone and head achieves a **2.35× speedup on CPU** ($40.92 \rightarrow 17.45\text{ ms}$) and **33.5% parameter reduction** ($3.01\text{M} \rightarrow 2.00\text{M}$) with **zero accuracy drop** (maintains 99.45% mAP@50).
+> Replacing C2f with C3Ghost across both backbone and head achieves a **2.35× speedup on CPU** ($40.92 \rightarrow 17.45\text{ ms}$) and **33.5% parameter reduction** ($3.01\text{M} \rightarrow 2.00\text{M}$) with **zero accuracy drop** (maintains 99.45% $\text{mAP}_{50}$).
 
 ---
 
@@ -61,7 +61,7 @@ Ablation analysis of decoders (Height-wise Average Pooling) and synthetic degrad
 | **HAP (Ours)** | No | **4.22** | 5.29 ± 1.19 | 9.05 ± 1.34 | 86.55% | 4.16% |
 | **HAP + Degrade (Ours)** | **Yes** | **4.22** | **5.03 ± 0.51** | **8.32 ± 0.98** | **89.15%** | **3.28%** |
 
-> Height-wise Average Pooling (HAP) completely replaces 2D attention matrices, slashing CPU recognition latency from **10.97 ms** down to **8.32 ms** while synthetic degradation training boosts sequence recognition accuracy up to **89.15%** and lowers Character Error Rate (CER) to **3.28%**.
+> Height-wise Average Pooling (HAP) completely replaces 2D attention matrices, slashing CPU recognition latency from **10.84 ms** down to **8.32 ms** while maintaining superior sequence recognition accuracy of **89.15%** and lowering Character Error Rate (CER) to **3.28%**.
 
 ---
 
