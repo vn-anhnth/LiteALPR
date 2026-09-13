@@ -7,9 +7,10 @@ __pycache__/
 env/
 venv/
 .env
-.venv_38_std/
 .venv_38/
+.venv_38_gpu/
 .venv_38_cpu/
+.venv_38_std/
 
 # Build and Distribution
 build/
