@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+    <url>
+         <loc>https://vn-anhnth.github.io/LiteALPR/0.1.5/</loc>
+         <lastmod>2026-09-13</lastmod>
+    </url>
+    <url>
+         <loc>https://vn-anhnth.github.io/LiteALPR/0.1.5/benchmarks/</loc>
+         <lastmod>2026-09-13</lastmod>
+    </url>
+    <url>
+         <loc>https://vn-anhnth.github.io/LiteALPR/0.1.5/citation/</loc>
+         <lastmod>2026-09-13</lastmod>
+    </url>
+    <url>
+         <loc>https://vn-anhnth.github.io/LiteALPR/0.1.5/getting-started/</loc>
+         <lastmod>2026-09-13</lastmod>
+    </url>
+    <url>
+         <loc>https://vn-anhnth.github.io/LiteALPR/0.1.5/pipeline/</loc>
+         <lastmod>2026-09-13</lastmod>
+    </url>
+    <url>
+         <loc>https://vn-anhnth.github.io/LiteALPR/0.1.5/training/</loc>
+         <lastmod>2026-09-13</lastmod>
+    </url>
+    <url>
+         <loc>https://vn-anhnth.github.io/LiteALPR/0.1.5/usage/</loc>
+         <lastmod>2026-09-13</lastmod>
+    </url>
+</urlset>
