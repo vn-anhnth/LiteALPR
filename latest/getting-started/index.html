@@ -641,6 +641,7 @@
 </div>
 <hr />
 <h2 id="hardware-requirements">Hardware Requirements</h2>
+<p>LiteALPR is designed to be lightweight, running efficiently on both standard CPU environments and GPU accelerators:</p>
 <table>
 <thead>
 <tr>
@@ -651,9 +652,9 @@
 </thead>
 <tbody>
 <tr>
-<td style="text-align: left;"><strong>OS</strong></td>
+<td style="text-align: left;"><strong>Operating System</strong></td>
 <td style="text-align: left;">Windows 10/11, Ubuntu 20.04+, macOS</td>
-<td style="text-align: left;">Linux / Windows 64-bit</td>
+<td style="text-align: left;">Ubuntu 20.04/22.04 LTS, Windows 64-bit</td>
 </tr>
 <tr>
 <td style="text-align: left;"><strong>Python</strong></td>
@@ -663,16 +664,21 @@
 <tr>
 <td style="text-align: left;"><strong>CPU</strong></td>
 <td style="text-align: left;">Dual-core x86_64 / ARM64</td>
-<td style="text-align: left;">4+ cores (e.g., AMD Ryzen or Intel Core i5+)</td>
+<td style="text-align: left;">4+ cores (Intel Core i5+, AMD Ryzen)</td>
 </tr>
 <tr>
-<td style="text-align: left;"><strong>RAM</strong></td>
-<td style="text-align: left;">2 GB</td>
+<td style="text-align: left;"><strong>RAM / Memory</strong></td>
+<td style="text-align: left;">2 GB (~350 MB memory footprint during inference)</td>
 <td style="text-align: left;">4 GB+</td>
 </tr>
 <tr>
+<td style="text-align: left;"><strong>Storage</strong></td>
+<td style="text-align: left;">~100 MB for library and model weights</td>
+<td style="text-align: left;">1 GB+ (SSD recommended)</td>
+</tr>
+<tr>
 <td style="text-align: left;"><strong>GPU (Optional)</strong></td>
-<td style="text-align: left;">None (runs fast on CPU)</td>
+<td style="text-align: left;">None (runs smoothly on CPU)</td>
 <td style="text-align: left;">NVIDIA GPU with CUDA 11.8 / 12.x</td>
 </tr>
 </tbody>
@@ -684,9 +690,11 @@
 </span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>
 </span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="n">model</span> <span class="o">=</span> <span class="n">LiteALPR</span><span class="p">()</span>
 </span></code></pre></div>
-<p>LiteALPR checks your local cache directory (<code>~/.cache/huggingface/hub/</code> or custom paths) for the official ONNX models. If they are not found, it automatically downloads the latest models from our HuggingFace repository:
-- <strong>Detection Model</strong>: <code>yolov8n_efficient/best_416.onnx</code> (~8.1 MB)
-- <strong>Recognition Model</strong>: <code>svtr26_tiny/best.onnx</code> (~17.0 MB)</p>
+<p>LiteALPR checks your local cache directory (<code>~/.cache/huggingface/hub/</code> or custom paths) for the official ONNX models. If they are not found, it automatically downloads the latest models from our HuggingFace repository:</p>
+<ul>
+<li><strong>Detection Model</strong>: <code>yolov8n_efficient/best_416.onnx</code> (~8.1 MB)</li>
+<li><strong>Recognition Model</strong>: <code>svtr26_tiny/best.onnx</code> (~17.0 MB)</li>
+</ul>
 <p>You do not need to download or place model files manually!</p>
 
 
