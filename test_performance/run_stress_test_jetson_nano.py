@@ -9,9 +9,10 @@ import numpy as np
 import pycuda.driver as cuda
 import tensorrt as trt
 
-logging.basicConfig(level=logging.INFO, format='%(asctime)s INFO: %(message)s', datefmt='%H:%M:%S')
+logging.basicConfig(level=logging.INFO, format="%(asctime)s INFO: %(message)s", datefmt="%H:%M:%S")
 
 TRT_LOGGER = trt.Logger(trt.Logger.WARNING)
+
 
 class TRTWrapper:
     def __init__(self, engine_path):
@@ -35,46 +36,48 @@ class TRTWrapper:
             device_mem = cuda.mem_alloc(host_mem.nbytes)
             self.bindings.append(int(device_mem))
             if self.engine.binding_is_input(binding):
-                self.inputs.append({'host': host_mem, 'device': device_mem, 'shape': shape})
+                self.inputs.append({"host": host_mem, "device": device_mem, "shape": shape})
             else:
-                self.outputs.append({'host': host_mem, 'device': device_mem, 'shape': shape})
+                self.outputs.append({"host": host_mem, "device": device_mem, "shape": shape})
         self.memory_allocated = True
 
     def infer(self, input_data):
-        if not self.memory_allocated or tuple(self.inputs[0]['shape']) != input_data.shape:
+        if not self.memory_allocated or tuple(self.inputs[0]["shape"]) != input_data.shape:
             if self.memory_allocated:
                 for inp in self.inputs:
-                    inp['device'].free()
+                    inp["device"].free()
                 for out in self.outputs:
-                    out['device'].free()
+                    out["device"].free()
                 self.inputs = []
                 self.outputs = []
                 self.bindings = []
             self.allocate_memory(input_data.shape)
 
-        np.copyto(self.inputs[0]['host'], input_data.ravel())
-        cuda.memcpy_htod_async(self.inputs[0]['device'], self.inputs[0]['host'], self.stream)
+        np.copyto(self.inputs[0]["host"], input_data.ravel())
+        cuda.memcpy_htod_async(self.inputs[0]["device"], self.inputs[0]["host"], self.stream)
         self.context.execute_async_v2(bindings=self.bindings, stream_handle=self.stream.handle)
         for out in self.outputs:
-            cuda.memcpy_dtoh_async(out['host'], out['device'], self.stream)
+            cuda.memcpy_dtoh_async(out["host"], out["device"], self.stream)
         self.stream.synchronize()
-        return [out['host'].reshape(out['shape']) for out in self.outputs]
+        return [out["host"].reshape(out["shape"]) for out in self.outputs]
 
     def destroy(self):
         try:
             self.stream.synchronize()
             for inp in self.inputs:
-                inp['device'].free()
+                inp["device"].free()
             for out in self.outputs:
-                out['device'].free()
+                out["device"].free()
         except Exception:
             pass
+
 
 def preprocess_yolo(img, img_size=416):
     img_rgb = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
     img_resized = cv2.resize(img_rgb, (img_size, img_size))
     img_float = img_resized.astype(np.float32).transpose((2, 0, 1)) / 255.0
     return np.expand_dims(img_float, axis=0)
+
 
 def preprocess_svtr(crops):
     base_shape = [[64, 64], [96, 48], [112, 40], [128, 32]]
@@ -98,6 +101,7 @@ def preprocess_svtr(crops):
         return np.stack(tensors, axis=0)
     return None
 
+
 def nms(boxes, scores, iou_threshold=0.45):
     if len(boxes) == 0:
         return []
@@ -117,6 +121,7 @@ def nms(boxes, scores, iou_threshold=0.45):
         order = order[inds + 1]
     return keep
 
+
 def postprocess_yolo(output, orig_shape, conf_thres=0.25, det_size=416):
     out = output[0][0].T
     scores = out[:, 4]
@@ -127,10 +132,10 @@ def postprocess_yolo(output, orig_shape, conf_thres=0.25, det_size=416):
         return []
     boxes = out[:, :4]
     x_c, y_c, w, h = boxes[:, 0], boxes[:, 1], boxes[:, 2], boxes[:, 3]
-    boxes[:, 0] = x_c - w/2
-    boxes[:, 1] = y_c - h/2
-    boxes[:, 2] = x_c + w/2
-    boxes[:, 3] = y_c + h/2
+    boxes[:, 0] = x_c - w / 2
+    boxes[:, 1] = y_c - h / 2
+    boxes[:, 2] = x_c + w / 2
+    boxes[:, 3] = y_c + h / 2
     keep = nms(boxes, scores)
     final_boxes = boxes[keep]
     h_orig, w_orig = orig_shape[:2]
@@ -149,32 +154,55 @@ def greedy_decode(preds, char_list, blank_idx=0):
             text += char_list[idx]
     return text
 
+
 def get_jetson_temp():
 
     try:
-        with open('/sys/devices/virtual/thermal/thermal_zone0/temp', 'r') as f:
+        with open("/sys/devices/virtual/thermal/thermal_zone0/temp", "r") as f:
             temp = float(f.read().strip()) / 1000.0
         return temp
     except Exception:
         return 0.0
 
+
 def main():
     parser = argparse.ArgumentParser(description="LiteALPR Jetson Nano Stress Test Script")
     parser.add_argument("--images_dir", type=str, required=True, help="Path to test images")
-    parser.add_argument("--det_model_path", type=str, required=True, help="Path to the detection TensorRT engine (.engine)")
-    parser.add_argument("--rec_model_path", type=str, required=True, help="Path to the recognition TensorRT engine (.engine)")
-    parser.add_argument("--dict_path", type=str, default="dataset/license_plates_ocr/license_plate_dict.txt", help="Path to the character dictionary")
+    parser.add_argument(
+        "--det_model_path",
+        type=str,
+        required=True,
+        help="Path to the detection TensorRT engine (.engine)",
+    )
+    parser.add_argument(
+        "--rec_model_path",
+        type=str,
+        required=True,
+        help="Path to the recognition TensorRT engine (.engine)",
+    )
+    parser.add_argument(
+        "--dict_path",
+        type=str,
+        default="dataset/license_plates_ocr/license_plate_dict.txt",
+        help="Path to the character dictionary",
+    )
     parser.add_argument("--duration", type=int, default=30, help="Stress test duration in minutes")
-    parser.add_argument("--output_csv", type=str, default="run_stress_test_results.csv", help="Output CSV file path")
+    parser.add_argument(
+        "--output_csv", type=str, default="run_stress_test_results.csv", help="Output CSV file path"
+    )
     args = parser.parse_args()
 
     logging.info(f"Starting Stress Test for {args.duration} minutes...")
 
-    with open(args.dict_path, 'r', encoding='utf-8') as f:
+    with open(args.dict_path, "r", encoding="utf-8") as f:
         char_list = [line.strip() for line in f.readlines()]
-    char_list = ['blank'] + char_list
+    char_list = ["blank"] + char_list
 
-    image_files = [os.path.join(args.images_dir, f) for f in os.listdir(args.images_dir) if f.lower().endswith(('.png', '.jpg', '.jpeg'))][:50]
+    image_files = [
+        os.path.join(args.images_dir, f)
+        for f in os.listdir(args.images_dir)
+        if f.lower().endswith((".png", ".jpg", ".jpeg"))
+    ][:50]
     images = [cv2.imread(f) for f in image_files]
     if not images:
         logging.error("No images found in dataset!")
@@ -206,9 +234,9 @@ def main():
 
     logging.info("Stress Test Started!")
 
-    with open(args.output_csv, mode='w', newline='') as f:
+    with open(args.output_csv, mode="w", newline="") as f:
         writer = csv.writer(f)
-        writer.writerow(['Time (min)', 'FPS', 'Latency (ms)', 'Temp (C)', 'Plate'])
+        writer.writerow(["Time (min)", "FPS", "Latency (ms)", "Temp (C)", "Plate"])
 
         start_time = time.time()
         end_time = start_time + args.duration * 60
@@ -229,7 +257,12 @@ def main():
             crops = []
             for box in boxes:
                 x1, y1, x2, y2 = box
-                x1, y1, x2, y2 = max(0, x1), max(0, y1), min(img.shape[1], x2), min(img.shape[0], y2)
+                x1, y1, x2, y2 = (
+                    max(0, x1),
+                    max(0, y1),
+                    min(img.shape[1], x2),
+                    min(img.shape[0], y2),
+                )
                 if x2 > x1 and y2 > y1:
                     crops.append(img[y1:y2, x1:x2])
 
@@ -250,10 +283,20 @@ def main():
                 latency = 1000.0 / fps if fps > 0 else 0.0
                 temp = get_jetson_temp()
 
-                writer.writerow([f"{elapsed_min:.2f}", f"{fps:.2f}", f"{latency:.2f}", f"{temp:.1f}", last_plate_text])
+                writer.writerow(
+                    [
+                        f"{elapsed_min:.2f}",
+                        f"{fps:.2f}",
+                        f"{latency:.2f}",
+                        f"{temp:.1f}",
+                        last_plate_text,
+                    ]
+                )
                 f.flush()
 
-                logging.info(f"[{elapsed_min:.2f} min] FPS: {fps:.2f} | Latency: {latency:.2f} ms | Temp: {temp:.1f} C | Plate: {last_plate_text}")
+                logging.info(
+                    f"[{elapsed_min:.2f} min] FPS: {fps:.2f} | Latency: {latency:.2f} ms | Temp: {temp:.1f} C | Plate: {last_plate_text}"
+                )
 
                 last_log_time = current_time
                 frames_since_last_log = 0
@@ -262,5 +305,6 @@ def main():
     detector.destroy()
     ocr_model.destroy()
 
-if __name__ == '__main__':
+
+if __name__ == "__main__":
     main()
