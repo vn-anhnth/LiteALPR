@@ -45,5 +45,4 @@ pretrained_models/
 *.pth
 *.safetensors
 
-test_performance/
 site/

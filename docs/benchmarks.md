@@ -18,7 +18,7 @@ All benchmarks were evaluated in native ONNX FP32 precision, reporting latency a
 
 ## 1. End-to-End Pipeline Performance
 
-Comparison against existing state-of-the-art and lightweight open-source ALPR pipelines:
+Comparison against existing lightweight open-source ALPR pipelines:
 
 | Platform | Model / Pipeline | Pre (ms) | Infer (ms) | Post (ms) | Total (ms) | Throughput (FPS) | Accuracy (%) |
 | :--- | :--- | :---: | :---: | :---: | :---: | :---: | :---: |
@@ -30,6 +30,17 @@ Comparison against existing state-of-the-art and lightweight open-source ALPR pi
 | | **LiteALPR (Ours)** | 6.52 ± 3.99 | 34.04 ± 9.32 | 1.80 ± 2.06 | 42.67 ± 8.66 | 23.4 ± 0.2 | **89.15%** |
 
 > **Key Takeaway:** While alternative lightweight pipelines such as [`fast-alpr`](https://github.com/ankandrew/fast-alpr) degrade down to 22.67% accuracy under blur, low light, and tilt angles, LiteALPR preserves **89.15% sequence accuracy** while maintaining ultra-high throughput (**~66.5 FPS** on GPU, **~23.4 FPS** on CPU).
+
+### Reproduce Desktop Benchmarks
+To evaluate the end-to-end pipeline latency and throughput on your own hardware, run the following benchmark script:
+
+```bash
+python test_performance/benchmark_latency.py \
+  --images_dir dataset/det/test/images \
+  --det_model_path output/det/yolov8n_efficient/train/weights/best_416.onnx \
+  --rec_model_path output/rec/svtr26_tiny/train/best.onnx \
+  --device cuda:0  # or use 'cpu'
+```
 
 ---
 
@@ -61,7 +72,7 @@ Impact of replacing 2D attention matrices with Height-wise Average Pooling (HAP)
 | **HAP (Ours)** | No | **4.22** | 5.29 ± 1.19 | 9.05 ± 1.34 | 86.55% | 4.16% |
 | **HAP + Degrade (Ours)** | **Yes** | **4.22** | **5.03 ± 0.51** | **8.32 ± 0.98** | **89.15%** | **3.28%** |
 
-> Height-wise Average Pooling (HAP) completely replaces 2D attention matrices, slashing CPU recognition latency from **~10.84 ms** down to **~8.32 ms** while maintaining superior sequence recognition accuracy of **89.15%** and lowering Character Error Rate (CER) to **3.28%**.
+> Height-wise Average Pooling (HAP) completely replaces 2D attention matrices, reducing CPU recognition latency from **~10.84 ms** down to **~8.32 ms** while maintaining a sequence recognition accuracy of **89.15%** and lowering Character Error Rate (CER) to **3.28%**.
 
 ---
 

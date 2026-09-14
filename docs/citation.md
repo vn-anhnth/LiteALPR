@@ -8,7 +8,7 @@ If you find LiteALPR useful for your research or production deployments, please 
 
 ```bibtex
 @article{nguyen2026litealpr,
-  title     = {LiteALPR: An ultra-fast and accurate open-source license plate recognition library},
+  title     = {LiteALPR: A lightweight open-source library for fast and accurate license plate recognition},
   author    = {Nguyen, Anh and Hoang, Vinh Truong},
   journal   = {SoftwareX},
   year      = {2026},

@@ -1,5 +1,5 @@
 site_name: LiteALPR Documentation
-site_description: An ultra-fast, robust, and lightweight License Plate Recognition (ALPR) library.
+site_description: A robust and lightweight License Plate Recognition (ALPR) library.
 site_author: Anh Nguyen
 site_url: https://vn-anhnth.github.io/LiteALPR/
 repo_url: https://github.com/vn-anhnth/LiteALPR
@@ -71,4 +71,6 @@ nav:
   - Python API & Usage: usage.md
   - Training & Tools: training.md
   - Benchmarks: benchmarks.md
+  - Reference Environment: reference-environment.md
+  - Jetson Nano Deployment: jetson-nano.md
   - Paper & Citation: citation.md

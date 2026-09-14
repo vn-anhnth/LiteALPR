@@ -2,6 +2,7 @@
 
 [![PyPI version](https://badge.fury.io/py/litealpr.svg)](https://pypi.org/project/litealpr/)
 [![Documentation](https://img.shields.io/badge/docs-mkdocs--material-blue.svg)](https://vn-anhnth.github.io/LiteALPR/)
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.22722292.svg)](https://doi.org/10.5281/zenodo.22722292)
 
 <p align="center">
   <img src="https://raw.githubusercontent.com/vn-anhnth/LiteALPR/main/docs/figures/intro1.png" width="350">
@@ -9,9 +10,9 @@
   <em>Visual samples of challenging real-world license plates (motion blur, diverse layouts, low light) that LiteALPR is built to handle.</em>
 </p>
 
-🚀 **LiteALPR** is an accurate, extremely fast, and flexible End-to-End License Plate Recognition library.
+🚀 **LiteALPR** is a lightweight, accurate, and flexible End-to-End License Plate Recognition library.
 
-Unlike traditional ALPR (Automatic License Plate Recognition) systems that rely on heavy architectures, LiteALPR introduces structural improvements designed specifically for high-throughput applications. Our framework achieves ultra-fast inference speeds without sacrificing accuracy on blurry or degraded license plates through two major architectural optimizations.
+Unlike traditional ALPR (Automatic License Plate Recognition) systems that rely on heavy architectures, LiteALPR introduces structural improvements designed specifically for high-throughput applications. Our framework achieves fast inference speeds without sacrificing accuracy on blurry or degraded license plates through two major architectural optimizations.
 
 ---
 
@@ -19,7 +20,7 @@ Unlike traditional ALPR (Automatic License Plate Recognition) systems that rely 
 
 - [🧩 LiteALPR Pipeline](#-litealpr-pipeline)
   - [1. YOLOv8n-Efficient for Fast Detection](#1-yolov8n-efficient-for-fast-detection)
-  - [2. SVTR26-Tiny for Lightning-Fast Recognition](#2-svtr26-tiny-for-lightning-fast-recognition)
+  - [2. SVTR26-Tiny for Fast Recognition](#2-svtr26-tiny-for-fast-recognition)
 - [🛠 Installation](#-installation)
 - [⚡ Quick Start](#-quick-start)
   - [1. End-to-End Recognition (CPU & GPU)](#1-end-to-end-recognition-cpu--gpu)
@@ -55,9 +56,9 @@ We replaced the **original heavy C2f blocks** in the YOLOv8 neck with **lightwei
 | :---: | :---: |
 | <img src="https://raw.githubusercontent.com/vn-anhnth/LiteALPR/main/docs/figures/generate_c2f.png" height="250"> | <img src="https://raw.githubusercontent.com/vn-anhnth/LiteALPR/main/docs/figures/generate_c3ghost.png" height="250"> |
 
-Leveraging Ghost modules, this architectural enhancement significantly increases detection speed while maintaining high localization accuracy. By generating more feature maps from cheap operations, it eliminates computational redundancy, enabling ultra-fast performance on consumer-grade hardware without compromising precision.
+Leveraging Ghost modules, this architectural enhancement significantly increases detection speed while maintaining high localization accuracy. By generating more feature maps from cheap operations, it eliminates computational redundancy, enabling highly efficient performance on consumer-grade hardware without compromising precision.
 
-### 2. SVTR26-Tiny for Lightning-Fast Recognition
+### 2. SVTR26-Tiny for Fast Recognition
 To make the SVTR26 OCR model viable for strict high-speed constraints, we applied a key modification:
 * **Efficient RCTC Decoder:** We entirely discarded the **Original heavy attention-based RCTC Decoder**. Since license plates have a rigid, horizontally aligned structure, we replaced 2D attention with a simple **Height-wise Average Pooling** operation. This elegantly compresses the 2D features into a 1D sequence, completely bypassing expensive matrix multiplications.
 
@@ -65,7 +66,7 @@ To make the SVTR26 OCR model viable for strict high-speed constraints, we applie
 | :---: | :---: |
 | <img src="https://raw.githubusercontent.com/vn-anhnth/LiteALPR/main/docs/figures/original_rctc_decoder.png" width="400"> | <img src="https://raw.githubusercontent.com/vn-anhnth/LiteALPR/main/docs/figures/efficient_rctc_decoder.png" width="400"> |
 
-By integrating these specialized components, **LiteALPR** delivers unmatched production-ready performance, processing frames at blazing speeds!
+By integrating these specialized components, **LiteALPR** delivers robust production-ready performance, processing frames efficiently in high-throughput pipelines.
 
 ---
 
@@ -134,7 +135,7 @@ print(f"Text: {text} | Confidence: {score:.4f}")
 LiteALPR seamlessly supports both **ONNX Runtime** (recommended for ultra-fast deployment) and **PyTorch** checkpoints (`.pt` / `.pth`):
 
 ```python
-# Option A: Load optimized ONNX models (Ultra-Fast)
+# Option A: Load optimized ONNX models (High-Throughput)
 model = LiteALPR(
     det_model_path="/path/to/your/yolov8n_efficient/best.onnx",
     rec_model_path="/path/to/your/svtr26_tiny/best.onnx",
@@ -159,13 +160,14 @@ git clone https://github.com/vn-anhnth/LiteALPR.git
 cd LiteALPR
 
 # Choose based on your runtime environment:
+pip install -r requirements.lock       # Exact reference environment for reproducibility
 pip install -r requirements.txt        # CPU environment
 pip install -r requirements-gpu.txt    # GPU ONNX acceleration
 ```
 
 ### 1. Model Weights Preparation
 Before training or evaluation, download the official pre-trained models from our [HuggingFace Repository](https://huggingface.co/anhone3/LiteALPR) and place them in the following structure:
-```
+```text
 LiteALPR/
 └── pretrained_models/
     ├── det/
@@ -268,10 +270,10 @@ python tools/eval_rec.py -c configs/rec/svtr26/svtr26_tiny.yml -m output/rec/svt
 Test your checkpoints directly on directories of images (supports `--save_log` to save predictions):
 ```bash
 # Infer Detection
-python tools/infer_det.py -m pretrained_models/det/yolov8n_efficient/best.pt -d dataset/det/test/images --save_log
+python tools/infer_det.py -m output/det/yolov8n_efficient/train/weights/best.pt -d dataset/det/test/images --save_log
 
 # Infer Recognition
-python tools/infer_rec.py -m pretrained_models/rec/svtr26_tiny/best.pth -d dataset/rec/test --save_log
+python tools/infer_rec.py -m output/rec/svtr26_tiny/train/best.pth -d dataset/rec/test --save_log
 ```
 
 ### 6. Export to ONNX
@@ -281,10 +283,12 @@ Export your trained PyTorch models to the ONNX format for deployment in producti
 # Export Detection (default: imgsz=416, opset=12)
 # The ONNX file will automatically be saved alongside the original `.pt` file (e.g., best_416.onnx)
 python tools/export_det.py -m output/det/yolov8n_efficient/train/weights/best.pt --imgsz 416 --opset 18
+# -> Expected output: output/det/yolov8n_efficient/train/weights/best_416.onnx
 
 # Export Recognition (default: 128x32, opset=12)
 # If you need it to accept dynamic width images in production, add the `--dynamic` flag
 python tools/export_rec.py -m output/rec/svtr26_tiny/train/best.pth --save_path output/rec/svtr26_tiny/train/best.onnx --opset 18 --dynamic
+# -> Expected output: output/rec/svtr26_tiny/train/best.onnx
 ```
 
 ## 🤝 Acknowledgements

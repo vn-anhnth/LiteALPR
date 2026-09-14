@@ -7,8 +7,9 @@ authors:
 - family-names: "Hoang"
   given-names: "Vinh Truong"
   orcid: "https://orcid.org/0000-0002-3464-3894"
-title: "LiteALPR: An ultra-fast and accurate open-source license plate recognition library"
-version: 0.1.6
+title: "LiteALPR: A lightweight open-source library for fast and accurate license plate recognition"
+doi: "10.5281/zenodo.22722292"
+version: 0.1.7
 date-released: 2026-09-13
 url: "https://github.com/vn-anhnth/LiteALPR"
 preferred-citation:
@@ -18,6 +19,6 @@ preferred-citation:
     given-names: "Anh"
   - family-names: "Hoang"
     given-names: "Vinh Truong"
-  title: "LiteALPR: An ultra-fast and accurate open-source license plate recognition library"
+  title: "LiteALPR: A lightweight open-source library for fast and accurate license plate recognition"
   journal: "SoftwareX"
   year: 2026

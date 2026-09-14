@@ -32,7 +32,7 @@ LiteALPR substitutes dense Bottlenecks with **C3Ghost** blocks. The underlying *
 
     $$Y = [Y', Y'']$$
 
-This mathematical factorization enables Ghost Convolution to preserve representational capacity while drastically slashing redundant FLOPs.
+This mathematical factorization enables Ghost Convolution to preserve representational capacity while significantly reducing FLOPs.
 
 | Baseline: Heavy C2f Block | Proposed: Lightweight C3Ghost Block |
 | :---: | :---: |

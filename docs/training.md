@@ -164,7 +164,7 @@ Test your checkpoints directly on directories of images. Pass `--save_log` to pe
 ### Infer Detection
 ```bash
 python tools/infer_det.py \
-    -m pretrained_models/det/yolov8n_efficient/best.pt \
+    -m output/det/yolov8n_efficient/train/weights/best.pt \
     -d dataset/det/test/images \
     --save_log
 ```
@@ -172,7 +172,7 @@ python tools/infer_det.py \
 ### Infer Recognition
 ```bash
 python tools/infer_rec.py \
-    -m pretrained_models/rec/svtr26_tiny/best.pth \
+    -m output/rec/svtr26_tiny/train/best.pth \
     -d dataset/rec/test \
     --save_log
 ```
