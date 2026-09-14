@@ -28,10 +28,10 @@ Unlike conventional ALPR systems that rely on computationally expensive models o
 ## Key Highlights
 
 - ⚡ **High Throughput**: **~66.5 FPS** on an NVIDIA RTX 3060 and **~23.4 FPS** on an AMD Ryzen 5 4600G CPU.
-- 🎯 **High Accuracy**: **89.15%** sequence accuracy on challenging real-world plates, compared to only 22.67% from existing lightweight alternatives like `fast-alpr`.
-- 📦 **Plug-and-Play Python API**: Simple `LiteALPR()` pipeline with automatic HuggingFace model weight caching.
+- 🎯 **High Accuracy**: **89.15%** sequence accuracy on challenging real-world plates, compared to only 22.67% from existing lightweight alternatives like [fast-alpr](https://github.com/ankandrew/fast-alpr).
+- 📦 **Plug-and-Play Python API**: Simple `LiteALPR()` pipeline with automatic Hugging Face model weight caching.
 - 🔄 **Flexible Backends**: Native support for **ONNX Runtime** (CPU & CUDA execution providers) as well as raw PyTorch (`.pt` / `.pth`).
-- 🌐 **Cross-Regional Support**: Validated on diverse license plate formats and multi-line layouts (Brazil RodoSol-ALPR, China CBLPRD-330k, Vietnam traffic footage).
+- 🌐 **Cross-Regional Support**: Validated on diverse license plate formats and multi-line layouts ([Brazil (RodoSol-ALPR)](https://github.com/laroca/RodoSol-ALPR), [China (CBLPRD-330k)](https://github.com/detectRecog/CBLPRD), [Vietnam](https://www.kaggle.com/datasets/duydieunguyen/licenseplates)).
 
 ---
 

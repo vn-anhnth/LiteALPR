@@ -23,7 +23,7 @@ def download_from_hf(filename):
     try:
         from huggingface_hub import hf_hub_download
 
-        print(f"[LiteALPR] Downloading/Verifying {filename} from HuggingFace...")
+        print(f"[LiteALPR] Downloading/Verifying {filename} from Hugging Face...")
         return hf_hub_download(repo_id="anhone3/LiteALPR", filename=filename)
     except ImportError:
         raise ImportError(

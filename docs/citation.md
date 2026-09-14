@@ -36,4 +36,4 @@ If you find LiteALPR useful for your research or production deployments, please 
 - **Source Code**: [https://github.com/vn-anhnth/LiteALPR](https://github.com/vn-anhnth/LiteALPR)
 - **License**: GNU Affero General Public License v3.0 (AGPL-3.0)
 - **PyPI Package**: [https://pypi.org/project/litealpr/](https://pypi.org/project/litealpr/)
-- **Pretrained Models**: [Hugging Face Repository](https://huggingface.co/anhone3/LiteALPR)
+- **Pretrained Models**: [Hugging Face repository](https://huggingface.co/anhone3/LiteALPR/tree/main)

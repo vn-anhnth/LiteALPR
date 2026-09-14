@@ -20,6 +20,7 @@ keywords = [
     "computer-vision",
     "license-plate-recognition",
     "onnxruntime",
+    "tensorrt",
     "plate-recognition",
     "yolov8",
     "python",

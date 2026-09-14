@@ -1,18 +1,33 @@
 # Benchmarks & Experimental Results
 
-LiteALPR was rigorously benchmarked on a comprehensive multi-national dataset totaling **52,595 images**:
+LiteALPR was trained and rigorously benchmarked on a large multi-national dataset (**52,595 total images**), comprising:
 
-- **[Brazil (RodoSol-ALPR)](https://github.com/raysonlaroca/rodosol-alpr-dataset)**: **20,000 images** (with 9,560 evaluated in test set)
-- **[China (CBLPRD-330k)](https://github.com/SunlifeV/CBLPRD-330k)**: **20,000 images** (with 9,450 evaluated in test set)
-- **[Vietnam](https://www.kaggle.com/datasets/duydieunguyen/licenseplates)**: **12,595 images** (public dataset + self-collected traffic footage, with 5,990 evaluated in test set)
+- **[Brazil (RodoSol-ALPR)](https://github.com/raysonlaroca/rodosol-alpr-dataset)**: 20,000 images
+- **[China (CBLPRD-330k)](https://github.com/SunlifeV/CBLPRD-330k)**: 20,000 images
+- **[Vietnam](https://www.kaggle.com/datasets/duydieunguyen/licenseplates)**: 12,595 images (public dataset + self-collected traffic footage)
 
-For the text recognition task, the full corpus of **52,595 localized plate crops** was used. To simulate challenging real-world environments and ensure the OCR engine's resilience, **half (50%) of these crops were artificially distorted** to emulate out-of-focus optics and high-speed motion blur. The recognition dataset was distributed into:
+### Detection Dataset
+The full-resolution images were split for the YOLOv8n-Efficient detector:
 
-- **Training set**: 25,000 crops
-- **Validation set**: 2,595 crops
-- **Test set**: 25,000 crops (comprising 9,560 from Brazil, 9,450 from China, and 5,990 from Vietnam)
+- **Training**: 42,136 images
+- **Validation**: 5,229 images
+- **Test**: 5,230 images
 
-All benchmarks were evaluated in native ONNX FP32 precision, reporting latency and throughput as $\text{mean} \pm \text{std}$ evaluated over 1,000 real-world test images or cropped plates across 5 consecutive execution passes.
+### Recognition Dataset
+The **52,595** localized license plates were cropped out. To ensure the model is robust to real-world conditions, **50% of the crops were artificially degraded** (e.g., motion blur, noise).
+
+- **Training**: 25,000 crops
+- **Validation**: 2,595 crops
+- **Test**: 25,000 crops
+
+**Cross-Regional Test Set Breakdown** (25,000 crops):
+
+- **Brazil**: 9,560 plates
+- **China**: 9,450 plates
+- **Vietnam**: 5,990 plates
+
+!!! info "Benchmarking Methodology"
+    All benchmarks were evaluated in native ONNX FP32 precision. To ensure statistical reliability, **latency and throughput (mean ± std)** were measured over **1,000 real-world test images** (or cropped plates) across **5 consecutive execution passes**.
 
 ---
 
@@ -61,16 +76,16 @@ Impact of progressively replacing C2f blocks with lightweight C3Ghost modules ac
 
 ## 3. Recognition Module Ablation (SVTR26-Tiny)
 
-Impact of replacing 2D attention matrices with Height-wise Average Pooling (HAP) and data synthesis augmentation:
+Impact of replacing 2D attention matrices with Height-wise Average Pooling (HAP) and data synthesis augmentation (Accuracy and CER are reported as mean ± std over 3 random seeds):
 
 | Decoder Architecture | Synthetic Degradation | Params (M) | GPU Lat. (ms) | CPU Lat. (ms) | Accuracy (%) | CER (%) |
 | :--- | :---: | :---: | :---: | :---: | :---: | :---: |
-| Baseline (Full Attention) | No | 5.11 | 5.55 ± 0.92 | 10.97 ± 1.26 | 86.71% | 4.13% |
-| Baseline (Full Attention) | Yes | 5.11 | 5.85 ± 0.89 | 10.84 ± 0.76 | 88.25% | 3.56% |
-| w/o Self-Attention | No | 4.33 | 5.95 ± 1.16 | 9.79 ± 0.74 | 85.98% | 4.29% |
-| w/o Self-Attention | Yes | 4.33 | 5.58 ± 0.77 | 9.81 ± 0.73 | 88.52% | 3.48% |
-| **HAP (Ours)** | No | **4.22** | 5.29 ± 1.19 | 9.05 ± 1.34 | 86.55% | 4.16% |
-| **HAP + Degrade (Ours)** | **Yes** | **4.22** | **5.03 ± 0.51** | **8.32 ± 0.98** | **89.15%** | **3.28%** |
+| Baseline (Full Attention) | No | 5.11 | 5.55 ± 0.92 | 10.97 ± 1.26 | 86.71 ± 0.12% | 4.13 ± 0.09% |
+| Baseline (Full Attention) | Yes | 5.11 | 5.85 ± 0.89 | 10.84 ± 0.76 | 88.25 ± 0.11% | 3.56 ± 0.06% |
+| w/o Self-Attention | No | 4.33 | 5.95 ± 1.16 | 9.79 ± 0.74 | 85.98 ± 0.15% | 4.29 ± 0.11% |
+| w/o Self-Attention | Yes | 4.33 | 5.58 ± 0.77 | 9.81 ± 0.73 | 88.52 ± 0.12% | 3.48 ± 0.05% |
+| **HAP (Ours)** | No | **4.22** | 5.29 ± 1.19 | 9.05 ± 1.34 | 86.55 ± 0.09% | 4.16 ± 0.06% |
+| **HAP + Degrade (Ours)** | **Yes** | **4.22** | **5.03 ± 0.51** | **8.32 ± 0.98** | **89.15 ± 0.10%** | **3.28 ± 0.04%** |
 
 > Height-wise Average Pooling (HAP) completely replaces 2D attention matrices, reducing CPU recognition latency from **~10.84 ms** down to **~8.32 ms** while maintaining a sequence recognition accuracy of **89.15%** and lowering Character Error Rate (CER) to **3.28%**.
 
@@ -80,7 +95,7 @@ Impact of replacing 2D attention matrices with Height-wise Average Pooling (HAP)
 
 Evaluation of SVTR26-Tiny against widely-adopted sequence recognition baselines across 3 diverse geographic subsets (**25,000 total test samples**: 5,990 from Vietnam, 9,560 from Brazil, and 9,450 from China).
 
-> **Alphanumeric Vocabulary:** All evaluated recognition models transcribe standard Latin uppercase alphabets and numeric digits (**A–Z**, **Đ**, **0–9**, totaling 37 alphanumeric characters plus 1 CTC blank token). For multi-line plates (e.g. Vietnam and Brazil formats), Chinese provincial Hanzi characters in CBLPRD-330k were normalized or evaluated on the alphanumeric sequence, ensuring a fair, unified Latin-character benchmark across all international datasets.
+> **Evaluation Vocabulary:** All models are evaluated on a unified 37-character Latin dictionary (**A–Z**, **Đ**, **0–9**). To ensure a fair cross-regional comparison, non-Latin symbols (e.g., Chinese Hanzi) are excluded, and multi-line plates are evaluated as a single sequence.
 
 The table below presents the performance of the evaluated lightweight architectures, ranked in progressive order of regional generalization:
 

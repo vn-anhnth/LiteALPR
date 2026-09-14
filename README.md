@@ -85,7 +85,7 @@ pip install litealpr[gpu]  # CUDA GPU acceleration
 
 ## ⚡ Quick Start
 
-LiteALPR automatically downloads the best pre-trained models from our HuggingFace repository the first time you run it. You don't need to manually configure any paths!
+LiteALPR automatically downloads the best pre-trained models from our Hugging Face repository the first time you run it. You don't need to manually configure any paths!
 
 ### 1. End-to-End Recognition (CPU & GPU)
 
@@ -166,7 +166,7 @@ pip install -r requirements-gpu.txt    # GPU ONNX acceleration
 ```
 
 ### 1. Model Weights Preparation
-Before training or evaluation, download the official pre-trained models from our [HuggingFace Repository](https://huggingface.co/anhone3/LiteALPR) and place them in the following structure:
+Before training or evaluation, download the official pre-trained models from our [Hugging Face repository](https://huggingface.co/anhone3/LiteALPR/tree/main) and place them in the following structure:
 ```text
 LiteALPR/
 └── pretrained_models/

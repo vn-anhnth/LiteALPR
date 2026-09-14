@@ -1,6 +1,6 @@
 # Reference Environment
 
-The performance metrics and evaluations presented in the LiteALPR documentation and scientific reports (e.g., Table 1) were generated under the following reference environment to ensure reproducibility.
+The performance metrics and evaluations presented in the LiteALPR documentation were generated under the following reference environment to ensure reproducibility.
 
 ## Hardware Specifications
 - **CPU**: AMD Ryzen 5 4600G with Radeon Graphics (6 Cores, 12 Threads, 3.7 GHz)

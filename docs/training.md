@@ -21,7 +21,7 @@ pip install -r requirements-gpu.txt    # GPU ONNX acceleration
 
 ## 1. Model Weights Preparation
 
-Before training (fine-tuning) or evaluation, download the official pre-trained weights from our [HuggingFace Repository](https://huggingface.co/anhone3/LiteALPR) and place them in `pretrained_models/`:
+Before training (fine-tuning) or evaluation, download the official pre-trained weights from our [Hugging Face repository](https://huggingface.co/anhone3/LiteALPR/tree/main) and place them in `pretrained_models/`:
 
 ```
 LiteALPR/

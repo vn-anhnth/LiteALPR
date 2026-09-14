@@ -70,7 +70,7 @@ nav:
   - Pipeline & Architecture: pipeline.md
   - Python API & Usage: usage.md
   - Training & Tools: training.md
-  - Benchmarks: benchmarks.md
   - Reference Environment: reference-environment.md
+  - Benchmarks: benchmarks.md
   - Jetson Nano Deployment: jetson-nano.md
   - Paper & Citation: citation.md
