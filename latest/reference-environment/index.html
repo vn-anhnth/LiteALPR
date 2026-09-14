@@ -12,29 +12,31 @@
         <meta name="author" content="Anh Nguyen">
       
       
-        <link rel="canonical" href="https://vn-anhnth.github.io/LiteALPR/latest/">
+        <link rel="canonical" href="https://vn-anhnth.github.io/LiteALPR/latest/reference-environment/">
       
       
+        <link rel="prev" href="../benchmarks/">
       
-        <link rel="next" href="getting-started/">
+      
+        <link rel="next" href="../jetson-nano/">
       
       
         
       
       
-      <link rel="icon" href="assets/images/favicon.png">
+      <link rel="icon" href="../assets/images/favicon.png">
       <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
     
     
       
-        <title>LiteALPR Documentation</title>
+        <title>Reference Environment - LiteALPR Documentation</title>
       
     
     
-      <link rel="stylesheet" href="assets/stylesheets/main.ec1eaa64.min.css">
+      <link rel="stylesheet" href="../assets/stylesheets/main.ec1eaa64.min.css">
       
         
-        <link rel="stylesheet" href="assets/stylesheets/palette.ab4e12ef.min.css">
+        <link rel="stylesheet" href="../assets/stylesheets/palette.ab4e12ef.min.css">
       
       
 
@@ -53,7 +55,7 @@
       
     
     
-    <script>__md_scope=new URL(".",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
     
       
 
@@ -78,7 +80,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#litealpr-lightweight-accurate-license-plate-recognition" class="md-skip">
+        <a href="#reference-environment" class="md-skip">
           Skip to content
         </a>
       
@@ -98,7 +100,7 @@
 
 <header class="md-header md-header--shadow" data-md-component="header">
   <nav class="md-header__inner md-grid" aria-label="Header">
-    <a href="." title="LiteALPR Documentation" class="md-header__button md-logo" aria-label="LiteALPR Documentation" data-md-component="logo">
+    <a href=".." title="LiteALPR Documentation" class="md-header__button md-logo" aria-label="LiteALPR Documentation" data-md-component="logo">
       
   
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
@@ -118,7 +120,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Home
+              Reference Environment
             
           </span>
         </div>
@@ -236,7 +238,7 @@
 
 <nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
   <label class="md-nav__title" for="__drawer">
-    <a href="." title="LiteALPR Documentation" class="md-nav__button md-logo" aria-label="LiteALPR Documentation" data-md-component="logo">
+    <a href=".." title="LiteALPR Documentation" class="md-nav__button md-logo" aria-label="LiteALPR Documentation" data-md-component="logo">
       
   
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
@@ -263,37 +265,10 @@
       
   
   
-    
   
   
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
-      
-      
-        
-      
-      
-        <label class="md-nav__link md-nav__link--active" for="__toc">
-          
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Home
-  
-
-    
-  </span>
-  
-  
-
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
-      <a href="." class="md-nav__link md-nav__link--active">
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
         
   
   
@@ -309,70 +284,6 @@
   
 
       </a>
-      
-        
-
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
-  
-  
-  
-    
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#what-is-litealpr" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        What is LiteALPR?
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#key-highlights" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Key Highlights
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#quick-example" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Quick Example
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#next-steps" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Next Steps
-      
-    </span>
-  </a>
-  
-</li>
-      
-    </ul>
-  
-</nav>
-      
     </li>
   
 
@@ -384,7 +295,7 @@
   
   
     <li class="md-nav__item">
-      <a href="getting-started/" class="md-nav__link">
+      <a href="../getting-started/" class="md-nav__link">
         
   
   
@@ -411,7 +322,7 @@
   
   
     <li class="md-nav__item">
-      <a href="pipeline/" class="md-nav__link">
+      <a href="../pipeline/" class="md-nav__link">
         
   
   
@@ -438,7 +349,7 @@
   
   
     <li class="md-nav__item">
-      <a href="usage/" class="md-nav__link">
+      <a href="../usage/" class="md-nav__link">
         
   
   
@@ -465,7 +376,7 @@
   
   
     <li class="md-nav__item">
-      <a href="training/" class="md-nav__link">
+      <a href="../training/" class="md-nav__link">
         
   
   
@@ -492,7 +403,7 @@
   
   
     <li class="md-nav__item">
-      <a href="benchmarks/" class="md-nav__link">
+      <a href="../benchmarks/" class="md-nav__link">
         
   
   
@@ -516,10 +427,37 @@
       
   
   
+    
   
   
-    <li class="md-nav__item">
-      <a href="reference-environment/" class="md-nav__link">
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Reference Environment
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
         
   
   
@@ -535,6 +473,59 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#hardware-specifications" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Hardware Specifications
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#software-environment" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Software Environment
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#dependency-lockfile" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Dependency Lockfile
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
     </li>
   
 
@@ -546,7 +537,7 @@
   
   
     <li class="md-nav__item">
-      <a href="jetson-nano/" class="md-nav__link">
+      <a href="../jetson-nano/" class="md-nav__link">
         
   
   
@@ -573,7 +564,7 @@
   
   
     <li class="md-nav__item">
-      <a href="citation/" class="md-nav__link">
+      <a href="../citation/" class="md-nav__link">
         
   
   
@@ -620,10 +611,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#what-is-litealpr" class="md-nav__link">
+  <a href="#hardware-specifications" class="md-nav__link">
     <span class="md-ellipsis">
       
-        What is LiteALPR?
+        Hardware Specifications
       
     </span>
   </a>
@@ -631,10 +622,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#key-highlights" class="md-nav__link">
+  <a href="#software-environment" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Key Highlights
+        Software Environment
       
     </span>
   </a>
@@ -642,21 +633,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#quick-example" class="md-nav__link">
+  <a href="#dependency-lockfile" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Quick Example
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#next-steps" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Next Steps
+        Dependency Lockfile
       
     </span>
   </a>
@@ -683,58 +663,29 @@
   
 
 
-<h1 id="litealpr-lightweight-accurate-license-plate-recognition">LiteALPR: Lightweight &amp; Accurate License Plate Recognition</h1>
-<p><a href="https://pypi.org/project/litealpr/"><img alt="PyPI version" src="https://badge.fury.io/py/litealpr.svg" /></a>
-<a href="https://pypi.org/project/litealpr/"><img alt="Python Versions" src="https://img.shields.io/pypi/pyversions/litealpr.svg" /></a>
-<a href="https://www.gnu.org/licenses/agpl-3.0"><img alt="License: AGPL v3" src="https://img.shields.io/badge/License-AGPL_v3-blue.svg" /></a>
-<a href="https://doi.org/10.5281/zenodo.22722292"><img alt="DOI" src="https://zenodo.org/badge/DOI/10.5281/zenodo.22722292.svg" /></a></p>
-<p align="center">
-  <img src="figures/intro1.png" width="450" alt="Challenging real-world license plates">
-  <br>
-  <em>Visual samples of challenging real-world license plates (motion blur, diverse layouts, low light) handled robustly by LiteALPR.</em>
-</p>
-
-<hr />
-<h2 id="what-is-litealpr">What is LiteALPR?</h2>
-<p><strong>LiteALPR</strong> is an open-source, lightweight, and accurate end-to-end Automatic License Plate Recognition (ALPR) framework designed for real-world production systems and resource-constrained edge environments.</p>
-<p>Unlike conventional ALPR systems that rely on computationally expensive models or suffer severe accuracy loss on degraded images, LiteALPR introduces targeted architectural innovations:</p>
-<ol>
-<li><strong>YOLOv8n-Efficient Detector</strong>: Replaces heavy C2f blocks with lightweight C3Ghost modules, reducing parameters to <strong>2.00M</strong> and slashing CPU detection latency by <strong>2.35×</strong> without losing localization accuracy.</li>
-<li><strong>SVTR26-Tiny Recognizer</strong>: Replaces resource-intensive 2D attention decoders with <strong>Height-wise Average Pooling (HAP)</strong>, aligning with horizontal plate character layouts while reducing inference to <strong>~5.03 ms</strong> on GPU and <strong>~8.32 ms</strong> on CPU.</li>
-<li><strong>Robust Degradation Augmentations</strong>: Trained with synthetic motion blur and optical degradation to achieve <strong>89.15% full-sequence accuracy</strong> across multi-national benchmarks (Vietnam, China, Brazil).</li>
-</ol>
-<hr />
-<h2 id="key-highlights">Key Highlights</h2>
+<h1 id="reference-environment">Reference Environment</h1>
+<p>The performance metrics and evaluations presented in the LiteALPR documentation and scientific reports (e.g., Table 1) were generated under the following reference environment to ensure reproducibility.</p>
+<h2 id="hardware-specifications">Hardware Specifications</h2>
 <ul>
-<li>⚡ <strong>High Throughput</strong>: <strong>~66.5 FPS</strong> on an NVIDIA RTX 3060 and <strong>~23.4 FPS</strong> on an AMD Ryzen 5 4600G CPU.</li>
-<li>🎯 <strong>High Accuracy</strong>: <strong>89.15%</strong> sequence accuracy on challenging real-world plates, compared to only 22.67% from existing lightweight alternatives like <code>fast-alpr</code>.</li>
-<li>📦 <strong>Plug-and-Play Python API</strong>: Simple <code>LiteALPR()</code> pipeline with automatic HuggingFace model weight caching.</li>
-<li>🔄 <strong>Flexible Backends</strong>: Native support for <strong>ONNX Runtime</strong> (CPU &amp; CUDA execution providers) as well as raw PyTorch (<code>.pt</code> / <code>.pth</code>).</li>
-<li>🌐 <strong>Cross-Regional Support</strong>: Validated on diverse license plate formats and multi-line layouts (Brazil RodoSol-ALPR, China CBLPRD-330k, Vietnam traffic footage).</li>
+<li><strong>CPU</strong>: AMD Ryzen 5 4600G with Radeon Graphics (6 Cores, 12 Threads, 3.7 GHz)</li>
+<li><strong>GPU</strong>: NVIDIA GeForce RTX 3060 (12GB VRAM)</li>
+<li><strong>RAM</strong>: 32 GB DDR4</li>
 </ul>
-<hr />
-<h2 id="quick-example">Quick Example</h2>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">litealpr</span><span class="w"> </span><span class="kn">import</span> <span class="n">LiteALPR</span>
-</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
-</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="c1"># Initialize pipeline (auto-downloads pre-trained models from HuggingFace)</span>
-</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="n">model</span> <span class="o">=</span> <span class="n">LiteALPR</span><span class="p">()</span>
-</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>
-</span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="c1"># Read license plate</span>
-</span><span id="__span-0-7"><a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="n">results</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="s2">"sample.jpg"</span><span class="p">)</span>
-</span><span id="__span-0-8"><a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>
-</span><span id="__span-0-9"><a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="k">for</span> <span class="n">res</span> <span class="ow">in</span> <span class="n">results</span><span class="p">:</span>
-</span><span id="__span-0-10"><a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Plate: </span><span class="si">{</span><span class="n">res</span><span class="p">[</span><span class="s1">'text'</span><span class="p">]</span><span class="si">}</span><span class="s2"> | Confidence: </span><span class="si">{</span><span class="n">res</span><span class="p">[</span><span class="s1">'score'</span><span class="p">]</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2"> | Box: </span><span class="si">{</span><span class="n">res</span><span class="p">[</span><span class="s1">'box'</span><span class="p">]</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
-</span></code></pre></div>
-<hr />
-<h2 id="next-steps">Next Steps</h2>
+<h2 id="software-environment">Software Environment</h2>
 <ul>
-<li>Check out <a href="getting-started/">Getting Started</a> to install LiteALPR via <code>pip</code>.</li>
-<li>Read about our <a href="pipeline/">Pipeline &amp; Architecture</a> innovations.</li>
-<li>Explore the comprehensive <a href="usage/">Python API &amp; Usage</a> guide.</li>
-<li>Learn how to train custom models in the <a href="training/">Training &amp; Tools</a> guide.</li>
-<li>Review detailed <a href="benchmarks/">Benchmarks</a> on GPU &amp; CPU platforms.</li>
-<li>Cite the project in your research using <a href="citation/">Paper &amp; Citation</a>.</li>
+<li><strong>Operating System</strong>: Windows 11 Pro (64-bit) / Ubuntu 22.04 LTS</li>
+<li><strong>Python Version</strong>: Python 3.8.10</li>
+<li><strong>NVIDIA Driver</strong>: 536.23 (or compatible)</li>
+<li><strong>CUDA Toolkit</strong>: 12.1</li>
+<li><strong>cuDNN</strong>: 8.9.x</li>
+<li><strong>PyTorch</strong>: 2.4.1+cu121</li>
+<li><strong>ONNX Runtime</strong>: onnxruntime-gpu 1.19.2</li>
 </ul>
+<h2 id="dependency-lockfile">Dependency Lockfile</h2>
+<p>For an exact reconstruction of the Python environment used during benchmarking, please refer to the <code>requirements.lock</code> file provided in the repository root.</p>
+<p>You can replicate this environment via:
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>pip<span class="w"> </span>install<span class="w"> </span>-r<span class="w"> </span>requirements.lock
+</span></code></pre></div></p>
 
 
 
@@ -792,12 +743,12 @@
     
       
       
-      <script id="__config" type="application/json">{"annotate": null, "base": ".", "features": ["navigation.indexes", "navigation.top", "search.suggest", "search.highlight", "content.code.copy", "content.tabs.link"], "search": "assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"provider": "mike"}}</script>
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["navigation.indexes", "navigation.top", "search.suggest", "search.highlight", "content.code.copy", "content.tabs.link"], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"provider": "mike"}}</script>
     
     
-      <script src="assets/javascripts/bundle.d7400e89.min.js"></script>
+      <script src="../assets/javascripts/bundle.d7400e89.min.js"></script>
       
-        <script src="javascripts/mathjax.js"></script>
+        <script src="../javascripts/mathjax.js"></script>
       
         <script src="https://unpkg.com/mathjax@3/es5/tex-mml-chtml.js"></script>
       

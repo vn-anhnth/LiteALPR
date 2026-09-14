@@ -6,7 +6,7 @@
       <meta charset="utf-8">
       <meta name="viewport" content="width=device-width,initial-scale=1">
       
-        <meta name="description" content="An ultra-fast, robust, and lightweight License Plate Recognition (ALPR) library.">
+        <meta name="description" content="A robust and lightweight License Plate Recognition (ALPR) library.">
       
       
         <meta name="author" content="Anh Nguyen">
@@ -18,7 +18,7 @@
         <link rel="prev" href="../training/">
       
       
-        <link rel="next" href="../citation/">
+        <link rel="next" href="../reference-environment/">
       
       
         
@@ -471,6 +471,23 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="1. End-to-End Pipeline Performance">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#reproduce-desktop-benchmarks" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Reproduce Desktop Benchmarks
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
       
         <li class="md-nav__item">
@@ -510,6 +527,60 @@
   
 </nav>
       
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../reference-environment/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Reference Environment
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../jetson-nano/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Jetson Nano Deployment
+  
+
+    
+  </span>
+  
+  
+
+      </a>
     </li>
   
 
@@ -575,6 +646,23 @@
       
     </span>
   </a>
+  
+    <nav class="md-nav" aria-label="1. End-to-End Pipeline Performance">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#reproduce-desktop-benchmarks" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Reproduce Desktop Benchmarks
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
       
@@ -647,7 +735,7 @@
 <p>All benchmarks were evaluated in native ONNX FP32 precision, reporting latency and throughput as <span class="arithmatex">\(\text{mean} \pm \text{std}\)</span> evaluated over 1,000 real-world test images or cropped plates across 5 consecutive execution passes.</p>
 <hr />
 <h2 id="1-end-to-end-pipeline-performance">1. End-to-End Pipeline Performance</h2>
-<p>Comparison against existing state-of-the-art and lightweight open-source ALPR pipelines:</p>
+<p>Comparison against existing lightweight open-source ALPR pipelines:</p>
 <table>
 <thead>
 <tr>
@@ -727,6 +815,14 @@
 <blockquote>
 <p><strong>Key Takeaway:</strong> While alternative lightweight pipelines such as <a href="https://github.com/ankandrew/fast-alpr"><code>fast-alpr</code></a> degrade down to 22.67% accuracy under blur, low light, and tilt angles, LiteALPR preserves <strong>89.15% sequence accuracy</strong> while maintaining ultra-high throughput (<strong>~66.5 FPS</strong> on GPU, <strong>~23.4 FPS</strong> on CPU).</p>
 </blockquote>
+<h3 id="reproduce-desktop-benchmarks">Reproduce Desktop Benchmarks</h3>
+<p>To evaluate the end-to-end pipeline latency and throughput on your own hardware, run the following benchmark script:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>python<span class="w"> </span>test_performance/benchmark_latency.py<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="w">  </span>--images_dir<span class="w"> </span>dataset/det/test/images<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="w">  </span>--det_model_path<span class="w"> </span>output/det/yolov8n_efficient/train/weights/best_416.onnx<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="w">  </span>--rec_model_path<span class="w"> </span>output/rec/svtr26_tiny/train/best.onnx<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="w">  </span>--device<span class="w"> </span>cuda:0<span class="w">  </span><span class="c1"># or use 'cpu'</span>
+</span></code></pre></div>
 <hr />
 <h2 id="2-detection-module-ablation-yolov8n-efficient">2. Detection Module Ablation (YOLOv8n-Efficient)</h2>
 <p>Impact of progressively replacing C2f blocks with lightweight C3Ghost modules across head and backbone:</p>
@@ -857,7 +953,7 @@
 </tbody>
 </table>
 <blockquote>
-<p>Height-wise Average Pooling (HAP) completely replaces 2D attention matrices, slashing CPU recognition latency from <strong>~10.84 ms</strong> down to <strong>~8.32 ms</strong> while maintaining superior sequence recognition accuracy of <strong>89.15%</strong> and lowering Character Error Rate (CER) to <strong>3.28%</strong>.</p>
+<p>Height-wise Average Pooling (HAP) completely replaces 2D attention matrices, reducing CPU recognition latency from <strong>~10.84 ms</strong> down to <strong>~8.32 ms</strong> while maintaining a sequence recognition accuracy of <strong>89.15%</strong> and lowering Character Error Rate (CER) to <strong>3.28%</strong>.</p>
 </blockquote>
 <hr />
 <h2 id="4-cross-regional-generalization-benchmark">4. Cross-Regional Generalization Benchmark</h2>
