@@ -525,23 +525,6 @@
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Hardware &amp; Software Specifications">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#latency-breakdown" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Latency Breakdown
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
 </li>
       
         <li class="md-nav__item">
@@ -567,10 +550,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#step-3-run-full-pipeline-benchmark" class="md-nav__link">
+  <a href="#step-3-pure-c-inference-profiling-optional" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Step 3: Run Full Pipeline Benchmark
+        Step 3: Pure C++ Inference Profiling (Optional)
       
     </span>
   </a>
@@ -578,10 +561,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#step-4-pure-c-inference-profiling-optional" class="md-nav__link">
+  <a href="#step-4-system-resource-monitoring-optional" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Step 4: Pure C++ Inference Profiling (Optional)
+        Step 4: System Resource Monitoring (Optional)
       
     </span>
   </a>
@@ -589,21 +572,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#step-5-system-resource-monitoring-optional" class="md-nav__link">
+  <a href="#step-5-power-thermal-stress-testing-optional" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Step 5: System Resource Monitoring (Optional)
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#step-6-power-thermal-stress-testing-optional" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Step 6: Power &amp; Thermal Stress Testing (Optional)
+        Step 5: Power &amp; Thermal Stress Testing (Optional)
       
     </span>
   </a>
@@ -680,23 +652,6 @@
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Hardware &amp; Software Specifications">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#latency-breakdown" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Latency Breakdown
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
 </li>
       
         <li class="md-nav__item">
@@ -722,10 +677,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#step-3-run-full-pipeline-benchmark" class="md-nav__link">
+  <a href="#step-3-pure-c-inference-profiling-optional" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Step 3: Run Full Pipeline Benchmark
+        Step 3: Pure C++ Inference Profiling (Optional)
       
     </span>
   </a>
@@ -733,10 +688,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#step-4-pure-c-inference-profiling-optional" class="md-nav__link">
+  <a href="#step-4-system-resource-monitoring-optional" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Step 4: Pure C++ Inference Profiling (Optional)
+        Step 4: System Resource Monitoring (Optional)
       
     </span>
   </a>
@@ -744,21 +699,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#step-5-system-resource-monitoring-optional" class="md-nav__link">
+  <a href="#step-5-power-thermal-stress-testing-optional" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Step 5: System Resource Monitoring (Optional)
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#step-6-power-thermal-stress-testing-optional" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Step 6: Power &amp; Thermal Stress Testing (Optional)
+        Step 5: Power &amp; Thermal Stress Testing (Optional)
       
     </span>
   </a>
@@ -807,54 +751,7 @@
 </ul>
 </li>
 </ul>
-<h3 id="latency-breakdown">Latency Breakdown</h3>
-<div class="admonition info">
-<p class="admonition-title">Benchmarking Methodology</p>
-<p>Similar to the desktop evaluation, the Jetson Nano latency and throughput (mean ± std) were rigorously measured over <strong>1,000 test images</strong> across <strong>5 consecutive execution passes</strong> to ensure statistical reliability.</p>
-</div>
-<table>
-<thead>
-<tr>
-<th style="text-align: left;">Pipeline Component</th>
-<th style="text-align: center;">Latency (ms)</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td style="text-align: left;">Pre-processing</td>
-<td style="text-align: center;">6.59 ± 0.82</td>
-</tr>
-<tr>
-<td style="text-align: left;">Detection (YOLOv8n-Efficient FP16)</td>
-<td style="text-align: center;">20.66 ± 1.15</td>
-</tr>
-<tr>
-<td style="text-align: left;">Crop &amp; Resize</td>
-<td style="text-align: center;">1.71 ± 0.45</td>
-</tr>
-<tr>
-<td style="text-align: left;">Recognition (SVTR26-Tiny INT8)</td>
-<td style="text-align: center;">21.77 ± 1.30</td>
-</tr>
-<tr>
-<td style="text-align: left;">Context-Switching</td>
-<td style="text-align: center;">6.73 ± 0.94</td>
-</tr>
-<tr>
-<td style="text-align: left;">Memcpy (H2D/D2H)</td>
-<td style="text-align: center;">0.23 ± 0.05</td>
-</tr>
-<tr>
-<td style="text-align: left;"><strong>Total End-to-End Latency</strong></td>
-<td style="text-align: center;"><strong>57.69 ± 4.71</strong></td>
-</tr>
-<tr>
-<td style="text-align: left;"><strong>Sustained Throughput (FPS)</strong></td>
-<td style="text-align: center;"><strong>17.33 ± 1.45</strong></td>
-</tr>
-</tbody>
-</table>
-<p>To reproduce the Jetson Nano benchmark (17.33 FPS End-to-End), follow these steps:</p>
+<p>To reproduce the Jetson Nano deployment and stress test, follow these steps:</p>
 <h2 id="step-1-export-models-to-onnx">Step 1: Export Models to ONNX</h2>
 <p>First, export the trained PyTorch models to ONNX format (this can be done on your host machine):</p>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Export Detection Model</span>
@@ -892,35 +789,28 @@
 </span><span id="__span-1-13"><a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="w">    </span>--maxShapes<span class="o">=</span>input:1x3x128x128<span class="w"> </span><span class="se">\</span>
 </span><span id="__span-1-14"><a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a><span class="w">    </span>--int8
 </span></code></pre></div>
-<h2 id="step-3-run-full-pipeline-benchmark">Step 3: Run Full Pipeline Benchmark</h2>
-<p>Finally, execute the provided Python benchmarking script directly on the Jetson Nano. This script precisely measures the end-to-end latency, including pre-processing, context-switching, and GPU memory transfers:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>python<span class="w"> </span>test_performance/benchmark_latency_jetson_nano.py<span class="w"> </span><span class="se">\</span>
-</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="w">  </span>--images_dir<span class="w"> </span>/path/to/your/dataset/images<span class="w"> </span><span class="se">\</span>
-</span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">  </span>--det_model_path<span class="w"> </span>/path/to/your/models/yolov8n_efficient_416_fp16.engine<span class="w"> </span><span class="se">\</span>
-</span><span id="__span-2-4"><a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="w">  </span>--rec_model_path<span class="w"> </span>/path/to/your/models/svtr26_tiny_int8.engine
-</span></code></pre></div>
-<h2 id="step-4-pure-c-inference-profiling-optional">Step 4: Pure C++ Inference Profiling (Optional)</h2>
+<h2 id="step-3-pure-c-inference-profiling-optional">Step 3: Pure C++ Inference Profiling (Optional)</h2>
 <p>In production, edge pipelines are often deployed entirely in C/C++ to eliminate Python overhead (such as the Global Interpreter Lock and context switching). To benchmark the pure theoretical latency of the standalone compiled engines, you can use the <code>trtexec</code> profiling tool:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Profile Detection Engine (YOLOv8n-Efficient)</span>
-</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>/usr/src/tensorrt/bin/trtexec<span class="w"> </span><span class="se">\</span>
-</span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w">    </span>--loadEngine<span class="o">=</span>/path/to/your/models/yolov8n_efficient_416_fp16.engine<span class="w"> </span><span class="se">\</span>
-</span><span id="__span-3-4"><a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="w">    </span>--shapes<span class="o">=</span>images:1x3x416x416<span class="w"> </span><span class="se">\</span>
-</span><span id="__span-3-5"><a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="w">    </span>--iterations<span class="o">=</span><span class="m">1000</span><span class="w"> </span><span class="se">\</span>
-</span><span id="__span-3-6"><a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="w">    </span>--avgRuns<span class="o">=</span><span class="m">100</span>
-</span><span id="__span-3-7"><a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>
-</span><span id="__span-3-8"><a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="c1"># Profile Recognition Engine (SVTR26-Tiny)</span>
-</span><span id="__span-3-9"><a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>/usr/src/tensorrt/bin/trtexec<span class="w"> </span><span class="se">\</span>
-</span><span id="__span-3-10"><a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="w">    </span>--loadEngine<span class="o">=</span>/path/to/your/models/svtr26_tiny_int8.engine<span class="w"> </span><span class="se">\</span>
-</span><span id="__span-3-11"><a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a><span class="w">    </span>--shapes<span class="o">=</span>input:1x3x32x128<span class="w"> </span><span class="se">\</span>
-</span><span id="__span-3-12"><a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a><span class="w">    </span>--iterations<span class="o">=</span><span class="m">1000</span><span class="w"> </span><span class="se">\</span>
-</span><span id="__span-3-13"><a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a><span class="w">    </span>--avgRuns<span class="o">=</span><span class="m">100</span>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Profile Detection Engine (YOLOv8n-Efficient)</span>
+</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>/usr/src/tensorrt/bin/trtexec<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">    </span>--loadEngine<span class="o">=</span>/path/to/your/models/yolov8n_efficient_416_fp16.engine<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-2-4"><a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="w">    </span>--shapes<span class="o">=</span>images:1x3x416x416<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-2-5"><a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="w">    </span>--iterations<span class="o">=</span><span class="m">1000</span><span class="w"> </span><span class="se">\</span>
+</span><span id="__span-2-6"><a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="w">    </span>--avgRuns<span class="o">=</span><span class="m">100</span>
+</span><span id="__span-2-7"><a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>
+</span><span id="__span-2-8"><a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="c1"># Profile Recognition Engine (SVTR26-Tiny)</span>
+</span><span id="__span-2-9"><a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>/usr/src/tensorrt/bin/trtexec<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-2-10"><a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="w">    </span>--loadEngine<span class="o">=</span>/path/to/your/models/svtr26_tiny_int8.engine<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-2-11"><a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="w">    </span>--shapes<span class="o">=</span>input:1x3x32x128<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-2-12"><a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a><span class="w">    </span>--iterations<span class="o">=</span><span class="m">1000</span><span class="w"> </span><span class="se">\</span>
+</span><span id="__span-2-13"><a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a><span class="w">    </span>--avgRuns<span class="o">=</span><span class="m">100</span>
 </span></code></pre></div>
-<h2 id="step-5-system-resource-monitoring-optional">Step 5: System Resource Monitoring (Optional)</h2>
+<h2 id="step-4-system-resource-monitoring-optional">Step 4: System Resource Monitoring (Optional)</h2>
 <p>To monitor the system resource utilization (RAM, CPU, GPU, and Temperature) during inference, you can use the built-in <code>tegrastats</code> utility.</p>
 <p>Open a new terminal on your Jetson Nano and run:
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>tegrastats
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>tegrastats
 </span></code></pre></div>
-While <code>tegrastats</code> is running, execute the benchmark script from <strong>Step 3</strong> in your primary terminal. You will be able to observe the real-time resource footprint as the models are loaded into VRAM and inference begins. Maintaining a low memory footprint is critical on edge devices. For instance, loading both YOLOv8n-Efficient FP16 and SVTR26-Tiny INT8 peaks at only ~2.55 GB, well within the 4 GB limit of the Jetson Nano:</p>
+While <code>tegrastats</code> is running, execute the stress test script from <strong>Step 5</strong> in your primary terminal. You will be able to observe the live resource footprint as the models are loaded into VRAM and inference begins. Maintaining a low memory footprint is critical on edge devices. For instance, loading both YOLOv8n-Efficient FP16 and SVTR26-Tiny INT8 peaks at only ~2.55 GB, well within the 4 GB limit of the Jetson Nano:</p>
 <table>
 <thead>
 <tr>
@@ -962,14 +852,15 @@ While <code>tegrastats</code> is running, execute the benchmark script from <str
 </tr>
 </tbody>
 </table>
-<h2 id="step-6-power-thermal-stress-testing-optional">Step 6: Power &amp; Thermal Stress Testing (Optional)</h2>
+<h2 id="step-5-power-thermal-stress-testing-optional">Step 5: Power &amp; Thermal Stress Testing (Optional)</h2>
 <p>To validate the deployment reliability for continuous 24/7 edge operation, we provide a stress testing script. This script runs the end-to-end pipeline continuously for a specified duration and logs the FPS, Latency, and Temperature every 10 seconds to a CSV file.</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>python<span class="w"> </span>test_performance/run_stress_test_jetson_nano.py<span class="w"> </span><span class="se">\</span>
-</span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="w">  </span>--images_dir<span class="w"> </span>/path/to/your/dataset/images<span class="w"> </span><span class="se">\</span>
-</span><span id="__span-5-3"><a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="w">  </span>--det_model_path<span class="w"> </span>/path/to/your/models/yolov8n_efficient_416_fp16.engine<span class="w"> </span><span class="se">\</span>
-</span><span id="__span-5-4"><a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="w">  </span>--rec_model_path<span class="w"> </span>/path/to/your/models/svtr26_tiny_int8.engine<span class="w"> </span><span class="se">\</span>
-</span><span id="__span-5-5"><a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="w">  </span>--duration<span class="w"> </span><span class="m">30</span><span class="w"> </span><span class="se">\</span>
-</span><span id="__span-5-6"><a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="w">  </span>--output_csv<span class="w"> </span>run_stress_test_results.csv
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>python<span class="w"> </span>test_performance/run_stress_test_jetson_nano.py<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="w">  </span>--images_dir<span class="w"> </span>/path/to/your/dataset/images<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">  </span>--det_model_path<span class="w"> </span>/path/to/your/models/yolov8n_efficient_416_fp16.engine<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-4-4"><a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="w">  </span>--rec_model_path<span class="w"> </span>/path/to/your/models/svtr26_tiny_int8.engine<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-4-5"><a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="w">  </span>--dict_path<span class="w"> </span>/path/to/your/dict/license_plate_dict.txt<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-4-6"><a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="w">  </span>--duration<span class="w"> </span><span class="m">30</span><span class="w"> </span><span class="se">\</span>
+</span><span id="__span-4-7"><a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="w">  </span>--output_csv<span class="w"> </span>run_stress_test_results.csv
 </span></code></pre></div>
 <p>This will run the pipeline continuously for 30 minutes. As an example, our rigorous 30-minute stress test demonstrates exceptional thermal stability under different power configurations. Running in the maximum performance 10W (MAXN) mode, the system sustains a throughput of 17.33 FPS with a safe Always-On (AO) peak temperature of 47.0°C. In the low-power 5W mode, the system averages 11.67 FPS with a peak temperature of 42.5°C. In both scenarios, the system exhibited zero thermal throttling, ensuring reliable continuous traffic monitoring.</p>
 <p><img alt="30-minute stress test monitoring sustained throughput (FPS) and temperature under 5W and 10W power modes" src="../figures/stress_test.png" /></p>
