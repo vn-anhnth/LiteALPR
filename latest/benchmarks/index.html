@@ -886,7 +886,7 @@
 </span></code></pre></div>
 <hr />
 <h2 id="2-detection-module-ablation-yolov8n-efficient">2. Detection Module Ablation (YOLOv8n-Efficient)</h2>
-<p>Impact of progressively replacing C2f blocks with lightweight C3Ghost modules across head and backbone:</p>
+<p>Impact of progressively replacing C2f blocks with lightweight C3Ghost modules across head and backbone (mAP is reported as mean ± std over 3 random seeds):</p>
 <table>
 <thead>
 <tr>
@@ -906,8 +906,8 @@
 <td style="text-align: center;">8.19</td>
 <td style="text-align: center;">10.02 ± 1.29</td>
 <td style="text-align: center;">40.92 ± 5.44</td>
-<td style="text-align: center;"><strong>99.45%</strong></td>
-<td style="text-align: center;">88.48%</td>
+<td style="text-align: center;"><strong>99.45 ± 0.04%</strong></td>
+<td style="text-align: center;">88.48 ± 0.12%</td>
 </tr>
 <tr>
 <td style="text-align: left;">Head (C3Ghost)</td>
@@ -915,8 +915,8 @@
 <td style="text-align: center;">7.19</td>
 <td style="text-align: center;">9.54 ± 1.24</td>
 <td style="text-align: center;">19.69 ± 4.26</td>
-<td style="text-align: center;">99.44%</td>
-<td style="text-align: center;"><strong>89.33%</strong></td>
+<td style="text-align: center;">99.44 ± 0.05%</td>
+<td style="text-align: center;"><strong>89.33 ± 0.15%</strong></td>
 </tr>
 <tr>
 <td style="text-align: left;">Backbone (C3Ghost)</td>
@@ -924,8 +924,8 @@
 <td style="text-align: center;">6.70</td>
 <td style="text-align: center;">9.04 ± 0.51</td>
 <td style="text-align: center;">19.59 ± 3.38</td>
-<td style="text-align: center;"><strong>99.45%</strong></td>
-<td style="text-align: center;">89.20%</td>
+<td style="text-align: center;"><strong>99.45 ± 0.04%</strong></td>
+<td style="text-align: center;">89.20 ± 0.14%</td>
 </tr>
 <tr>
 <td style="text-align: left;"><strong>YOLOv8n-Efficient (Ours)</strong></td>
@@ -933,13 +933,13 @@
 <td style="text-align: center;"><strong>5.69</strong></td>
 <td style="text-align: center;"><strong>9.02 ± 0.98</strong></td>
 <td style="text-align: center;"><strong>17.45 ± 1.62</strong></td>
-<td style="text-align: center;"><strong>99.45%</strong></td>
-<td style="text-align: center;">88.41%</td>
+<td style="text-align: center;"><strong>99.45 ± 0.05%</strong></td>
+<td style="text-align: center;">88.41 ± 0.16%</td>
 </tr>
 </tbody>
 </table>
 <blockquote>
-<p>Replacing C2f with C3Ghost across both backbone and head achieves a <strong>2.35× speedup on CPU</strong> (~<span class="arithmatex">\(40.92 \rightarrow\)</span> ~17.45 ms) and <strong>33.5% parameter reduction</strong> (<span class="arithmatex">\(3.01\text{M} \rightarrow 2.00\text{M}\)</span>) with <strong>zero accuracy drop</strong> (maintains 99.45% <span class="arithmatex">\(\text{mAP}_{50}\)</span>).</p>
+<p>Replacing C2f with C3Ghost across both backbone and head achieves a <strong>2.35× speedup on CPU</strong> (~<span class="arithmatex">\(40.92 \rightarrow\)</span> ~17.45 ms) and <strong>33.5% parameter reduction</strong> (<span class="arithmatex">\(3.01\text{M} \rightarrow 2.00\text{M}\)</span>) with <strong>zero accuracy drop</strong> (maintains ~99.45% <span class="arithmatex">\(\text{mAP}_{50}\)</span>).</p>
 </blockquote>
 <hr />
 <h2 id="3-recognition-module-ablation-svtr26-tiny">3. Recognition Module Ablation (SVTR26-Tiny)</h2>

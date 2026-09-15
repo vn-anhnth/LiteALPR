@@ -1040,8 +1040,9 @@
 </span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="nb">cd</span><span class="w"> </span>LiteALPR
 </span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
 </span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1"># Choose based on your runtime environment:</span>
-</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>pip<span class="w"> </span>install<span class="w"> </span>-r<span class="w"> </span>requirements.txt<span class="w">        </span><span class="c1"># CPU environment</span>
-</span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>pip<span class="w"> </span>install<span class="w"> </span>-r<span class="w"> </span>requirements-gpu.txt<span class="w">    </span><span class="c1"># GPU ONNX acceleration</span>
+</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>pip<span class="w"> </span>install<span class="w"> </span>-r<span class="w"> </span>requirements.lock<span class="w">       </span><span class="c1"># Exact reference environment for reproducibility</span>
+</span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>pip<span class="w"> </span>install<span class="w"> </span>-r<span class="w"> </span>requirements.txt<span class="w">        </span><span class="c1"># CPU (ONNX) Inference</span>
+</span><span id="__span-0-7"><a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>pip<span class="w"> </span>install<span class="w"> </span>-r<span class="w"> </span>requirements-gpu.txt<span class="w">    </span><span class="c1"># NVIDIA GPU (ONNX) Acceleration</span>
 </span></code></pre></div>
 <hr />
 <h2 id="1-model-weights-preparation">1. Model Weights Preparation</h2>
@@ -1067,8 +1068,8 @@
 <h3 id="detection-dataset">Detection Dataset</h3>
 <p>Detection models use the standard YOLO dataset format (<code>data.yaml</code> pointing to image and label folders).</p>
 <h3 id="recognition-dataset-lmdb">Recognition Dataset (LMDB)</h3>
-<p>The recognition stage uses Lightning Memory-Mapped Databases (LMDB) for maximum I/O throughput during training.</p>
-<p>Convert text label files into LMDB format:</p>
+<p>The recognition module requires datasets to be formatted into Lightning Memory-Mapped Databases (LMDB) for fast I/O access during training.</p>
+<p>Generate the LMDB using our CLI script:</p>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>python<span class="w"> </span>tools/create_lmdb_dataset.py<span class="w"> </span><span class="se">\</span>
 </span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="w">    </span>--data_dir<span class="w"> </span>./dataset/rec<span class="w"> </span><span class="se">\</span>
 </span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w">    </span>--label_files<span class="w"> </span>train_labels.txt<span class="w"> </span>val_labels.txt<span class="w"> </span>test_labels.txt<span class="w"> </span><span class="se">\</span>
@@ -1131,7 +1132,7 @@
 <p>By default, the training process will load pre-trained weights to speed up convergence. You can change the path or remove it to train from scratch:</p>
 <ul>
 <li><strong>For Detection:</strong> Edit the <code>Global.pretrained_model</code> field inside <code>configs/det/yolov8/yolov8n_efficient.yml</code>.</li>
-<li><strong>For Recognition:</strong> Edit the <code>Global.pretrained_model</code> field inside your <code>.yml</code> config file (e.g. <code>configs/rec/svtr26/svtr26_tiny.yml</code>).</li>
+<li><strong>For Recognition:</strong> Edit the <code>Global.pretrained_model</code> field inside <code>configs/rec/svtr26/svtr26_tiny.yml</code>.</li>
 </ul>
 </div>
 <hr />
@@ -1162,7 +1163,7 @@
 </span></code></pre></div>
 <hr />
 <h2 id="6-exporting-to-onnx">6. Exporting to ONNX</h2>
-<p>Export your trained PyTorch models to the ONNX format for deployment in production environments (C++, C#, TensorRT, Triton, OpenVINO, etc.). You can configure the ONNX operator set version via <code>--opset</code> (default: 12).</p>
+<p>Export your trained PyTorch models to the ONNX format for deployment in production environments (C++, C#, TensorRT, etc.). You can configure the ONNX operator set version via <code>--opset</code> (default: 12).</p>
 <h3 id="export-detector">Export Detector</h3>
 <p>The ONNX file will automatically be saved alongside the original <code>.pt</code> file (e.g. <code>best_416.onnx</code>):</p>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-12-1"><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>python<span class="w"> </span>tools/export_det.py<span class="w"> </span><span class="se">\</span>
