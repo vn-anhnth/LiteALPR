@@ -14,13 +14,13 @@ You can install LiteALPR easily with `pip`. Choose the option that fits your dep
     ```
     *LiteALPR will automatically detect available acceleration hardware and run with default CPU/GPU fallbacks.*
 
-=== "CPU Optimized"
+=== "CPU (ONNX) Inference"
     ```bash
     pip install litealpr[cpu]
     ```
     *Installs standard `onnxruntime` for optimal lightweight CPU inference.*
 
-=== "CUDA GPU Accelerated"
+=== "NVIDIA GPU (ONNX) Acceleration"
     ```bash
     pip install litealpr[gpu]
     ```

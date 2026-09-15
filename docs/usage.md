@@ -15,8 +15,8 @@ from litealpr import LiteALPR
 alpr = LiteALPR()
 
 # Or explicitly choose target device:
-# alpr = LiteALPR(device="cpu")
-# alpr = LiteALPR(device="cuda:0")
+# alpr = LiteALPR(device="cpu")      # CPU (ONNX) Inference
+# alpr = LiteALPR(device="cuda:0")   # NVIDIA GPU (ONNX) Acceleration
 
 # 2. Process an image file or numpy array
 results = alpr.read("test_car.jpg")

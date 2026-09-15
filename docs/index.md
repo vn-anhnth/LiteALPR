@@ -58,5 +58,7 @@ for res in results:
 - Read about our [Pipeline & Architecture](pipeline.md) innovations.
 - Explore the comprehensive [Python API & Usage](usage.md) guide.
 - Learn how to train custom models in the [Training & Tools](training.md) guide.
+- Understand the hardware context in [Reference Environment](reference-environment.md).
 - Review detailed [Benchmarks](benchmarks.md) on GPU & CPU platforms.
+- Learn how to deploy on edge devices in [Jetson Nano Deployment](jetson-nano.md).
 - Cite the project in your research using [Paper & Citation](citation.md).

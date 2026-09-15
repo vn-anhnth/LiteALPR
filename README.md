@@ -77,8 +77,8 @@ By integrating these specialized components, **LiteALPR** delivers robust produc
 pip install litealpr
 
 # Or explicitly specify your target runtime environment:
-pip install litealpr[cpu]  # CPU inference
-pip install litealpr[gpu]  # CUDA GPU acceleration
+pip install litealpr[cpu]  # CPU (ONNX) Inference
+pip install litealpr[gpu]  # NVIDIA GPU (ONNX) Acceleration
 ```
 
 *(Note: When using standard `pip install litealpr`, LiteALPR automatically detects your device hardware and configures the corresponding ONNX Runtime execution engine and Hugging Face pre-trained weights upon initial execution).*
@@ -96,8 +96,8 @@ from litealpr import LiteALPR
 model = LiteALPR()
 
 # Option B: Explicitly select target execution device
-# model = LiteALPR(device="cpu")     # Force CPU execution
-# model = LiteALPR(device="cuda:0")  # CUDA GPU acceleration
+# model = LiteALPR(device="cpu")     # CPU (ONNX) Inference
+# model = LiteALPR(device="cuda:0")  # NVIDIA GPU (ONNX) Acceleration
 
 # Read the license plate (auto-downloads pre-trained weights if not found)
 results = model.read("sample.jpg")
@@ -161,8 +161,8 @@ cd LiteALPR
 
 # Choose based on your runtime environment:
 pip install -r requirements.lock       # Exact reference environment for reproducibility
-pip install -r requirements.txt        # CPU environment
-pip install -r requirements-gpu.txt    # GPU ONNX acceleration
+pip install -r requirements.txt        # CPU (ONNX) Inference
+pip install -r requirements-gpu.txt    # NVIDIA GPU (ONNX) Acceleration
 ```
 
 ### 1. Model Weights Preparation
@@ -177,7 +177,7 @@ LiteALPR/
         └── svtr26_tiny/
             └── best.pth
 ```
-You can download them manually or use `wget`:
+You can download them using `wget` or `curl`:
 ```bash
 # Download Detection pre-trained weights
 wget -O pretrained_models/det/yolov8n_efficient/best.pt https://huggingface.co/anhone3/LiteALPR/resolve/main/yolov8n_efficient/best.pt
@@ -187,7 +187,9 @@ wget -O pretrained_models/rec/svtr26_tiny/best.pth https://huggingface.co/anhone
 ```
 
 ### 2. Data Preparation (Create LMDB)
-The recognition module requires datasets to be formatted into Lightning Memory-Mapped Databases (LMDB) for fast I/O access during training. Generate the LMDB using our CLI script:
+The recognition module requires datasets to be formatted into Lightning Memory-Mapped Databases (LMDB) for fast I/O access during training.
+
+Generate the LMDB using our CLI script:
 ```bash
 python tools/create_lmdb_dataset.py \
     --data_dir ./dataset/rec \
@@ -243,7 +245,7 @@ Once configured, start training:
 > **Pre-trained Models (Fine-tuning)**
 > By default, the training process will load pre-trained weights to speed up convergence. You can change the path or remove it to train from scratch:
 > - **For Detection:** Edit the `Global.pretrained_model` field inside `configs/det/yolov8/yolov8n_efficient.yml`.
-> - **For Recognition:** Edit the `Global.pretrained_model` field inside your `.yml` config file (e.g., `configs/rec/svtr26/svtr26_tiny.yml`).
+> - **For Recognition:** Edit the `Global.pretrained_model` field inside `configs/rec/svtr26/svtr26_tiny.yml`.
 
 ```bash
 # Train Detection Model (YOLOv8)

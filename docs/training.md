@@ -13,8 +13,9 @@ git clone https://github.com/vn-anhnth/LiteALPR.git
 cd LiteALPR
 
 # Choose based on your runtime environment:
-pip install -r requirements.txt        # CPU environment
-pip install -r requirements-gpu.txt    # GPU ONNX acceleration
+pip install -r requirements.lock       # Exact reference environment for reproducibility
+pip install -r requirements.txt        # CPU (ONNX) Inference
+pip install -r requirements-gpu.txt    # NVIDIA GPU (ONNX) Acceleration
 ```
 
 ---
@@ -52,9 +53,9 @@ wget -O pretrained_models/rec/svtr26_tiny/best.pth https://huggingface.co/anhone
 Detection models use the standard YOLO dataset format (`data.yaml` pointing to image and label folders).
 
 ### Recognition Dataset (LMDB)
-The recognition stage uses Lightning Memory-Mapped Databases (LMDB) for maximum I/O throughput during training.
+The recognition module requires datasets to be formatted into Lightning Memory-Mapped Databases (LMDB) for fast I/O access during training.
 
-Convert text label files into LMDB format:
+Generate the LMDB using our CLI script:
 
 ```bash
 python tools/create_lmdb_dataset.py \
@@ -134,7 +135,7 @@ torchrun --nproc_per_node=2 tools/train_rec.py -c configs/rec/svtr26/svtr26_tiny
     By default, the training process will load pre-trained weights to speed up convergence. You can change the path or remove it to train from scratch:
 
     * **For Detection:** Edit the `Global.pretrained_model` field inside `configs/det/yolov8/yolov8n_efficient.yml`.
-    * **For Recognition:** Edit the `Global.pretrained_model` field inside your `.yml` config file (e.g. `configs/rec/svtr26/svtr26_tiny.yml`).
+    * **For Recognition:** Edit the `Global.pretrained_model` field inside `configs/rec/svtr26/svtr26_tiny.yml`.
 
 
 ---
@@ -181,7 +182,7 @@ python tools/infer_rec.py \
 
 ## 6. Exporting to ONNX
 
-Export your trained PyTorch models to the ONNX format for deployment in production environments (C++, C#, TensorRT, Triton, OpenVINO, etc.). You can configure the ONNX operator set version via `--opset` (default: 12).
+Export your trained PyTorch models to the ONNX format for deployment in production environments (C++, C#, TensorRT, etc.). You can configure the ONNX operator set version via `--opset` (default: 12).
 
 ### Export Detector
 The ONNX file will automatically be saved alongside the original `.pt` file (e.g. `best_416.onnx`):

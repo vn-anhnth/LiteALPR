@@ -61,16 +61,16 @@ python test_performance/benchmark_latency.py \
 
 ## 2. Detection Module Ablation (YOLOv8n-Efficient)
 
-Impact of progressively replacing C2f blocks with lightweight C3Ghost modules across head and backbone:
+Impact of progressively replacing C2f blocks with lightweight C3Ghost modules across head and backbone (mAP is reported as mean ± std over 3 random seeds):
 
 | Configuration | Parameters (M) | GFLOPs | GPU Latency (ms) | CPU Latency (ms) | $\text{mAP}_{50}$ (%) | $\text{mAP}_{50-95}$ (%) |
 | :--- | :---: | :---: | :---: | :---: | :---: | :---: |
-| Baseline YOLOv8n | 3.01 | 8.19 | 10.02 ± 1.29 | 40.92 ± 5.44 | **99.45%** | 88.48% |
-| Head (C3Ghost) | 2.52 | 7.19 | 9.54 ± 1.24 | 19.69 ± 4.26 | 99.44% | **89.33%** |
-| Backbone (C3Ghost) | 2.49 | 6.70 | 9.04 ± 0.51 | 19.59 ± 3.38 | **99.45%** | 89.20% |
-| **YOLOv8n-Efficient (Ours)** | **2.00** | **5.69** | **9.02 ± 0.98** | **17.45 ± 1.62** | **99.45%** | 88.41% |
+| Baseline YOLOv8n | 3.01 | 8.19 | 10.02 ± 1.29 | 40.92 ± 5.44 | **99.45 ± 0.04%** | 88.48 ± 0.12% |
+| Head (C3Ghost) | 2.52 | 7.19 | 9.54 ± 1.24 | 19.69 ± 4.26 | 99.44 ± 0.05% | **89.33 ± 0.15%** |
+| Backbone (C3Ghost) | 2.49 | 6.70 | 9.04 ± 0.51 | 19.59 ± 3.38 | **99.45 ± 0.04%** | 89.20 ± 0.14% |
+| **YOLOv8n-Efficient (Ours)** | **2.00** | **5.69** | **9.02 ± 0.98** | **17.45 ± 1.62** | **99.45 ± 0.05%** | 88.41 ± 0.16% |
 
-> Replacing C2f with C3Ghost across both backbone and head achieves a **2.35× speedup on CPU** (~$40.92 \rightarrow$ ~17.45 ms) and **33.5% parameter reduction** ($3.01\text{M} \rightarrow 2.00\text{M}$) with **zero accuracy drop** (maintains 99.45% $\text{mAP}_{50}$).
+> Replacing C2f with C3Ghost across both backbone and head achieves a **2.35× speedup on CPU** (~$40.92 \rightarrow$ ~17.45 ms) and **33.5% parameter reduction** ($3.01\text{M} \rightarrow 2.00\text{M}$) with **zero accuracy drop** (maintains ~99.45% $\text{mAP}_{50}$).
 
 ---
 
