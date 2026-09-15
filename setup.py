@@ -73,7 +73,7 @@ setup(
         "Topic :: Software Development :: Libraries :: Python Modules",
     ],
     # Keywords
-    keywords="alpr, ocr, automatic-license-plate-recognition, automatic-number-plate-recognition, computer-vision, license-plate-recognition, onnxruntime, tensorrt, plate-recognition, yolov8, python, litealpr, plate-detection, realtime, svtr",
+    keywords="alpr, ocr, automatic-license-plate-recognition, automatic-number-plate-recognition, computer-vision, license-plate-recognition, onnxruntime, tensorrt, plate-recognition, yolov8, python, litealpr, plate-detection, svtr",
     # Project URLs
     project_urls={
         "Bug Reports": "https://github.com/vn-anhnth/LiteALPR/issues",

@@ -6,6 +6,7 @@ import time
 
 import cv2
 import numpy as np
+import pycuda.autoinit  # noqa: F401
 import pycuda.driver as cuda
 import tensorrt as trt
 
@@ -183,7 +184,7 @@ def main():
     parser.add_argument(
         "--dict_path",
         type=str,
-        default="dataset/license_plates_ocr/license_plate_dict.txt",
+        required=True,
         help="Path to the character dictionary",
     )
     parser.add_argument("--duration", type=int, default=30, help="Stress test duration in minutes")

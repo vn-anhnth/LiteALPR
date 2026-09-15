@@ -19,25 +19,7 @@ To ensure exact reproducibility, the following specifications were used during o
     - **TensorRT**: 8.2.1
     - **Python**: 3.6.9
 
-### Latency Breakdown
-
-!!! info "Benchmarking Methodology"
-    Similar to the desktop evaluation, the Jetson Nano latency and throughput (mean ± std) were rigorously measured over **1,000 test images** across **5 consecutive execution passes** to ensure statistical reliability.
-
-| Pipeline Component | Latency (ms) |
-| :--- | :---: |
-| Pre-processing | 6.59 ± 0.82 |
-| Detection (YOLOv8n-Efficient FP16) | 20.66 ± 1.15 |
-| Crop & Resize | 1.71 ± 0.45 |
-| Recognition (SVTR26-Tiny INT8) | 21.77 ± 1.30 |
-| Context-Switching | 6.73 ± 0.94 |
-| Memcpy (H2D/D2H) | 0.23 ± 0.05 |
-| **Total End-to-End Latency** | **57.69 ± 4.71** |
-| **Sustained Throughput (FPS)** | **17.33 ± 1.45** |
-
-
-
-To reproduce the Jetson Nano benchmark (17.33 FPS End-to-End), follow these steps:
+To reproduce the Jetson Nano deployment and stress test, follow these steps:
 
 ## Step 1: Export Models to ONNX
 First, export the trained PyTorch models to ONNX format (this can be done on your host machine):
@@ -81,17 +63,7 @@ Transfer the ONNX models to your Jetson Nano and use `trtexec` to build the opti
     --int8
 ```
 
-## Step 3: Run Full Pipeline Benchmark
-Finally, execute the provided Python benchmarking script directly on the Jetson Nano. This script precisely measures the end-to-end latency, including pre-processing, context-switching, and GPU memory transfers:
-
-```bash
-python test_performance/benchmark_latency_jetson_nano.py \
-  --images_dir /path/to/your/dataset/images \
-  --det_model_path /path/to/your/models/yolov8n_efficient_416_fp16.engine \
-  --rec_model_path /path/to/your/models/svtr26_tiny_int8.engine
-```
-
-## Step 4: Pure C++ Inference Profiling (Optional)
+## Step 3: Pure C++ Inference Profiling (Optional)
 In production, edge pipelines are often deployed entirely in C/C++ to eliminate Python overhead (such as the Global Interpreter Lock and context switching). To benchmark the pure theoretical latency of the standalone compiled engines, you can use the `trtexec` profiling tool:
 
 ```bash
@@ -110,14 +82,14 @@ In production, edge pipelines are often deployed entirely in C/C++ to eliminate 
     --avgRuns=100
 ```
 
-## Step 5: System Resource Monitoring (Optional)
+## Step 4: System Resource Monitoring (Optional)
 To monitor the system resource utilization (RAM, CPU, GPU, and Temperature) during inference, you can use the built-in `tegrastats` utility.
 
 Open a new terminal on your Jetson Nano and run:
 ```bash
 tegrastats
 ```
-While `tegrastats` is running, execute the benchmark script from **Step 3** in your primary terminal. You will be able to observe the real-time resource footprint as the models are loaded into VRAM and inference begins. Maintaining a low memory footprint is critical on edge devices. For instance, loading both YOLOv8n-Efficient FP16 and SVTR26-Tiny INT8 peaks at only ~2.55 GB, well within the 4 GB limit of the Jetson Nano:
+While `tegrastats` is running, execute the stress test script from **Step 5** in your primary terminal. You will be able to observe the live resource footprint as the models are loaded into VRAM and inference begins. Maintaining a low memory footprint is critical on edge devices. For instance, loading both YOLOv8n-Efficient FP16 and SVTR26-Tiny INT8 peaks at only ~2.55 GB, well within the 4 GB limit of the Jetson Nano:
 
 | Execution Phase | RAM Utilization | CPU Utilization | GPU Utilization | Temperature |
 | :--- | :---: | :---: | :---: | :---: |
@@ -126,7 +98,7 @@ While `tegrastats` is running, execute the benchmark script from **Step 3** in y
 | Peak Inference | 2,554 MB | ~35% | 40–99% | 32.0°C |
 | Cooldown | 1,467 MB | ~22% | 0% | 30.5°C |
 
-## Step 6: Power & Thermal Stress Testing (Optional)
+## Step 5: Power & Thermal Stress Testing (Optional)
 To validate the deployment reliability for continuous 24/7 edge operation, we provide a stress testing script. This script runs the end-to-end pipeline continuously for a specified duration and logs the FPS, Latency, and Temperature every 10 seconds to a CSV file.
 
 ```bash
@@ -134,6 +106,7 @@ python test_performance/run_stress_test_jetson_nano.py \
   --images_dir /path/to/your/dataset/images \
   --det_model_path /path/to/your/models/yolov8n_efficient_416_fp16.engine \
   --rec_model_path /path/to/your/models/svtr26_tiny_int8.engine \
+  --dict_path /path/to/your/dict/license_plate_dict.txt \
   --duration 30 \
   --output_csv run_stress_test_results.csv
 ```

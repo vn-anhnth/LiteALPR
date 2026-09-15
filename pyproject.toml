@@ -26,7 +26,6 @@ keywords = [
     "python",
     "litealpr",
     "plate-detection",
-    "realtime",
     "svtr",
 ]
 classifiers = [
