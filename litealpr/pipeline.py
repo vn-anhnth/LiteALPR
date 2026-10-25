@@ -133,7 +133,7 @@ class LiteALPR:
                 "[LiteALPR] WARNING: No models loaded. Please provide det_model_path or rec_model_path."
             )
 
-    def _preprocess_crop(self, img_crop, max_ratio=12, base_shape=None, base_h=32):
+    def _preprocess_crop(self, img_crop, max_ratio=4, base_shape=None, base_h=32):
         """Preprocesses cropped image for SVTR with RatioRecTVResize logic using PIL (to match training)."""
         from PIL import Image
         from torchvision import transforms as T
@@ -146,7 +146,8 @@ class LiteALPR:
         img = Image.fromarray(img_rgb)
 
         w, h = img.size
-        gen_ratio = int(float(w) / float(h)) + 1
+        gen_ratio = int(round(float(w) / float(h)))
+        gen_ratio = max(gen_ratio, 1)
         ratio_resize = min(gen_ratio, max_ratio)
 
         if ratio_resize <= 4:
