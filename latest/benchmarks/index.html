@@ -874,7 +874,7 @@
 </tbody>
 </table>
 <blockquote>
-<p><strong>Key Takeaway:</strong> While off-the-shelf pipelines such as <a href="https://github.com/ankandrew/fast-alpr"><code>fast-alpr (out-of-the-box)</code></a> degrade down to 22.67% accuracy without domain retraining, LiteALPR achieves <strong>89.15% sequence accuracy</strong> while maintaining ultra-high throughput (<strong>66.45 ± 1.80 FPS</strong> on GPU, <strong>23.44 ± 0.20 FPS</strong> on CPU), delivering a steady 5.26% GPU speedup and 52.5% CPU speedup over the matched baseline (63.13 FPS on GPU, 15.37 FPS on CPU, 88.25% accuracy).</p>
+<p><strong>Key Takeaway:</strong> While off-the-shelf pipelines such as <a href="https://github.com/ankandrew/fast-alpr"><code>fast-alpr (out-of-the-box)</code></a> degrade down to 22.67% accuracy without domain retraining (despite a compact 2.68M default parameter count: 1.89M YOLOv9-tiny detector + 0.79M CCT-XS v2 recognizer), LiteALPR achieves <strong>89.15% sequence accuracy</strong> while maintaining ultra-high throughput (<strong>66.45 ± 1.80 FPS</strong> on GPU, <strong>23.44 ± 0.20 FPS</strong> on CPU), delivering a steady 5.26% GPU speedup and 52.5% CPU speedup over the matched baseline (63.13 FPS on GPU, 15.37 FPS on CPU, 88.25% accuracy).</p>
 </blockquote>
 <h3 id="reproduce-desktop-benchmarks">Reproduce Desktop Benchmarks</h3>
 <p>To evaluate the end-to-end pipeline latency and throughput on your own hardware, run the following benchmark script:</p>
