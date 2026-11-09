@@ -9,7 +9,7 @@ authors:
   orcid: "https://orcid.org/0000-0002-3464-3894"
 title: "LiteALPR: A lightweight open-source library for fast and accurate license plate recognition"
 doi: "10.5281/zenodo.22722292"
-version: 0.1.7
+version: 0.1.8
 date-released: 2026-09-13
 url: "https://github.com/vn-anhnth/LiteALPR"
 preferred-citation:

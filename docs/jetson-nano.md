@@ -44,7 +44,7 @@ python tools/export_rec.py \
 ## Step 2: Build TensorRT Engines
 Transfer the ONNX models to your Jetson Nano and use `trtexec` to build the optimized engines. We utilize **FP16** precision for the detector and **INT8** quantization for the recognizer to maximize throughput.
 
-> **Note on INT8 Quantization:** Applying INT8 quantization to SVTR26-Tiny drastically reduces latency (approx. 5× speedup compared to FP32's ~111.12 ms) while maintaining robust accuracy (**89.28% sequence accuracy**, **3.26% CER**). The slight accuracy improvement suggests that INT8 calibration inherently acts as a regularization mechanism, suppressing high-frequency sensor noise. For detailed performance comparisons, refer to the [Benchmarks](benchmarks.md) page.
+> **Note on INT8 Quantization:** Applying INT8 quantization to SVTR26-Tiny drastically reduces latency (approx. 5× speedup compared to FP32's ~111.12 ms) while maintaining robust accuracy (**89.28% sequence accuracy**, **3.26% CER**). The minor accuracy variation (+0.13%) falls well within expected quantization tolerance. For detailed performance comparisons, refer to the [Benchmarks](benchmarks.md) page.
 
 ```bash
 # Build YOLOv8n-Efficient Engine (FP16)
@@ -81,6 +81,8 @@ In production, edge pipelines are often deployed entirely in C/C++ to eliminate 
     --iterations=1000 \
     --avgRuns=100
 ```
+
+Under this benchmark, the **YOLOv8n-Efficient** detector (FP16 at $416 \times 416$) achieves an inference latency of **20.66 ms**. The **SVTR26-Tiny** recognizer in INT8 precision at $32 \times 128$ achieves **21.77 ms** (down from 111.12 ms in FP32 and 97.92 ms in FP16).
 
 ## Step 4: System Resource Monitoring (Optional)
 To monitor the system resource utilization (RAM, CPU, GPU, and Temperature) during inference, you can use the built-in `tegrastats` utility.

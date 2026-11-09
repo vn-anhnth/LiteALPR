@@ -1,10 +1,10 @@
 [build-system]
-requires = ["setuptools>=45", "wheel", "setuptools_scm>=6.2"]
+requires = ["setuptools>=45", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [project]
 name = "litealpr"
-version = "0.1.7"
+version = "0.1.8"
 description = "Accurate and Efficient General OCR System for License Plates"
 readme = "README.md"
 requires-python = ">=3.8"

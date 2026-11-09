@@ -262,7 +262,7 @@ if __name__ == "__main__":
     parser.add_argument(
         "--device", type=str, default="cuda:0", help="Device to use (e.g. 'cpu' or 'cuda:0')"
     )
-    parser.add_argument("--warmup", type=int, default=10, help="Number of warmup iterations")
+    parser.add_argument("--warmup", type=int, default=50, help="Number of warmup iterations")
     parser.add_argument("--num_samples", type=int, default=1000, help="Number of images to sample")
     parser.add_argument("--num_runs", type=int, default=5, help="Number of benchmark passes")
     args = parser.parse_args()

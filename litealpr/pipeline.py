@@ -242,18 +242,19 @@ class LiteALPR:
         boxes = self.detect(img, conf_thresh)
         final_results = []
 
-        h, w, _ = img.shape
+        h, w = img.shape[:2]
         for box in boxes:
-            x1, y1, x2, y2 = box
-
-            # Ensure bounds
+            # Ensure coordinates are integers and clamped to image bounds
+            x1, y1, x2, y2 = [int(v) for v in box[:4]]
             x1_c, y1_c = max(0, x1), max(0, y1)
             x2_c, y2_c = min(w, x2), min(h, y2)
 
+            # Skip empty or degenerate bounding boxes
+            if x2_c <= x1_c or y2_c <= y1_c:
+                continue
+
             crop_img = img[y1_c:y2_c, x1_c:x2_c]
-
             text, score = self.recognize(crop_img)
-
-            final_results.append({"box": box, "text": text, "score": score})
+            final_results.append({"box": [x1, y1, x2, y2], "text": text, "score": score})
 
         return final_results
