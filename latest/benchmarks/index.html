@@ -562,10 +562,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#4-cross-regional-generalization-benchmark" class="md-nav__link">
+  <a href="#4-multi-national-robustness-across-regional-subsets" class="md-nav__link">
     <span class="md-ellipsis">
       
-        4. Cross-Regional Generalization Benchmark
+        4. Multi-National Robustness across Regional Subsets
       
     </span>
   </a>
@@ -733,10 +733,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#4-cross-regional-generalization-benchmark" class="md-nav__link">
+  <a href="#4-multi-national-robustness-across-regional-subsets" class="md-nav__link">
     <span class="md-ellipsis">
       
-        4. Cross-Regional Generalization Benchmark
+        4. Multi-National Robustness across Regional Subsets
       
     </span>
   </a>
@@ -818,17 +818,17 @@
 <td style="text-align: center;">12.38 ± 2.43</td>
 <td style="text-align: center;">1.55 ± 0.20</td>
 <td style="text-align: center;">15.84 ± 2.79</td>
-<td style="text-align: center;">63.1 ± 0.7</td>
-<td style="text-align: center;">88.60%</td>
+<td style="text-align: center;">63.13 ± 0.70</td>
+<td style="text-align: center;">88.25%</td>
 </tr>
 <tr>
 <td style="text-align: left;"></td>
-<td style="text-align: left;"><a href="https://github.com/ankandrew/fast-alpr">fast-alpr</a></td>
+<td style="text-align: left;"><a href="https://github.com/ankandrew/fast-alpr">fast-alpr (out-of-the-box)</a></td>
 <td style="text-align: center;">4.58 ± 0.85</td>
 <td style="text-align: center;">15.06 ± 3.27</td>
 <td style="text-align: center;">5.62 ± 2.96</td>
 <td style="text-align: center;">25.27 ± 5.67</td>
-<td style="text-align: center;">40.1 ± 4.3</td>
+<td style="text-align: center;">39.57 ± 4.30</td>
 <td style="text-align: center;">22.67%</td>
 </tr>
 <tr>
@@ -838,7 +838,7 @@
 <td style="text-align: center;"><strong>11.57 ± 5.87</strong></td>
 <td style="text-align: center;"><strong>1.49 ± 0.12</strong></td>
 <td style="text-align: center;"><strong>15.05 ± 6.01</strong></td>
-<td style="text-align: center;"><strong>66.5 ± 1.8</strong></td>
+<td style="text-align: center;"><strong>66.45 ± 1.80</strong></td>
 <td style="text-align: center;"><strong>89.15%</strong></td>
 </tr>
 <tr>
@@ -848,17 +848,17 @@
 <td style="text-align: center;">58.53 ± 13.50</td>
 <td style="text-align: center;"><strong>0.95 ± 0.78</strong></td>
 <td style="text-align: center;">65.08 ± 14.28</td>
-<td style="text-align: center;">15.4 ± 0.3</td>
-<td style="text-align: center;">88.60%</td>
+<td style="text-align: center;">15.37 ± 0.30</td>
+<td style="text-align: center;">88.25%</td>
 </tr>
 <tr>
 <td style="text-align: left;"></td>
-<td style="text-align: left;"><a href="https://github.com/ankandrew/fast-alpr">fast-alpr</a></td>
+<td style="text-align: left;"><a href="https://github.com/ankandrew/fast-alpr">fast-alpr (out-of-the-box)</a></td>
 <td style="text-align: center;"><strong>5.10 ± 1.18</strong></td>
 <td style="text-align: center;"><strong>24.02 ± 3.29</strong></td>
 <td style="text-align: center;">4.17 ± 2.44</td>
 <td style="text-align: center;"><strong>33.30 ± 4.92</strong></td>
-<td style="text-align: center;"><strong>30.1 ± 0.8</strong></td>
+<td style="text-align: center;"><strong>30.03 ± 0.80</strong></td>
 <td style="text-align: center;">22.67%</td>
 </tr>
 <tr>
@@ -868,13 +868,13 @@
 <td style="text-align: center;">34.04 ± 9.32</td>
 <td style="text-align: center;">1.80 ± 2.06</td>
 <td style="text-align: center;">42.67 ± 8.66</td>
-<td style="text-align: center;">23.4 ± 0.2</td>
+<td style="text-align: center;">23.44 ± 0.20</td>
 <td style="text-align: center;"><strong>89.15%</strong></td>
 </tr>
 </tbody>
 </table>
 <blockquote>
-<p><strong>Key Takeaway:</strong> While alternative lightweight pipelines such as <a href="https://github.com/ankandrew/fast-alpr"><code>fast-alpr</code></a> degrade down to 22.67% accuracy under blur, low light, and tilt angles, LiteALPR preserves <strong>89.15% sequence accuracy</strong> while maintaining ultra-high throughput (<strong>~66.5 FPS</strong> on GPU, <strong>~23.4 FPS</strong> on CPU).</p>
+<p><strong>Key Takeaway:</strong> While off-the-shelf pipelines such as <a href="https://github.com/ankandrew/fast-alpr"><code>fast-alpr (out-of-the-box)</code></a> degrade down to 22.67% accuracy without domain retraining, LiteALPR achieves <strong>89.15% sequence accuracy</strong> while maintaining ultra-high throughput (<strong>66.45 ± 1.80 FPS</strong> on GPU, <strong>23.44 ± 0.20 FPS</strong> on CPU), delivering a steady 5.26% GPU speedup and 52.5% CPU speedup over the matched baseline (63.13 FPS on GPU, 15.37 FPS on CPU, 88.25% accuracy).</p>
 </blockquote>
 <h3 id="reproduce-desktop-benchmarks">Reproduce Desktop Benchmarks</h3>
 <p>To evaluate the end-to-end pipeline latency and throughput on your own hardware, run the following benchmark script:</p>
@@ -1017,17 +1017,18 @@
 <p>Height-wise Average Pooling (HAP) completely replaces 2D attention matrices, reducing CPU recognition latency from <strong>~10.84 ms</strong> down to <strong>~8.32 ms</strong> while maintaining a sequence recognition accuracy of <strong>89.15%</strong> and lowering Character Error Rate (CER) to <strong>3.28%</strong>.</p>
 </blockquote>
 <hr />
-<h2 id="4-cross-regional-generalization-benchmark">4. Cross-Regional Generalization Benchmark</h2>
-<p>Evaluation of SVTR26-Tiny against widely-adopted sequence recognition baselines across 3 diverse geographic subsets (<strong>25,000 total test samples</strong>: 5,990 from Vietnam, 9,560 from Brazil, and 9,450 from China).</p>
+<h2 id="4-multi-national-robustness-across-regional-subsets">4. Multi-National Robustness across Regional Subsets</h2>
+<p>Evaluation of SVTR26-Tiny against widely-adopted sequence recognition baselines across 3 diverse geographic subsets (<strong>25,000 total test samples</strong>: 5,990 from Vietnam, 9,560 from Brazil, and 9,450 from China), fine-tuned under matched training conditions using identical crop resolution (<span class="arithmatex">\(128 \times 32\)</span>), vocabulary, and augmentations.</p>
 <blockquote>
-<p><strong>Evaluation Vocabulary:</strong> All models are evaluated on a unified 37-character Latin dictionary (<strong>A–Z</strong>, <strong>Đ</strong>, <strong>0–9</strong>). To ensure a fair cross-regional comparison, non-Latin symbols (e.g., Chinese Hanzi) are excluded, and multi-line plates are evaluated as a single sequence.</p>
+<p><strong>Evaluation Vocabulary:</strong> All models are evaluated on a unified 38-token Latin alphanumeric vocabulary (26 uppercase letters <strong>A–Z</strong>, Vietnamese <strong>Đ</strong>, 10 digits <strong>0–9</strong>, and 1 CTC blank token). To ensure a fair regional comparison, non-Latin provincial logograms (e.g., Chinese prefix characters) are excluded during label normalization, and multi-line plates are concatenated into a contiguous 1D sequence.</p>
 </blockquote>
-<p>The table below presents the performance of the evaluated lightweight architectures, ranked in progressive order of regional generalization:</p>
+<p>The table below presents the performance of the evaluated lightweight architectures across regional benchmarks:</p>
 <table>
 <thead>
 <tr>
 <th style="text-align: center;">No.</th>
 <th style="text-align: left;">Model</th>
+<th style="text-align: center;">Params</th>
 <th style="text-align: center;">Vietnam Acc (%)</th>
 <th style="text-align: center;">Brazil Acc (%)</th>
 <th style="text-align: center;">China Acc (%)</th>
@@ -1040,6 +1041,7 @@
 <tr>
 <td style="text-align: center;">1</td>
 <td style="text-align: left;"><a href="https://arxiv.org/abs/1507.05717">CRNN</a></td>
+<td style="text-align: center;">24.50M</td>
 <td style="text-align: center;">35.17%</td>
 <td style="text-align: center;">55.96%</td>
 <td style="text-align: center;">67.88%</td>
@@ -1050,6 +1052,7 @@
 <tr>
 <td style="text-align: center;">2</td>
 <td style="text-align: left;"><a href="https://github.com/PaddlePaddle/PaddleOCR">PP-OCRv4-Mobile</a></td>
+<td style="text-align: center;">19.30M</td>
 <td style="text-align: center;">64.50%</td>
 <td style="text-align: center;">87.28%</td>
 <td style="text-align: center;">92.05%</td>
@@ -1060,6 +1063,7 @@
 <tr>
 <td style="text-align: center;">3</td>
 <td style="text-align: left;"><a href="http://dx.doi.org/10.1609/aaai.v37i11.26538">TrOCR</a></td>
+<td style="text-align: center;">333.92M</td>
 <td style="text-align: center;">70.20%</td>
 <td style="text-align: center;">90.85%</td>
 <td style="text-align: center;">91.45%</td>
@@ -1070,6 +1074,7 @@
 <tr>
 <td style="text-align: center;">4</td>
 <td style="text-align: left;"><a href="https://arxiv.org/abs/2411.15858">SVTRv2-Tiny</a></td>
+<td style="text-align: center;">5.11M</td>
 <td style="text-align: center;">81.36%</td>
 <td style="text-align: center;">90.54%</td>
 <td style="text-align: center;">96.00%</td>
@@ -1080,6 +1085,7 @@
 <tr>
 <td style="text-align: center;">5</td>
 <td style="text-align: left;"><strong>SVTR26-Tiny (Ours)</strong></td>
+<td style="text-align: center;"><strong>4.22M</strong></td>
 <td style="text-align: center;"><strong>82.93%</strong></td>
 <td style="text-align: center;"><strong>90.98%</strong></td>
 <td style="text-align: center;"><strong>96.51%</strong></td>
@@ -1090,7 +1096,7 @@
 </tbody>
 </table>
 <blockquote>
-<p><strong>Summary:</strong> SVTR26-Tiny attains top performance among the evaluated architectures on the challenging Vietnam benchmark (<strong>82.93%</strong>) and China benchmark (<strong>96.51%</strong> with <strong>0.71% CER</strong>), while achieving the highest <strong>90.98%</strong> accuracy in Brazil.</p>
+<p><strong>Summary:</strong> SVTR26-Tiny attains top performance among the evaluated architectures while requiring the smallest parameter footprint (<strong>4.22M</strong>). It demonstrates multi-national robustness across disparate plate aspect ratios, font morphologies, and line layouts within the pooled distribution.</p>
 </blockquote>
 
 

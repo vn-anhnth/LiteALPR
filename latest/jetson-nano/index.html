@@ -772,7 +772,7 @@
 <h2 id="step-2-build-tensorrt-engines">Step 2: Build TensorRT Engines</h2>
 <p>Transfer the ONNX models to your Jetson Nano and use <code>trtexec</code> to build the optimized engines. We utilize <strong>FP16</strong> precision for the detector and <strong>INT8</strong> quantization for the recognizer to maximize throughput.</p>
 <blockquote>
-<p><strong>Note on INT8 Quantization:</strong> Applying INT8 quantization to SVTR26-Tiny drastically reduces latency (approx. 5× speedup compared to FP32's ~111.12 ms) while maintaining robust accuracy (<strong>89.28% sequence accuracy</strong>, <strong>3.26% CER</strong>). The slight accuracy improvement suggests that INT8 calibration inherently acts as a regularization mechanism, suppressing high-frequency sensor noise. For detailed performance comparisons, refer to the <a href="../benchmarks/">Benchmarks</a> page.</p>
+<p><strong>Note on INT8 Quantization:</strong> Applying INT8 quantization to SVTR26-Tiny drastically reduces latency (approx. 5× speedup compared to FP32's ~111.12 ms) while maintaining robust accuracy (<strong>89.28% sequence accuracy</strong>, <strong>3.26% CER</strong>). The minor accuracy variation (+0.13%) falls well within expected quantization tolerance. For detailed performance comparisons, refer to the <a href="../benchmarks/">Benchmarks</a> page.</p>
 </blockquote>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Build YOLOv8n-Efficient Engine (FP16)</span>
 </span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>/usr/src/tensorrt/bin/trtexec<span class="w"> </span>--onnx<span class="o">=</span>/path/to/your/models/best_416.onnx<span class="w"> </span><span class="se">\</span>
@@ -805,6 +805,7 @@
 </span><span id="__span-2-12"><a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a><span class="w">    </span>--iterations<span class="o">=</span><span class="m">1000</span><span class="w"> </span><span class="se">\</span>
 </span><span id="__span-2-13"><a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a><span class="w">    </span>--avgRuns<span class="o">=</span><span class="m">100</span>
 </span></code></pre></div>
+<p>Under this benchmark, the <strong>YOLOv8n-Efficient</strong> detector (FP16 at <span class="arithmatex">\(416 \times 416\)</span>) achieves an inference latency of <strong>20.66 ms</strong>. The <strong>SVTR26-Tiny</strong> recognizer in INT8 precision at <span class="arithmatex">\(32 \times 128\)</span> achieves <strong>21.77 ms</strong> (down from 111.12 ms in FP32 and 97.92 ms in FP16).</p>
 <h2 id="step-4-system-resource-monitoring-optional">Step 4: System Resource Monitoring (Optional)</h2>
 <p>To monitor the system resource utilization (RAM, CPU, GPU, and Temperature) during inference, you can use the built-in <code>tegrastats</code> utility.</p>
 <p>Open a new terminal on your Jetson Nano and run:
