@@ -2,7 +2,7 @@
 
 [![PyPI version](https://badge.fury.io/py/litealpr.svg)](https://pypi.org/project/litealpr/)
 [![Documentation](https://img.shields.io/badge/docs-mkdocs--material-blue.svg)](https://vn-anhnth.github.io/LiteALPR/)
-[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.22722292.svg)](https://doi.org/10.5281/zenodo.22722292)
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.24094968.svg)](https://doi.org/10.5281/zenodo.24094968)
 
 <p align="center">
   <img src="https://raw.githubusercontent.com/vn-anhnth/LiteALPR/main/docs/figures/intro1.png" width="350">
@@ -12,7 +12,7 @@
 
 🚀 **LiteALPR** is a lightweight, accurate, and flexible End-to-End License Plate Recognition library.
 
-Unlike traditional ALPR (Automatic License Plate Recognition) systems that rely on heavy architectures, LiteALPR introduces structural improvements designed specifically for high-throughput applications. Our framework achieves fast inference speeds without sacrificing accuracy on blurry or degraded license plates through two major architectural optimizations.
+Unlike traditional ALPR (Automatic License Plate Recognition) systems that rely on heavy architectures, LiteALPR integrates lightweight architectural adaptations designed for high-throughput and edge-oriented deployment, balancing inference speed and transcription accuracy across diverse plate layouts and conditions.
 
 ---
 
@@ -42,15 +42,15 @@ Unlike traditional ALPR (Automatic License Plate Recognition) systems that rely 
 ---
 
 ## 🧩 LiteALPR Pipeline
-The framework is structured as a highly optimized two-stage sequential pipeline:
+The framework is structured as a lightweight two-stage sequential pipeline:
 
 <p align="center">
   <img src="https://raw.githubusercontent.com/vn-anhnth/LiteALPR/main/docs/figures/Hung_0060.png" height="150"> ➔ <b>YOLOv8n-Efficient</b> ➔ <img src="https://raw.githubusercontent.com/vn-anhnth/LiteALPR/main/docs/figures/Hung_0060_crop.png" height="150"> ➔ <b>SVTR26-Tiny</b> ➔ <code>59P289136</code>
 </p>
-<p align="center"><em>Overview of the proposed highly optimized two-stage ALPR pipeline.</em></p>
+<p align="center"><em>Overview of the proposed two-stage ALPR pipeline.</em></p>
 
 ### 1. YOLOv8n-Efficient for Fast Detection
-We replaced the **original heavy C2f blocks** in the YOLOv8 neck with **lightweight C3Ghost blocks**.
+We replaced the **original heavy C2f blocks** in the YOLOv8 backbone and neck with **lightweight C3Ghost blocks**.
 
 | Original: Heavy C2f Block | Proposed: Lightweight C3Ghost Block |
 | :---: | :---: |
@@ -296,10 +296,10 @@ python tools/export_rec.py -m output/rec/svtr26_tiny/train/best.pth --save_path 
 ## 🤝 Acknowledgements
 
 - **OpenOCR**: LiteALPR is built upon the robust foundation of [OpenOCR](https://github.com/Topdu/OpenOCR).
-- **YOLOv8 & SVTRv2**: This work heavily leverages the architectural innovations from **YOLOv8** for high-speed object detection and **SVTRv2** for accurate text recognition.
+- **YOLOv8 & SVTRv2**: This work builds upon the established **YOLOv8** object detection and **SVTRv2** text recognition architectures.
   - Read the [YOLOv8 Paper](https://arxiv.org/html/2408.15857v1)
   - Read the [SVTRv2 Paper](https://arxiv.org/html/2411.15858v1)
-- **Datasets**: Our evaluation utilizes datasets from [Brazil (RodoSol-ALPR)](https://github.com/raysonlaroca/rodosol-alpr-dataset), [China (CBLPRD-330k)](https://github.com/SunlifeV/CBLPRD-330k), and [Vietnam](https://www.kaggle.com/datasets/duydieunguyen/licenseplates) public collections alongside self-collected traffic footage. We sincerely thank the original authors of these datasets for advancing the ALPR research community.
+- **Datasets**: Our evaluation utilizes public benchmarks from [Brazil (RodoSol-ALPR)](https://github.com/raysonlaroca/rodosol-alpr-dataset), China ([CCPD](https://github.com/detectRecog/CCPD) and [CBLPRD-330k](https://github.com/SunlifeV/CBLPRD-330k)), [Vietnam](https://www.kaggle.com/datasets/duydieunguyen/licenseplates), and [European](https://www.kaggle.com/datasets/abdelhamidzakaria/european-license-plates-dataset) subsets, alongside 1,036 privacy-redacted self-collected Vietnamese crops (see `manifests/`). We sincerely thank the original authors of these datasets for advancing the ALPR research community.
 
 ## 📜 License
 This project is open-sourced under the [GNU Affero General Public License v3.0 (AGPL-3.0)](LICENSE).

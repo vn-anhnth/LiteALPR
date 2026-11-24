@@ -53,7 +53,7 @@ alpr = LiteALPR(use_rec=False)
 boxes = alpr.detect("test_car.jpg")
 
 for box in boxes:
-    # box format: [x1, y1, x2, y2, confidence, class_id]
+    # box format: [x1, y1, x2, y2] (integer pixel coordinates)
     print("Detected box:", box)
 ```
 

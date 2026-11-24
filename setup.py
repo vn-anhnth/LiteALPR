@@ -24,7 +24,7 @@ def get_version():
         for line in f:
             if line.startswith("__version__"):
                 return line.split("=")[1].strip().strip('"').strip("'")
-    return "0.1.8"
+    return "0.1.9"
 
 
 setup(
@@ -33,7 +33,7 @@ setup(
     description="Accurate and Efficient General OCR System",
     long_description=read_file("README.md"),
     long_description_content_type="text/markdown",
-    author="Anh Nguyen",
+    author="Anh Nguyen, Bay Nguyen Van, Vinh Truong Hoang",
     author_email="anhnth.25ai@ou.edu.vn",
     url="https://github.com/vn-anhnth/LiteALPR",
     license="GNU Affero General Public License v3.0 (AGPL-3.0)",
@@ -44,7 +44,7 @@ setup(
         "opencv-python<=5.0.0.93",
         "PyYAML<=6.0.3",
         "huggingface-hub<=0.31",
-        "torch>=1.7.0",
+        "torch>=1.10.0",
         "torchvision",
         "ultralytics<=8.3.99",
         "onnx>=1.13.0",

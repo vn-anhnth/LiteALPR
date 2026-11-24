@@ -173,7 +173,12 @@ class LiteALPR:
             raise ValueError("Detection model not loaded! Initialize with det_model_path.")
 
         if isinstance(img, str):
-            img = cv2.imread(img)
+            img_path = img
+            img = cv2.imread(img_path)
+            if img is None:
+                raise ValueError(f"Could not read image: {img_path}")
+        elif img is None:
+            raise ValueError("Input image cannot be None.")
 
         device_arg = 0 if "cuda" in str(self.device) else "cpu"
         det_results = self.det_model(

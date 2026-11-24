@@ -4,13 +4,15 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "litealpr"
-version = "0.1.8"
+version = "0.1.9"
 description = "Accurate and Efficient General OCR System for License Plates"
 readme = "README.md"
 requires-python = ">=3.8"
 license = {text = "GNU Affero General Public License v3.0 (AGPL-3.0)"}
 authors = [
-    {name = "Anh Nguyen", email = "anhnth.25ai@ou.edu.vn"}
+    {name = "Anh Nguyen", email = "anhnth.25ai@ou.edu.vn"},
+    {name = "Bay Nguyen Van", email = "bay.nv@ou.edu.vn"},
+    {name = "Vinh Truong Hoang", email = "vinh.th@ou.edu.vn"},
 ]
 keywords = [
     "alpr",
@@ -45,7 +47,7 @@ dependencies = [
     "opencv-python<=5.0.0.93",
     "pyyaml<=6.0.3",
     "huggingface-hub<=0.31",
-    "torch>=1.7.0",
+    "torch>=1.10.0",
     "torchvision",
     "ultralytics<=8.3.99",
     "onnx>=1.13.0",

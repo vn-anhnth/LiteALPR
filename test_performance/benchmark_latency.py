@@ -43,15 +43,26 @@ except ImportError:
 from litealpr import LiteALPR
 
 
+def _sync_cuda(use_cuda):
+    if use_cuda and "torch" in sys.modules and torch.cuda.is_available():
+        torch.cuda.synchronize()
+
+
 def benchmark_pipeline_dataset(
     image_dir,
     det_model_path=None,
     rec_model_path=None,
     num_samples=1000,
     num_runs=5,
-    num_warmup=10,
+    num_warmup=50,
     device="cpu",
+    cpu_threads=6,
 ):
+    use_cuda = "cuda" in str(device).lower()
+    if not use_cuda:
+        os.environ["OMP_NUM_THREADS"] = str(cpu_threads)
+        if "torch" in sys.modules:
+            torch.set_num_threads(cpu_threads)
     print("=" * 68)
     print(f" LiteALPR FULL PIPELINE BENCHMARK (Device: {device.upper()})")
     print(f" Dataset : {image_dir}")
@@ -103,11 +114,20 @@ def benchmark_pipeline_dataset(
 
     # Initialize LiteALPR
     alpr = LiteALPR(det_model_path=det_model_path, rec_model_path=rec_model_path, device=device)
+    if not use_cuda:
+        import onnxruntime as ort
+
+        so = ort.SessionOptions()
+        so.intra_op_num_threads = cpu_threads
+        alpr.rec_session = ort.InferenceSession(
+            rec_model_path, sess_options=so, providers=["CPUExecutionProvider"]
+        )
 
     # Warm-up runs
     print(f"\nWarm-up: executing {num_warmup} warm-up runs...")
     for i in range(num_warmup):
         _ = alpr.read(images[i % len(images)].copy())
+    _sync_cuda(use_cuda)
 
     all_pre = []
     all_det_infer = []
@@ -126,9 +146,11 @@ def benchmark_pipeline_dataset(
         pass_total_infer = []
         pass_total = []
 
+        _sync_cuda(use_cuda)
         t_pass_start = time.perf_counter()
         pbar = tqdm(images, desc=f"Pass {pass_idx}/{num_runs}", unit="img", ncols=90)
         for img in pbar:
+            _sync_cuda(use_cuda)
             t_start = time.perf_counter()
 
             # 1. Detection Pre-processing (Letterbox / Normalization)
@@ -164,14 +186,17 @@ def benchmark_pipeline_dataset(
                     input_numpy = tensor.detach().cpu().numpy()
                     t_rec_pre_total += (time.perf_counter() - t_rp0) * 1000
 
+                    _sync_cuda(use_cuda)
                     t_ri0 = time.perf_counter()
                     preds = alpr.rec_session.run(None, {alpr.rec_input_name: input_numpy})[0]
+                    _sync_cuda(use_cuda)
                     t_rec_infer_total += (time.perf_counter() - t_ri0) * 1000
 
                     t_rpost0 = time.perf_counter()
                     _ = alpr.post_process_class(preds)
                     t_rec_post_total += (time.perf_counter() - t_rpost0) * 1000
 
+            _sync_cuda(use_cuda)
             t_total = (time.perf_counter() - t_start) * 1000
 
             # Breakdown matching paper:
@@ -265,6 +290,7 @@ if __name__ == "__main__":
     parser.add_argument("--warmup", type=int, default=50, help="Number of warmup iterations")
     parser.add_argument("--num_samples", type=int, default=1000, help="Number of images to sample")
     parser.add_argument("--num_runs", type=int, default=5, help="Number of benchmark passes")
+    parser.add_argument("--cpu_threads", type=int, default=6, help="Intra-op CPU threads for ONNX Runtime")
     args = parser.parse_args()
 
     benchmark_pipeline_dataset(
@@ -275,4 +301,5 @@ if __name__ == "__main__":
         num_runs=args.num_runs,
         num_warmup=args.warmup,
         device=args.device,
+        cpu_threads=args.cpu_threads,
     )

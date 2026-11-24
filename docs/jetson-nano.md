@@ -1,97 +1,81 @@
 # Edge Deployment (Jetson Nano)
 
-To demonstrate the practical viability of LiteALPR in resource-constrained edge environments, we evaluated the framework on an NVIDIA Jetson Nano utilizing TensorRT post-training quantization.
+To demonstrate the viability of LiteALPR on resource-constrained edge hardware, we deployed and profiled the pipeline on an embedded NVIDIA Jetson Nano (4GB) using TensorRT 8.2.1.
 
 ## Hardware & Software Specifications
 
-To ensure exact reproducibility, the following specifications were used during our edge evaluation:
-
-- **Hardware**: NVIDIA Jetson Nano Developer Kit
+- **Hardware**: NVIDIA Jetson Nano Developer Kit (4GB)
     - **CPU**: Quad-core ARM Cortex-A57
-    - **GPU**: 128-core NVIDIA Maxwell
+    - **GPU**: 128-core NVIDIA Maxwell (GM20B)
     - **Memory**: 4 GB 64-bit LPDDR4 (25.6 GB/s bandwidth)
-    - **Power Mode**: 10W (MAXN) maximum performance mode
+    - **Configured Power Modes**: 10W MAXN (`nvpmodel -m 0`) and 5W (`nvpmodel -m 1`)
 - **Software Environment**:
-    - **OS**: Ubuntu 18.04
-    - **JetPack SDK**: 4.6.1
-    - **CUDA**: 10.2
-    - **cuDNN**: 8.2
+    - **OS**: Ubuntu 18.04 (JetPack 4.6.1)
+    - **CUDA / cuDNN**: CUDA 10.2 / cuDNN 8.2
     - **TensorRT**: 8.2.1
     - **Python**: 3.6.9
 
-To reproduce the Jetson Nano deployment and stress test, follow these steps:
-
 ## Step 1: Export Models to ONNX
-First, export the trained PyTorch models to ONNX format (this can be done on your host machine):
+
+Export the trained PyTorch models to ONNX on your host workstation:
 
 ```bash
-# Export Detection Model
+# Export Detection Model (416x416)
 python tools/export_det.py \
     -m output/det/yolov8n_efficient/train/weights/best.pt \
     --imgsz 416 \
     --opset 12
-# -> Expected output: output/det/yolov8n_efficient/train/weights/best_416.onnx
 
-# Export Recognition Model
+# Export Recognition Model (dynamic input shapes)
 python tools/export_rec.py \
     -m output/rec/svtr26_tiny/train/best.pth \
     --save_path output/rec/svtr26_tiny/train/best.onnx \
     --opset 12 \
     --dynamic
-# -> Expected output: output/rec/svtr26_tiny/train/best.onnx
 ```
 
-## Step 2: Build TensorRT Engines
-Transfer the ONNX models to your Jetson Nano and use `trtexec` to build the optimized engines. We utilize **FP16** precision for the detector and **INT8** quantization for the recognizer to maximize throughput.
+## Step 2: Calibrate INT8 & Build 4-Profile TensorRT Engines
 
-> **Note on INT8 Quantization:** Applying INT8 quantization to SVTR26-Tiny drastically reduces latency (approx. 5× speedup compared to FP32's ~111.12 ms) while maintaining robust accuracy (**89.28% sequence accuracy**, **3.26% CER**). The minor accuracy variation (+0.13%) falls well within expected quantization tolerance. For detailed performance comparisons, refer to the [Benchmarks](benchmarks.md) page.
+Because TensorRT 8.2.1 exhibits numerical divergence when compiling multi-aspect-ratio transformers under a single dynamic profile, `SVTR26-Tiny` is compiled with **four static optimization profiles** matching its discrete aspect-ratio buckets (`64×64`, `48×96`, `40×112`, and `32×128`). INT8 Post-Training Quantization (PTQ) uses `IInt8EntropyCalibrator2` calibrated on 500 validation crops strictly disjoint from the 25,000-crop test set.
 
 ```bash
-# Build YOLOv8n-Efficient Engine (FP16)
-/usr/src/tensorrt/bin/trtexec --onnx=/path/to/your/models/best_416.onnx \
+# 1. Build YOLOv8n-Efficient Detector Engine (FP16 at 416x416)
+/usr/src/tensorrt/bin/trtexec --onnx=pretrained_models/det/yolov8n_efficient/best_416.onnx \
     --saveEngine=yolov8n_efficient_416_fp16.engine \
     --fp16 \
-    --workspace=2048
+    --workspace=1024
 
-# Build SVTR26-Tiny Engine (INT8)
-/usr/src/tensorrt/bin/trtexec --onnx=/path/to/your/models/best.onnx \
-    --saveEngine=svtr26_tiny_int8.engine \
-    --workspace=1024 \
-    --minShapes=input:1x3x32x32 \
-    --optShapes=input:1x3x64x64 \
-    --maxShapes=input:1x3x128x128 \
-    --int8
+# 2. Generate INT8 Entropy Calibration Cache (500 validation crops)
+python test_performance/build_int8_calib.py \
+    --onnx pretrained_models/rec/svtr26_tiny/best.onnx \
+    --calib-out svtr26_tiny.calib \
+    --labels-file dataset/rec/val_labels.txt \
+    --dataset-dir dataset/rec \
+    --num-images 500
+
+# 3. Compile 4-Profile Static Recognizer Engines (FP32, FP16, and INT8)
+python test_performance/build_trt_4profiles.py \
+    --onnx pretrained_models/rec/svtr26_tiny/best.onnx \
+    --calib svtr26_tiny.calib \
+    --precision all \
+    --output-dir .
 ```
 
-## Step 3: Pure C++ Inference Profiling (Optional)
-In production, edge pipelines are often deployed entirely in C/C++ to eliminate Python overhead (such as the Global Interpreter Lock and context switching). To benchmark the pure theoretical latency of the standalone compiled engines, you can use the `trtexec` profiling tool:
+## Step 3: Standalone Latency & Precision Trade-offs
 
-```bash
-# Profile Detection Engine (YOLOv8n-Efficient)
-/usr/src/tensorrt/bin/trtexec \
-    --loadEngine=/path/to/your/models/yolov8n_efficient_416_fp16.engine \
-    --shapes=images:1x3x416x416 \
-    --iterations=1000 \
-    --avgRuns=100
+Pure GPU inference latency was measured in 10W MAXN mode (`nvpmodel -m 0`) over 1,000 iterations (with 100 warm-up runs). At $416 \times 416$, **YOLOv8n-Efficient (FP16)** achieves **20.66 ms** detection latency. Across the full 25,000-crop test set, **SVTR26-Tiny** precision trade-offs (latency measured at $32 \times 128$) are:
 
-# Profile Recognition Engine (SVTR26-Tiny)
-/usr/src/tensorrt/bin/trtexec \
-    --loadEngine=/path/to/your/models/svtr26_tiny_int8.engine \
-    --shapes=input:1x3x32x128 \
-    --iterations=1000 \
-    --avgRuns=100
-```
+| Precision | Engine Size | Pure GPU Latency (ms) | Test Accuracy (%) | Test CER (%) |
+| :--- | :---: | :---: | :---: | :---: |
+| **FP32** | 141 MB | 23.05 | 89.14 | 3.28 |
+| **FP16** | 129 MB | 23.50 | 89.14 | 3.28 |
+| **INT8 (PTQ)** | **44 MB** | 27.06 | 89.12 | 3.29 |
 
-Under this benchmark, the **YOLOv8n-Efficient** detector (FP16 at $416 \times 416$) achieves an inference latency of **20.66 ms**. The **SVTR26-Tiny** recognizer in INT8 precision at $32 \times 128$ achieves **21.77 ms** (down from 111.12 ms in FP32 and 97.92 ms in FP16).
+> **Hardware Note:** Both FP32 and FP16 TensorRT engines match the workstation PyTorch accuracy (89.14%). Because the Jetson Nano's Maxwell GPU (GM20B) lacks native INT8 Tensor Cores, INT8 PTQ introduces a ~4 ms reformatting overhead rather than a speedup, but shrinks serialized engine size by **3.2×** (44 MB vs. 141 MB) with only a 0.02% accuracy difference (4 crops out of 25,000).
 
-## Step 4: System Resource Monitoring (Optional)
-To monitor the system resource utilization (RAM, CPU, GPU, and Temperature) during inference, you can use the built-in `tegrastats` utility.
+## Step 4: System Resource Monitoring (`tegrastats`)
 
-Open a new terminal on your Jetson Nano and run:
-```bash
-tegrastats
-```
-While `tegrastats` is running, execute the stress test script from **Step 5** in your primary terminal. You will be able to observe the live resource footprint as the models are loaded into VRAM and inference begins. Maintaining a low memory footprint is critical on edge devices. For instance, loading both YOLOv8n-Efficient FP16 and SVTR26-Tiny INT8 peaks at only ~2.55 GB, well within the 4 GB limit of the Jetson Nano:
+Short-run (~1 min) system resource utilization in 10W MAXN mode monitored via `tegrastats` confirms that the complete pipeline peaks at **2.55 GB RAM**, safely within the 4 GB limit:
 
 | Execution Phase | RAM Utilization | CPU Utilization | GPU Utilization | Temperature |
 | :--- | :---: | :---: | :---: | :---: |
@@ -100,19 +84,22 @@ While `tegrastats` is running, execute the stress test script from **Step 5** in
 | Peak Inference | 2,554 MB | ~35% | 40–99% | 32.0°C |
 | Cooldown | 1,467 MB | ~22% | 0% | 30.5°C |
 
-## Step 5: Power & Thermal Stress Testing (Optional)
-To validate the deployment reliability for continuous 24/7 edge operation, we provide a stress testing script. This script runs the end-to-end pipeline continuously for a specified duration and logs the FPS, Latency, and Temperature every 10 seconds to a CSV file.
+*(Initialization exhibits a brief 99% GPU spike during TensorRT engine deserialization before thermal inertia raises die temperature above 25.0°C.)*
+
+## Step 5: 30-Minute Always-On Thermal & Power Stress Testing
+
+To validate sustained stability under continuous operation, run the Always-On stress test combining `YOLOv8n-Efficient` (FP16) and the 4-profile `SVTR26-Tiny` (INT8, 44 MB) engine:
 
 ```bash
 python test_performance/run_stress_test_jetson_nano.py \
   --images_dir /path/to/your/dataset/images \
-  --det_model_path /path/to/your/models/yolov8n_efficient_416_fp16.engine \
-  --rec_model_path /path/to/your/models/svtr26_tiny_int8.engine \
-  --dict_path /path/to/your/dict/license_plate_dict.txt \
+  --det_model_path yolov8n_efficient_416_fp16.engine \
+  --rec_model_path svtr26_tiny_int8.engine \
+  --dict_path litealpr/license_plate_dict.txt \
   --duration 30 \
   --output_csv run_stress_test_results.csv
 ```
 
-This will run the pipeline continuously for 30 minutes. As an example, our rigorous 30-minute stress test demonstrates exceptional thermal stability under different power configurations. Running in the maximum performance 10W (MAXN) mode, the system sustains a throughput of 17.33 FPS with a safe Always-On (AO) peak temperature of 47.0°C. In the low-power 5W mode, the system averages 11.67 FPS with a peak temperature of 42.5°C. In both scenarios, the system exhibited zero thermal throttling, ensuring reliable continuous traffic monitoring.
+Across continuous 30-minute runs, the pipeline sustains **15.70 ± 0.07 FPS** under **10W MAXN** mode (`nvpmodel -m 0`, reaching a steady peak of **44.5°C**) and **10.74 ± 0.03 FPS** under **5W** mode (`nvpmodel -m 1`, reaching a steady peak of **39.0°C**), with zero thermal throttling.
 
-![30-minute stress test monitoring sustained throughput (FPS) and temperature under 5W and 10W power modes](figures/stress_test.png)
+![30-minute Always-On stress test on Jetson Nano under 5W and 10W power modes](figures/stress_test.png)
