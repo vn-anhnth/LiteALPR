@@ -687,32 +687,29 @@
 <p><a href="https://pypi.org/project/litealpr/"><img alt="PyPI version" src="https://badge.fury.io/py/litealpr.svg" /></a>
 <a href="https://pypi.org/project/litealpr/"><img alt="Python Versions" src="https://img.shields.io/pypi/pyversions/litealpr.svg" /></a>
 <a href="https://www.gnu.org/licenses/agpl-3.0"><img alt="License: AGPL v3" src="https://img.shields.io/badge/License-AGPL_v3-blue.svg" /></a>
-<a href="https://doi.org/10.5281/zenodo.22722292"><img alt="DOI" src="https://zenodo.org/badge/DOI/10.5281/zenodo.22722292.svg" /></a></p>
+<a href="https://doi.org/10.5281/zenodo.24094968"><img alt="DOI" src="https://zenodo.org/badge/DOI/10.5281/zenodo.24094968.svg" /></a></p>
 <p align="center">
-  <img src="figures/intro1.png" width="450" alt="Challenging real-world license plates">
+  <img src="figures/intro1.png" width="450" alt="Representative multi-national license plate samples">
   <br>
-  <em>Visual samples of challenging real-world license plates (motion blur, diverse layouts, low light) handled robustly by LiteALPR.</em>
+  <em>Representative license plate samples across diverse layouts and visual conditions evaluated in LiteALPR.</em>
 </p>
 
-<hr />
 <h2 id="what-is-litealpr">What is LiteALPR?</h2>
-<p><strong>LiteALPR</strong> is an open-source, lightweight, and accurate end-to-end Automatic License Plate Recognition (ALPR) framework designed for real-world production systems and resource-constrained edge environments.</p>
-<p>Unlike conventional ALPR systems that rely on computationally expensive models or suffer severe accuracy loss on degraded images, LiteALPR introduces targeted architectural innovations:</p>
+<p><strong>LiteALPR</strong> is an open-source, lightweight two-stage Automatic License Plate Recognition (ALPR) library designed for high-throughput workstation processing and resource-constrained edge deployment.</p>
+<p>LiteALPR integrates two task-specific lightweight adaptations:</p>
 <ol>
-<li><strong>YOLOv8n-Efficient Detector</strong>: Replaces heavy C2f blocks with lightweight C3Ghost modules, reducing parameters to <strong>2.00M</strong> and slashing CPU detection latency by <strong>2.35×</strong> without losing localization accuracy.</li>
-<li><strong>SVTR26-Tiny Recognizer</strong>: Replaces resource-intensive 2D attention decoders with <strong>Height-wise Average Pooling (HAP)</strong>, aligning with horizontal plate character layouts while reducing inference to <strong>~5.03 ms</strong> on GPU and <strong>~8.32 ms</strong> on CPU.</li>
-<li><strong>Robust Degradation Augmentations</strong>: Trained with synthetic motion blur and optical degradation to achieve <strong>89.15% full-sequence accuracy</strong> across multi-national benchmarks (Vietnam, China, Brazil).</li>
+<li><strong>YOLOv8n-Efficient Detector</strong>: Replaces dense C2f bottlenecks across backbone stages (P3–P5) and the PANet neck with lightweight C3Ghost modules (<span class="arithmatex">\(5 \times 5\)</span> depthwise convolutions), reducing parameters to <strong>2.00M</strong>, cutting <span class="arithmatex">\(416 \times 416\)</span> compute to <strong>2.36 GFLOPs</strong> (-30.8%), and accelerating CPU detection by <strong>2.34×</strong> while preserving localization precision (<strong>99.45% <span class="arithmatex">\(\text{mAP}_{50}\)</span></strong>, <strong>88.07% <span class="arithmatex">\(\text{mAP}_{50-95}\)</span></strong>).</li>
+<li><strong>SVTR26-Tiny Recognizer</strong>: Replaces 2D self- and cross-attention decoders with an attention-free <strong>Efficient RCTC Decoder</strong> using <strong>Height-wise Average Pooling (HAP)</strong> and 4-bucket aspect-ratio resizing (<span class="arithmatex">\(64 \times 64\)</span>, <span class="arithmatex">\(48 \times 96\)</span>, <span class="arithmatex">\(40 \times 112\)</span>, <span class="arithmatex">\(32 \times 128\)</span>), reducing parameters to <strong>4.22M</strong> and lowering latency to <strong>~5.03 ms</strong> on GPU and <strong>~8.32 ms</strong> on CPU.</li>
+<li><strong>Multi-National Training &amp; Degradation Modeling</strong>: Trained with Gaussian/motion blur, JPEG compression, additive noise, and PARSeq-style augmentations across Brazilian, Chinese, and Vietnamese/auxiliary benchmarks.</li>
 </ol>
-<hr />
 <h2 id="key-highlights">Key Highlights</h2>
 <ul>
-<li>⚡ <strong>High Throughput</strong>: <strong>66.45 FPS</strong> on an NVIDIA GeForce RTX 3060 GPU and <strong>23.44 FPS</strong> on an AMD Ryzen 5 4600G CPU.</li>
-<li>🎯 <strong>High Accuracy</strong>: <strong>89.15%</strong> sequence accuracy on challenging real-world plates, compared to 22.67% from out-of-the-box pretrained models like <a href="https://github.com/ankandrew/fast-alpr">fast-alpr (out-of-the-box)</a>.</li>
-<li>📦 <strong>Plug-and-Play Python API</strong>: Simple <code>LiteALPR()</code> pipeline with automatic Hugging Face model weight caching.</li>
-<li>🔄 <strong>Flexible Backends</strong>: Native support for <strong>ONNX Runtime</strong> (CPU &amp; CUDA execution providers) as well as raw PyTorch (<code>.pt</code> / <code>.pth</code>).</li>
-<li>🌐 <strong>Cross-Regional Support</strong>: Validated on diverse license plate formats and multi-line layouts (<a href="https://github.com/laroca/RodoSol-ALPR">Brazil (RodoSol-ALPR)</a>, <a href="https://github.com/detectRecog/CBLPRD">China (CBLPRD-330k)</a>, <a href="https://www.kaggle.com/datasets/duydieunguyen/licenseplates">Vietnam</a>).</li>
+<li>⚡ <strong>High Throughput</strong>: <strong>66.45 FPS</strong> on an NVIDIA GeForce RTX 3060 GPU, <strong>23.44 FPS</strong> on an AMD Ryzen 5 4600G CPU, and <strong>15.70 FPS (10W) / 10.74 FPS (5W)</strong> sustained without thermal throttling on an NVIDIA Jetson Nano (4GB).</li>
+<li>🎯 <strong>Competitive Accuracy</strong>: <strong>77.55% end-to-end exact-match accuracy (6.22% CER)</strong> on 5,230 full-scene holdout images (compared to 39.67% for out-of-the-box <a href="https://github.com/ankandrew/fast-alpr">fast-alpr</a>), and <strong>89.14% sequence accuracy (3.28% CER)</strong> across 25,000 localized plate crops (<strong>87.96%</strong> on the 22,350 real-image crops; <strong>89.25%</strong> on 20,036 strictly unseen-plate crops).</li>
+<li>📦 <strong>Plug-and-Play Python API</strong>: Simple <code>LiteALPR()</code> interface with automatic Hugging Face weight caching and modular <code>detect()</code> / <code>recognize()</code> execution.</li>
+<li>🔄 <strong>Flexible Backends</strong>: Native support for <strong>ONNX Runtime</strong> (CPU &amp; CUDA), <strong>PyTorch</strong> (<code>.pt</code> / <code>.pth</code>), and <strong>TensorRT</strong> 4-profile static engines on Jetson Nano.</li>
+<li>🌐 <strong>Multi-National Benchmarks</strong>: Evaluated across <a href="https://github.com/raysonlaroca/rodosol-alpr-dataset">Brazil (RodoSol-ALPR)</a>, <a href="https://github.com/detectRecog/CCPD">China (CCPD)</a> &amp; <a href="https://github.com/SunlifeV/CBLPRD-330k">CBLPRD-330k</a>, <a href="https://www.kaggle.com/datasets/duydieunguyen/licenseplates">Vietnam</a>, and <a href="https://www.kaggle.com/datasets/abdelhamidzakaria/european-license-plates-dataset">Auxiliary European</a> subsets, with full sample-level split manifests in <code>manifests/</code>.</li>
 </ul>
-<hr />
 <h2 id="quick-example">Quick Example</h2>
 <div class="language-python highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">litealpr</span><span class="w"> </span><span class="kn">import</span> <span class="n">LiteALPR</span>
 </span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
@@ -725,16 +722,15 @@
 </span><span id="__span-0-9"><a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="k">for</span> <span class="n">res</span> <span class="ow">in</span> <span class="n">results</span><span class="p">:</span>
 </span><span id="__span-0-10"><a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Plate: </span><span class="si">{</span><span class="n">res</span><span class="p">[</span><span class="s1">'text'</span><span class="p">]</span><span class="si">}</span><span class="s2"> | Confidence: </span><span class="si">{</span><span class="n">res</span><span class="p">[</span><span class="s1">'score'</span><span class="p">]</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2"> | Box: </span><span class="si">{</span><span class="n">res</span><span class="p">[</span><span class="s1">'box'</span><span class="p">]</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 </span></code></pre></div>
-<hr />
 <h2 id="next-steps">Next Steps</h2>
 <ul>
 <li>Check out <a href="getting-started/">Getting Started</a> to install LiteALPR via <code>pip</code>.</li>
-<li>Read about our <a href="pipeline/">Pipeline &amp; Architecture</a> innovations.</li>
+<li>Read about our <a href="pipeline/">Pipeline &amp; Architecture</a> design.</li>
 <li>Explore the comprehensive <a href="usage/">Python API &amp; Usage</a> guide.</li>
 <li>Learn how to train custom models in the <a href="training/">Training &amp; Tools</a> guide.</li>
-<li>Understand the hardware context in <a href="reference-environment/">Reference Environment</a>.</li>
-<li>Review detailed <a href="benchmarks/">Benchmarks</a> on GPU &amp; CPU platforms.</li>
-<li>Learn how to deploy on edge devices in <a href="jetson-nano/">Jetson Nano Deployment</a>.</li>
+<li>Understand the hardware and software setup in <a href="reference-environment/">Reference Environment</a>.</li>
+<li>Review detailed <a href="benchmarks/">Benchmarks</a> across GPU, CPU, and regional subsets.</li>
+<li>Learn how to build 4-profile TensorRT engines in <a href="jetson-nano/">Jetson Nano Deployment</a>.</li>
 <li>Cite the project in your research using <a href="citation/">Paper &amp; Citation</a>.</li>
 </ul>
 
