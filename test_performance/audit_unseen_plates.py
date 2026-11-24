@@ -4,7 +4,6 @@ import argparse
 import csv
 import os
 import string
-import sys
 
 import cv2
 import onnxruntime as ort

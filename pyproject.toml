@@ -86,6 +86,8 @@ exclude = [
     "*.egg-info",
     "dataset",
     "weights",
+    "manifests",
+    "test_performance",
 ]
 
 [tool.ruff.lint]
