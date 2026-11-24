@@ -9,7 +9,7 @@
         <meta name="description" content="A robust and lightweight License Plate Recognition (ALPR) library.">
       
       
-        <meta name="author" content="Anh Nguyen">
+        <meta name="author" content="Anh Nguyen, Bay Nguyen Van, Vinh Truong Hoang">
       
       
         <link rel="canonical" href="https://vn-anhnth.github.io/LiteALPR/latest/benchmarks/">
@@ -876,12 +876,12 @@
 </table>
 <ul>
 <li><strong>Plates per scene (Detection test, 5,230 scenes)</strong>: 5,156 single-plate (98.59%) and 74 multi-plate (1.41%: 52 with 2, 16 with 3, 4 with 4, and 2 with 5 plates).</li>
-<li><strong>End-to-End Holdout Set (5,230 full-scene images)</strong>: Distinct from the detection test split; combines 3,981 detection-test scenes having verified character labels (2,104 <code>ccpd_test</code>, 1,742 <code>rodosol_test</code>, 135 <code>vn_test</code>) with 1,249 additional <code>ccpd_extra</code> scenes strictly disjoint from detector training/validation.</li>
-<li><strong>Reproducible Split Manifests</strong>: Provided in <code>manifests/</code> (<code>detection_split_manifest.csv</code>, <code>ocr_split_manifest.csv</code> with <code>unseen_plate</code> flag, and <code>e2e_holdout_manifest.csv</code>).</li>
+<li><strong>End-to-End Holdout Set (5,230 full-scene images)</strong>: Distinct from the detection test split; combines 3,981 detection-test scenes having verified character labels (2,104 <code>ccpd_test</code>, 1,742 <code>rodosol_test</code>, 135 <code>vn_test</code> — omitting 980 unlabeled <code>vietnam_and_other</code> scenes and 269 RodoSol <code>cars-br</code> scenes excluded because their plate crops belong to the OCR training/validation splits) with 1,249 additional <code>ccpd_extra</code> scenes strictly disjoint from detector training/validation.</li>
+<li><strong>Reproducible Split Manifests</strong>: Provided in <code>manifests/</code> (<code>detection_split_manifest.csv</code>, <code>ocr_split_manifest.csv</code>, and <code>e2e_holdout_manifest.csv</code>, the latter two with an <code>unseen_plate</code> boolean flag).</li>
 </ul>
 <div class="admonition info">
 <p class="admonition-title">Benchmarking Protocol</p>
-<p>Workstation benchmarks run in ONNX FP32 precision (<span class="arithmatex">\(N=1\)</span> batch size, <span class="arithmatex">\(416 \times 416\)</span> detector deployment resolution, 50 warm-up runs discarded, explicit <code>cudaDeviceSynchronize()</code> barriers on GPU, and 6 intra-op CPU threads on the AMD Ryzen 5 4600G). Latency (<span class="arithmatex">\(\text{mean} \pm \text{std}\)</span>) is measured per-image over 1,000 samples, while FPS standard deviation is computed across 5 consecutive 1,000-image passes.</p>
+<p>Workstation benchmarks run in ONNX FP32 precision (<span class="arithmatex">\(N=1\)</span> batch size, <span class="arithmatex">\(416 \times 416\)</span> detector deployment resolution, 50 warm-up runs discarded, explicit CUDA synchronization barriers (<code>torch.cuda.synchronize()</code>) on GPU, and 6 intra-op CPU threads on the AMD Ryzen 5 4600G). Latency (<span class="arithmatex">\(\text{mean} \pm \text{std}\)</span>) is measured per-image over 1,000 samples, while FPS standard deviation is computed across 5 consecutive 1,000-image passes.</p>
 </div>
 <h2 id="1-end-to-end-pipeline-performance">1. End-to-End Pipeline Performance</h2>
 <p>Full-pipeline latency, throughput, exact-match accuracy (<code>E2E Acc.</code>), and Character Error Rate (<code>E2E CER</code>) on the 5,230-scene holdout set (missed detections with <span class="arithmatex">\(\text{IoU} &lt; 0.50\)</span> count as full-length CER deletions):</p>
