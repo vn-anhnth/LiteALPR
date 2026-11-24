@@ -20,11 +20,11 @@ LiteALPR was trained and evaluated on two task-specific corpora spanning three r
 | Testing | 9,560 | 9,450 | 5,990 | 25,000 |
 
 - **Plates per scene (Detection test, 5,230 scenes)**: 5,156 single-plate (98.59%) and 74 multi-plate (1.41%: 52 with 2, 16 with 3, 4 with 4, and 2 with 5 plates).
-- **End-to-End Holdout Set (5,230 full-scene images)**: Distinct from the detection test split; combines 3,981 detection-test scenes having verified character labels (2,104 `ccpd_test`, 1,742 `rodosol_test`, 135 `vn_test`) with 1,249 additional `ccpd_extra` scenes strictly disjoint from detector training/validation.
-- **Reproducible Split Manifests**: Provided in `manifests/` (`detection_split_manifest.csv`, `ocr_split_manifest.csv` with `unseen_plate` flag, and `e2e_holdout_manifest.csv`).
+- **End-to-End Holdout Set (5,230 full-scene images)**: Distinct from the detection test split; combines 3,981 detection-test scenes having verified character labels (2,104 `ccpd_test`, 1,742 `rodosol_test`, 135 `vn_test` — omitting 980 unlabeled `vietnam_and_other` scenes and 269 RodoSol `cars-br` scenes excluded because their plate crops belong to the OCR training/validation splits) with 1,249 additional `ccpd_extra` scenes strictly disjoint from detector training/validation.
+- **Reproducible Split Manifests**: Provided in `manifests/` (`detection_split_manifest.csv`, `ocr_split_manifest.csv`, and `e2e_holdout_manifest.csv`, the latter two with an `unseen_plate` boolean flag).
 
 !!! info "Benchmarking Protocol"
-    Workstation benchmarks run in ONNX FP32 precision ($N=1$ batch size, $416 \times 416$ detector deployment resolution, 50 warm-up runs discarded, explicit `cudaDeviceSynchronize()` barriers on GPU, and 6 intra-op CPU threads on the AMD Ryzen 5 4600G). Latency ($\text{mean} \pm \text{std}$) is measured per-image over 1,000 samples, while FPS standard deviation is computed across 5 consecutive 1,000-image passes.
+    Workstation benchmarks run in ONNX FP32 precision ($N=1$ batch size, $416 \times 416$ detector deployment resolution, 50 warm-up runs discarded, explicit CUDA synchronization barriers (`torch.cuda.synchronize()`) on GPU, and 6 intra-op CPU threads on the AMD Ryzen 5 4600G). Latency ($\text{mean} \pm \text{std}$) is measured per-image over 1,000 samples, while FPS standard deviation is computed across 5 consecutive 1,000-image passes.
 
 ## 1. End-to-End Pipeline Performance
 

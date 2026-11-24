@@ -45,7 +45,12 @@ def main():
     unseen_paths = set()
     with open(args.manifest, encoding="utf-8") as f:
         for row in csv.DictReader(f):
-            if row["split"] == "test" and row.get("unseen_plate") == "True" and row["relative_path"] != "REDACTED":
+            is_public_unseen = (
+                row["split"] == "test"
+                and row.get("unseen_plate") == "True"
+                and not row["relative_path"].startswith("REDACTED")
+            )
+            if is_public_unseen:
                 unseen_paths.add(row["relative_path"].replace("\\", "/"))
 
     chars = load_ctc_chars(args.dict_path)

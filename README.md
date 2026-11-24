@@ -2,7 +2,7 @@
 
 [![PyPI version](https://badge.fury.io/py/litealpr.svg)](https://pypi.org/project/litealpr/)
 [![Documentation](https://img.shields.io/badge/docs-mkdocs--material-blue.svg)](https://vn-anhnth.github.io/LiteALPR/)
-[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.24496125.svg)](https://doi.org/10.5281/zenodo.24496125)
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.22722292.svg)](https://doi.org/10.5281/zenodo.22722292)
 
 <p align="center">
   <img src="https://raw.githubusercontent.com/vn-anhnth/LiteALPR/main/docs/figures/intro1.png" width="350">

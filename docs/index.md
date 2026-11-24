@@ -3,7 +3,7 @@
 [![PyPI version](https://badge.fury.io/py/litealpr.svg)](https://pypi.org/project/litealpr/)
 [![Python Versions](https://img.shields.io/pypi/pyversions/litealpr.svg)](https://pypi.org/project/litealpr/)
 [![License: AGPL v3](https://img.shields.io/badge/License-AGPL_v3-blue.svg)](https://www.gnu.org/licenses/agpl-3.0)
-[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.24496125.svg)](https://doi.org/10.5281/zenodo.24496125)
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.22722292.svg)](https://doi.org/10.5281/zenodo.22722292)
 
 <p align="center">
   <img src="figures/intro1.png" width="450" alt="Representative multi-national license plate samples">

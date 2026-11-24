@@ -1,6 +1,6 @@
 site_name: LiteALPR Documentation
 site_description: A robust and lightweight License Plate Recognition (ALPR) library.
-site_author: Anh Nguyen
+site_author: Anh Nguyen, Bay Nguyen Van, Vinh Truong Hoang
 site_url: https://vn-anhnth.github.io/LiteALPR/
 repo_url: https://github.com/vn-anhnth/LiteALPR
 repo_name: vn-anhnth/LiteALPR
