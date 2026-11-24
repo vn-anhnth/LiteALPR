@@ -463,10 +463,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#hardware-specifications" class="md-nav__link">
+  <a href="#workstation-hardware-specifications" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Hardware Specifications
+        Workstation Hardware Specifications
       
     </span>
   </a>
@@ -474,10 +474,21 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#software-environment" class="md-nav__link">
+  <a href="#workstation-software-environment" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Software Environment
+        Workstation Software Environment
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#embedded-edge-platform-jetson-nano" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Embedded Edge Platform (Jetson Nano)
       
     </span>
   </a>
@@ -611,10 +622,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#hardware-specifications" class="md-nav__link">
+  <a href="#workstation-hardware-specifications" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Hardware Specifications
+        Workstation Hardware Specifications
       
     </span>
   </a>
@@ -622,10 +633,21 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#software-environment" class="md-nav__link">
+  <a href="#workstation-software-environment" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Software Environment
+        Workstation Software Environment
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#embedded-edge-platform-jetson-nano" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Embedded Edge Platform (Jetson Nano)
       
     </span>
   </a>
@@ -664,28 +686,30 @@
 
 
 <h1 id="reference-environment">Reference Environment</h1>
-<p>The performance metrics and evaluations presented in the LiteALPR documentation were generated under the following reference environment to ensure reproducibility.</p>
-<h2 id="hardware-specifications">Hardware Specifications</h2>
+<p>The performance metrics and evaluations reported in the <em>SoftwareX</em> manuscript and this documentation were benchmarked on the following workstation and embedded platforms.</p>
+<h2 id="workstation-hardware-specifications">Workstation Hardware Specifications</h2>
 <ul>
-<li><strong>CPU</strong>: AMD Ryzen 5 4600G with Radeon Graphics (6 Cores, 12 Threads, 3.7 GHz)</li>
-<li><strong>GPU</strong>: NVIDIA GeForce RTX 3060 (12GB VRAM)</li>
+<li><strong>CPU</strong>: AMD Ryzen 5 4600G with Radeon Graphics (6 physical cores, 12 threads, 3.7 GHz; benchmarked with 6 intra-op threads)</li>
+<li><strong>GPU</strong>: NVIDIA GeForce RTX 3060 (12 GB VRAM)</li>
 <li><strong>RAM</strong>: 32 GB DDR4</li>
 </ul>
-<h2 id="software-environment">Software Environment</h2>
+<h2 id="workstation-software-environment">Workstation Software Environment</h2>
 <ul>
 <li><strong>Operating System</strong>: Windows 11 Pro (64-bit) / Ubuntu 22.04 LTS</li>
-<li><strong>Python Version</strong>: Python 3.8.10</li>
-<li><strong>NVIDIA Driver</strong>: 536.23 (or compatible)</li>
-<li><strong>CUDA Toolkit</strong>: 12.1</li>
-<li><strong>cuDNN</strong>: 8.9.x</li>
-<li><strong>PyTorch</strong>: 2.4.1+cu121</li>
-<li><strong>ONNX Runtime</strong>: onnxruntime-gpu 1.19.2</li>
+<li><strong>Python</strong>: Python 3.8+ (tested on Python 3.8.10)</li>
+<li><strong>CUDA Toolkit</strong>: CUDA 11.8</li>
+<li><strong>Benchmark Runtime (Manuscript)</strong>: PyTorch 2.1.0, ONNX Runtime 1.16.3</li>
+<li><strong>Pinned Lockfile (<code>requirements.lock</code>)</strong>: <code>torch==2.2.0+cu118</code>, <code>onnxruntime-gpu==1.17.1</code>, <code>onnxruntime==1.19.2</code>, <code>ultralytics==8.4.98</code></li>
+</ul>
+<h2 id="embedded-edge-platform-jetson-nano">Embedded Edge Platform (Jetson Nano)</h2>
+<ul>
+<li><strong>Hardware</strong>: NVIDIA Jetson Nano Developer Kit (4 GB LPDDR4, 128-core Maxwell GPU, Quad-core Cortex-A57)</li>
+<li><strong>Software</strong>: Ubuntu 18.04 (JetPack 4.6.1), CUDA 10.2, cuDNN 8.2, TensorRT 8.2.1, Python 3.6.9</li>
 </ul>
 <h2 id="dependency-lockfile">Dependency Lockfile</h2>
-<p>For an exact reconstruction of the Python environment used during benchmarking, please refer to the <code>requirements.lock</code> file provided in the repository root.</p>
-<p>You can replicate this environment via:
+<p>To reconstruct the pinned Python development environment, install from <code>requirements.lock</code> in the repository root:</p>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>pip<span class="w"> </span>install<span class="w"> </span>-r<span class="w"> </span>requirements.lock
-</span></code></pre></div></p>
+</span></code></pre></div>
 
 
 

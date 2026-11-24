@@ -490,21 +490,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#detection-dataset" class="md-nav__link">
+  <a href="#dataset-splits-summary" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Detection Dataset
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#recognition-dataset" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Recognition Dataset
+        Dataset Splits Summary
       
     </span>
   </a>
@@ -524,10 +513,21 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#reproduce-desktop-benchmarks" class="md-nav__link">
+  <a href="#per-subset-end-to-end-breakdown-4-bucket-resizing" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Reproduce Desktop Benchmarks
+        Per-Subset End-to-End Breakdown (4-Bucket Resizing)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#reproduce-desktop-latency-e2e-benchmarks" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Reproduce Desktop Latency &amp; E2E Benchmarks
       
     </span>
   </a>
@@ -562,13 +562,30 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#4-multi-national-robustness-across-regional-subsets" class="md-nav__link">
+  <a href="#4-regional-subsets-unseen-plate-diagnostic-audit" class="md-nav__link">
     <span class="md-ellipsis">
       
-        4. Multi-National Robustness across Regional Subsets
+        4. Regional Subsets &amp; Unseen-Plate Diagnostic Audit
       
     </span>
   </a>
+  
+    <nav class="md-nav" aria-label="4. Regional Subsets &amp; Unseen-Plate Diagnostic Audit">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#diagnostic-breakdown-of-svtr26-tiny-unseen-plate-audit-per-source-accuracy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Diagnostic Breakdown of SVTR26-Tiny (Unseen-Plate Audit &amp; Per-Source Accuracy)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
       
@@ -661,21 +678,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#detection-dataset" class="md-nav__link">
+  <a href="#dataset-splits-summary" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Detection Dataset
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#recognition-dataset" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Recognition Dataset
+        Dataset Splits Summary
       
     </span>
   </a>
@@ -695,10 +701,21 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#reproduce-desktop-benchmarks" class="md-nav__link">
+  <a href="#per-subset-end-to-end-breakdown-4-bucket-resizing" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Reproduce Desktop Benchmarks
+        Per-Subset End-to-End Breakdown (4-Bucket Resizing)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#reproduce-desktop-latency-e2e-benchmarks" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Reproduce Desktop Latency &amp; E2E Benchmarks
       
     </span>
   </a>
@@ -733,13 +750,30 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#4-multi-national-robustness-across-regional-subsets" class="md-nav__link">
+  <a href="#4-regional-subsets-unseen-plate-diagnostic-audit" class="md-nav__link">
     <span class="md-ellipsis">
       
-        4. Multi-National Robustness across Regional Subsets
+        4. Regional Subsets &amp; Unseen-Plate Diagnostic Audit
       
     </span>
   </a>
+  
+    <nav class="md-nav" aria-label="4. Regional Subsets &amp; Unseen-Plate Diagnostic Audit">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#diagnostic-breakdown-of-svtr26-tiny-unseen-plate-audit-per-source-accuracy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Diagnostic Breakdown of SVTR26-Tiny (Unseen-Plate Audit &amp; Per-Source Accuracy)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
       
@@ -764,137 +798,253 @@
 
 
 <h1 id="benchmarks-experimental-results">Benchmarks &amp; Experimental Results</h1>
-<p>LiteALPR was trained and rigorously benchmarked on a large multi-national dataset (<strong>52,595 total images</strong>), comprising:</p>
+<p>LiteALPR was trained and evaluated on two task-specific corpora spanning three regional groups:</p>
 <ul>
-<li><strong><a href="https://github.com/raysonlaroca/rodosol-alpr-dataset">Brazil (RodoSol-ALPR)</a></strong>: 20,000 images</li>
-<li><strong><a href="https://github.com/SunlifeV/CBLPRD-330k">China (CBLPRD-330k)</a></strong>: 20,000 images</li>
-<li><strong><a href="https://www.kaggle.com/datasets/duydieunguyen/licenseplates">Vietnam</a></strong>: 12,595 images (public dataset + self-collected traffic footage)</li>
+<li><strong><a href="https://github.com/raysonlaroca/rodosol-alpr-dataset">Brazil (RodoSol-ALPR)</a></strong>: 20,000 scenes (detection) and 20,000 crops (recognition)</li>
+<li><strong>China</strong>: 20,644 <a href="https://github.com/detectRecog/CCPD">CCPD</a> scenes (detection) and 20,000 <a href="https://github.com/SunlifeV/CBLPRD-330k">CBLPRD-330k</a> crops (recognition)</li>
+<li><strong><a href="https://www.kaggle.com/datasets/duydieunguyen/licenseplates">Vietnam</a> &amp; Auxiliary</strong>: 11,651 scenes (detection) and 12,595 crops (recognition: 4,556 public Vietnamese, 5,547 synthetic Vietnamese, 1,036 self-collected Vietnamese, and 1,456 <a href="https://www.kaggle.com/datasets/abdelhamidzakaria/european-license-plates-dataset">auxiliary European</a> crops)</li>
 </ul>
-<h3 id="detection-dataset">Detection Dataset</h3>
-<p>The full-resolution images were split for the YOLOv8n-Efficient detector:</p>
+<h3 id="dataset-splits-summary">Dataset Splits Summary</h3>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Task / Partition</th>
+<th style="text-align: right;">Brazil</th>
+<th style="text-align: right;">China</th>
+<th style="text-align: right;">Vietnam &amp; Aux.</th>
+<th style="text-align: right;">Total</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><strong>Full-Image Plate Detection (Scenes)</strong></td>
+<td style="text-align: right;"><strong>20,000</strong></td>
+<td style="text-align: right;"><strong>20,644</strong></td>
+<td style="text-align: right;"><strong>11,651</strong></td>
+<td style="text-align: right;"><strong>52,295</strong></td>
+</tr>
+<tr>
+<td style="text-align: left;">Training</td>
+<td style="text-align: right;">15,990</td>
+<td style="text-align: right;">16,502</td>
+<td style="text-align: right;">9,344</td>
+<td style="text-align: right;">41,836</td>
+</tr>
+<tr>
+<td style="text-align: left;">Validation</td>
+<td style="text-align: right;">1,999</td>
+<td style="text-align: right;">2,038</td>
+<td style="text-align: right;">1,192</td>
+<td style="text-align: right;">5,229</td>
+</tr>
+<tr>
+<td style="text-align: left;">Testing</td>
+<td style="text-align: right;">2,011</td>
+<td style="text-align: right;">2,104</td>
+<td style="text-align: right;">1,115</td>
+<td style="text-align: right;">5,230</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Cropped Character Recognition (Crops)</strong></td>
+<td style="text-align: right;"><strong>20,000</strong></td>
+<td style="text-align: right;"><strong>20,000</strong></td>
+<td style="text-align: right;"><strong>12,595</strong></td>
+<td style="text-align: right;"><strong>52,595</strong></td>
+</tr>
+<tr>
+<td style="text-align: left;">Training</td>
+<td style="text-align: right;">9,454</td>
+<td style="text-align: right;">9,570</td>
+<td style="text-align: right;">5,976</td>
+<td style="text-align: right;">25,000</td>
+</tr>
+<tr>
+<td style="text-align: left;">Validation</td>
+<td style="text-align: right;">986</td>
+<td style="text-align: right;">980</td>
+<td style="text-align: right;">629</td>
+<td style="text-align: right;">2,595</td>
+</tr>
+<tr>
+<td style="text-align: left;">Testing</td>
+<td style="text-align: right;">9,560</td>
+<td style="text-align: right;">9,450</td>
+<td style="text-align: right;">5,990</td>
+<td style="text-align: right;">25,000</td>
+</tr>
+</tbody>
+</table>
 <ul>
-<li><strong>Training</strong>: 42,136 images</li>
-<li><strong>Validation</strong>: 5,229 images</li>
-<li><strong>Test</strong>: 5,230 images</li>
-</ul>
-<h3 id="recognition-dataset">Recognition Dataset</h3>
-<p>The <strong>52,595</strong> localized license plates were cropped out. To ensure the model is robust to real-world conditions, <strong>50% of the crops were artificially degraded</strong> (e.g., motion blur, noise).</p>
-<ul>
-<li><strong>Training</strong>: 25,000 crops</li>
-<li><strong>Validation</strong>: 2,595 crops</li>
-<li><strong>Test</strong>: 25,000 crops</li>
-</ul>
-<p><strong>Cross-Regional Test Set Breakdown</strong> (25,000 crops):</p>
-<ul>
-<li><strong>Brazil</strong>: 9,560 plates</li>
-<li><strong>China</strong>: 9,450 plates</li>
-<li><strong>Vietnam</strong>: 5,990 plates</li>
+<li><strong>Plates per scene (Detection test, 5,230 scenes)</strong>: 5,156 single-plate (98.59%) and 74 multi-plate (1.41%: 52 with 2, 16 with 3, 4 with 4, and 2 with 5 plates).</li>
+<li><strong>End-to-End Holdout Set (5,230 full-scene images)</strong>: Distinct from the detection test split; combines 3,981 detection-test scenes having verified character labels (2,104 <code>ccpd_test</code>, 1,742 <code>rodosol_test</code>, 135 <code>vn_test</code>) with 1,249 additional <code>ccpd_extra</code> scenes strictly disjoint from detector training/validation.</li>
+<li><strong>Reproducible Split Manifests</strong>: Provided in <code>manifests/</code> (<code>detection_split_manifest.csv</code>, <code>ocr_split_manifest.csv</code> with <code>unseen_plate</code> flag, and <code>e2e_holdout_manifest.csv</code>).</li>
 </ul>
 <div class="admonition info">
-<p class="admonition-title">Benchmarking Methodology</p>
-<p>All benchmarks were evaluated in native ONNX FP32 precision. To ensure statistical reliability, <strong>latency and throughput (mean ± std)</strong> were measured over <strong>1,000 real-world test images</strong> (or cropped plates) across <strong>5 consecutive execution passes</strong>.</p>
+<p class="admonition-title">Benchmarking Protocol</p>
+<p>Workstation benchmarks run in ONNX FP32 precision (<span class="arithmatex">\(N=1\)</span> batch size, <span class="arithmatex">\(416 \times 416\)</span> detector deployment resolution, 50 warm-up runs discarded, explicit <code>cudaDeviceSynchronize()</code> barriers on GPU, and 6 intra-op CPU threads on the AMD Ryzen 5 4600G). Latency (<span class="arithmatex">\(\text{mean} \pm \text{std}\)</span>) is measured per-image over 1,000 samples, while FPS standard deviation is computed across 5 consecutive 1,000-image passes.</p>
 </div>
-<hr />
 <h2 id="1-end-to-end-pipeline-performance">1. End-to-End Pipeline Performance</h2>
-<p>Comparison against existing lightweight open-source ALPR pipelines:</p>
+<p>Full-pipeline latency, throughput, exact-match accuracy (<code>E2E Acc.</code>), and Character Error Rate (<code>E2E CER</code>) on the 5,230-scene holdout set (missed detections with <span class="arithmatex">\(\text{IoU} &lt; 0.50\)</span> count as full-length CER deletions):</p>
 <table>
 <thead>
 <tr>
 <th style="text-align: left;">Platform</th>
 <th style="text-align: left;">Model / Pipeline</th>
+<th style="text-align: center;">Params</th>
 <th style="text-align: center;">Pre (ms)</th>
 <th style="text-align: center;">Infer (ms)</th>
 <th style="text-align: center;">Post (ms)</th>
 <th style="text-align: center;">Total (ms)</th>
-<th style="text-align: center;">Throughput (FPS)</th>
-<th style="text-align: center;">Accuracy (%)</th>
+<th style="text-align: center;">FPS</th>
+<th style="text-align: center;">E2E Acc. (%)</th>
+<th style="text-align: center;">E2E CER (%)</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td style="text-align: left;"><strong>GPU</strong> <em>(RTX 3060 12GB)</em></td>
-<td style="text-align: left;">YOLOv8n + SVTRv2 (Baseline)</td>
-<td style="text-align: center;"><strong>1.54 ± 0.41</strong></td>
-<td style="text-align: center;">12.38 ± 2.43</td>
-<td style="text-align: center;">1.55 ± 0.20</td>
-<td style="text-align: center;">15.84 ± 2.79</td>
-<td style="text-align: center;">63.13 ± 0.70</td>
-<td style="text-align: center;">88.25%</td>
-</tr>
-<tr>
-<td style="text-align: left;"></td>
 <td style="text-align: left;"><a href="https://github.com/ankandrew/fast-alpr">fast-alpr (out-of-the-box)</a></td>
+<td style="text-align: center;">2.68M</td>
 <td style="text-align: center;">4.58 ± 0.85</td>
 <td style="text-align: center;">15.06 ± 3.27</td>
 <td style="text-align: center;">5.62 ± 2.96</td>
 <td style="text-align: center;">25.27 ± 5.67</td>
 <td style="text-align: center;">39.57 ± 4.30</td>
-<td style="text-align: center;">22.67%</td>
+<td style="text-align: center;">39.67</td>
+<td style="text-align: center;">34.79</td>
+</tr>
+<tr>
+<td style="text-align: left;"></td>
+<td style="text-align: left;">YOLOv8n + SVTRv2-Tiny (Baseline)</td>
+<td style="text-align: center;">8.12M</td>
+<td style="text-align: center;"><strong>1.54 ± 0.41</strong></td>
+<td style="text-align: center;">12.38 ± 2.43</td>
+<td style="text-align: center;">1.55 ± 0.20</td>
+<td style="text-align: center;">15.84 ± 2.79</td>
+<td style="text-align: center;">63.13 ± 0.70</td>
+<td style="text-align: center;"><strong>78.60</strong></td>
+<td style="text-align: center;"><strong>5.60</strong></td>
 </tr>
 <tr>
 <td style="text-align: left;"></td>
 <td style="text-align: left;"><strong>LiteALPR (Ours)</strong></td>
+<td style="text-align: center;"><strong>6.22M</strong></td>
 <td style="text-align: center;">1.63 ± 0.40</td>
 <td style="text-align: center;"><strong>11.57 ± 5.87</strong></td>
 <td style="text-align: center;"><strong>1.49 ± 0.12</strong></td>
 <td style="text-align: center;"><strong>15.05 ± 6.01</strong></td>
 <td style="text-align: center;"><strong>66.45 ± 1.80</strong></td>
-<td style="text-align: center;"><strong>89.15%</strong></td>
+<td style="text-align: center;">77.55</td>
+<td style="text-align: center;">6.22</td>
 </tr>
 <tr>
 <td style="text-align: left;"><strong>CPU</strong> <em>(Ryzen 5 4600G)</em></td>
-<td style="text-align: left;">YOLOv8n + SVTRv2 (Baseline)</td>
-<td style="text-align: center;">5.26 ± 3.55</td>
-<td style="text-align: center;">58.53 ± 13.50</td>
-<td style="text-align: center;"><strong>0.95 ± 0.78</strong></td>
-<td style="text-align: center;">65.08 ± 14.28</td>
-<td style="text-align: center;">15.37 ± 0.30</td>
-<td style="text-align: center;">88.25%</td>
-</tr>
-<tr>
-<td style="text-align: left;"></td>
 <td style="text-align: left;"><a href="https://github.com/ankandrew/fast-alpr">fast-alpr (out-of-the-box)</a></td>
+<td style="text-align: center;">2.68M</td>
 <td style="text-align: center;"><strong>5.10 ± 1.18</strong></td>
 <td style="text-align: center;"><strong>24.02 ± 3.29</strong></td>
 <td style="text-align: center;">4.17 ± 2.44</td>
 <td style="text-align: center;"><strong>33.30 ± 4.92</strong></td>
 <td style="text-align: center;"><strong>30.03 ± 0.80</strong></td>
-<td style="text-align: center;">22.67%</td>
+<td style="text-align: center;">39.67</td>
+<td style="text-align: center;">34.79</td>
+</tr>
+<tr>
+<td style="text-align: left;"></td>
+<td style="text-align: left;">YOLOv8n + SVTRv2-Tiny (Baseline)</td>
+<td style="text-align: center;">8.12M</td>
+<td style="text-align: center;">5.26 ± 3.55</td>
+<td style="text-align: center;">58.53 ± 13.50</td>
+<td style="text-align: center;"><strong>0.95 ± 0.78</strong></td>
+<td style="text-align: center;">65.08 ± 14.28</td>
+<td style="text-align: center;">15.37 ± 0.30</td>
+<td style="text-align: center;"><strong>78.60</strong></td>
+<td style="text-align: center;"><strong>5.60</strong></td>
 </tr>
 <tr>
 <td style="text-align: left;"></td>
 <td style="text-align: left;"><strong>LiteALPR (Ours)</strong></td>
+<td style="text-align: center;"><strong>6.22M</strong></td>
 <td style="text-align: center;">6.52 ± 3.99</td>
 <td style="text-align: center;">34.04 ± 9.32</td>
 <td style="text-align: center;">1.80 ± 2.06</td>
 <td style="text-align: center;">42.67 ± 8.66</td>
 <td style="text-align: center;">23.44 ± 0.20</td>
-<td style="text-align: center;"><strong>89.15%</strong></td>
+<td style="text-align: center;">77.55</td>
+<td style="text-align: center;">6.22</td>
+</tr>
+</tbody>
+</table>
+<h3 id="per-subset-end-to-end-breakdown-4-bucket-resizing">Per-Subset End-to-End Breakdown (4-Bucket Resizing)</h3>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Holdout Subset</th>
+<th style="text-align: right;">Scenes</th>
+<th style="text-align: center;">Baseline (%)</th>
+<th style="text-align: center;">LiteALPR (%)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">Standard Chinese (<code>ccpd_extra</code>)</td>
+<td style="text-align: right;">1,249</td>
+<td style="text-align: center;"><strong>96.80</strong></td>
+<td style="text-align: center;">94.72</td>
+</tr>
+<tr>
+<td style="text-align: left;">Brazilian (<code>rodosol_test</code>)</td>
+<td style="text-align: right;">1,742</td>
+<td style="text-align: center;"><strong>88.29</strong></td>
+<td style="text-align: center;">87.43</td>
+</tr>
+<tr>
+<td style="text-align: left;">Vietnamese (<code>vn_test</code>)</td>
+<td style="text-align: right;">135</td>
+<td style="text-align: center;">73.33</td>
+<td style="text-align: center;"><strong>81.48</strong></td>
+</tr>
+<tr>
+<td style="text-align: left;">Tilted/Blurred Chinese (<code>ccpd_test</code>)</td>
+<td style="text-align: right;">2,104</td>
+<td style="text-align: center;"><strong>60.12</strong></td>
+<td style="text-align: center;">58.94</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Overall (E2E Acc. / CER)</strong></td>
+<td style="text-align: right;"><strong>5,230</strong></td>
+<td style="text-align: center;"><strong>78.60 / 5.60</strong></td>
+<td style="text-align: center;"><strong>77.55 / 6.22</strong></td>
 </tr>
 </tbody>
 </table>
 <blockquote>
-<p><strong>Key Takeaway:</strong> While off-the-shelf pipelines such as <a href="https://github.com/ankandrew/fast-alpr"><code>fast-alpr (out-of-the-box)</code></a> degrade down to 22.67% accuracy without domain retraining (despite a compact 2.68M default parameter count: 1.89M YOLOv9-tiny detector + 0.79M CCT-XS v2 recognizer), LiteALPR achieves <strong>89.15% sequence accuracy</strong> while maintaining ultra-high throughput (<strong>66.45 ± 1.80 FPS</strong> on GPU, <strong>23.44 ± 0.20 FPS</strong> on CPU), delivering a steady 5.26% GPU speedup and 52.5% CPU speedup over the matched baseline (63.13 FPS on GPU, 15.37 FPS on CPU, 88.25% accuracy).</p>
+<p><strong>Key Takeaway:</strong> Against the domain-matched 4-bucket baseline (<code>YOLOv8n + SVTRv2-Tiny</code>, 8.12M params), LiteALPR reduces parameters by <strong>23.4%</strong> (6.22M) and speeds up inference by <strong>52.5% on CPU</strong> (23.44 vs. 15.37 FPS) and <strong>5.3% on GPU</strong> (66.45 vs. 63.13 FPS), trailing the baseline by 1.05 percentage points in overall E2E accuracy (99.90% detection recall, 16 FPs). Heavily tilted/blurred CCPD scenes (<code>ccpd_test</code>, 58.94%) account for most of the gap between full-pipeline E2E (77.55%) and ground-truth crop OCR (89.14%). Out-of-the-box <code>fast-alpr</code> (2.68M params, 2.79 GFLOPs) is smaller and faster on CPU (30.03 FPS) but reaches 39.67% E2E accuracy without domain adaptation.</p>
 </blockquote>
-<h3 id="reproduce-desktop-benchmarks">Reproduce Desktop Benchmarks</h3>
-<p>To evaluate the end-to-end pipeline latency and throughput on your own hardware, run the following benchmark script:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>python<span class="w"> </span>test_performance/benchmark_latency.py<span class="w"> </span><span class="se">\</span>
-</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="w">  </span>--images_dir<span class="w"> </span>dataset/det/test/images<span class="w"> </span><span class="se">\</span>
-</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="w">  </span>--det_model_path<span class="w"> </span>output/det/yolov8n_efficient/train/weights/best_416.onnx<span class="w"> </span><span class="se">\</span>
-</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="w">  </span>--rec_model_path<span class="w"> </span>output/rec/svtr26_tiny/train/best.onnx<span class="w"> </span><span class="se">\</span>
-</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="w">  </span>--device<span class="w"> </span>cuda:0<span class="w">  </span><span class="c1"># or use 'cpu'</span>
+<h3 id="reproduce-desktop-latency-e2e-benchmarks">Reproduce Desktop Latency &amp; E2E Benchmarks</h3>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Latency &amp; Throughput Benchmark</span>
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>python<span class="w"> </span>test_performance/benchmark_latency.py<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="w">  </span>--images_dir<span class="w"> </span>dataset/det/test/images<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="w">  </span>--det_model_path<span class="w"> </span>pretrained_models/det/yolov8n_efficient/best_416.onnx<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="w">  </span>--rec_model_path<span class="w"> </span>pretrained_models/rec/svtr26_tiny/best.onnx<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="w">  </span>--device<span class="w"> </span>cuda:0<span class="w">  </span><span class="c1"># or 'cpu'</span>
+</span><span id="__span-0-7"><a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>
+</span><span id="__span-0-8"><a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="c1"># Full-Pipeline End-to-End Accuracy &amp; CER Evaluation</span>
+</span><span id="__span-0-9"><a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>python<span class="w"> </span>test_performance/eval_end2end_full.py<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-0-10"><a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="w">  </span>--dataset_dir<span class="w"> </span>dataset/e2e_holdout<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-0-11"><a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="w">  </span>--det_model<span class="w"> </span>pretrained_models/det/yolov8n_efficient/best_416.onnx<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-0-12"><a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a><span class="w">  </span>--rec_model<span class="w"> </span>pretrained_models/rec/svtr26_tiny/best.onnx
 </span></code></pre></div>
-<hr />
 <h2 id="2-detection-module-ablation-yolov8n-efficient">2. Detection Module Ablation (YOLOv8n-Efficient)</h2>
-<p>Impact of progressively replacing C2f blocks with lightweight C3Ghost modules across head and backbone (mAP is reported as mean ± std over 3 random seeds):</p>
+<p>Models were trained at <span class="arithmatex">\(640 \times 640\)</span>; all evaluation metrics (GFLOPs, ONNX latency over 1,000 samples with 50 warm-up runs, and mAP over 3 random seeds on the 5,230-image test set) are measured uniformly at the <strong><span class="arithmatex">\(416 \times 416\)</span> deployment resolution</strong> ("Head" follows Ultralytics YAML terminology for the PANet neck and detection layers):</p>
 <table>
 <thead>
 <tr>
 <th style="text-align: left;">Configuration</th>
-<th style="text-align: center;">Parameters (M)</th>
-<th style="text-align: center;">GFLOPs</th>
-<th style="text-align: center;">GPU Latency (ms)</th>
-<th style="text-align: center;">CPU Latency (ms)</th>
+<th style="text-align: center;">Params (M)</th>
+<th style="text-align: center;">GFLOPs (<span class="arithmatex">\(416\times416\)</span>)</th>
+<th style="text-align: center;">GPU Lat. (ms)</th>
+<th style="text-align: center;">CPU Lat. (ms)</th>
 <th style="text-align: center;"><span class="arithmatex">\(\text{mAP}_{50}\)</span> (%)</th>
 <th style="text-align: center;"><span class="arithmatex">\(\text{mAP}_{50-95}\)</span> (%)</th>
 </tr>
@@ -903,52 +1053,51 @@
 <tr>
 <td style="text-align: left;">Baseline YOLOv8n</td>
 <td style="text-align: center;">3.01</td>
-<td style="text-align: center;">8.19</td>
+<td style="text-align: center;">3.41</td>
 <td style="text-align: center;">10.02 ± 1.29</td>
 <td style="text-align: center;">40.92 ± 5.44</td>
-<td style="text-align: center;"><strong>99.45 ± 0.04%</strong></td>
-<td style="text-align: center;">88.48 ± 0.12%</td>
+<td style="text-align: center;">99.44 ± 0.03</td>
+<td style="text-align: center;">88.01 ± 0.11</td>
 </tr>
 <tr>
 <td style="text-align: left;">Head (C3Ghost)</td>
 <td style="text-align: center;">2.52</td>
-<td style="text-align: center;">7.19</td>
+<td style="text-align: center;">2.99</td>
 <td style="text-align: center;">9.54 ± 1.24</td>
 <td style="text-align: center;">19.69 ± 4.26</td>
-<td style="text-align: center;">99.44 ± 0.05%</td>
-<td style="text-align: center;"><strong>89.33 ± 0.15%</strong></td>
+<td style="text-align: center;">99.43 ± 0.06</td>
+<td style="text-align: center;"><strong>88.98 ± 0.14</strong></td>
 </tr>
 <tr>
 <td style="text-align: left;">Backbone (C3Ghost)</td>
 <td style="text-align: center;">2.49</td>
-<td style="text-align: center;">6.70</td>
+<td style="text-align: center;">2.78</td>
 <td style="text-align: center;">9.04 ± 0.51</td>
 <td style="text-align: center;">19.59 ± 3.38</td>
-<td style="text-align: center;"><strong>99.45 ± 0.04%</strong></td>
-<td style="text-align: center;">89.20 ± 0.14%</td>
+<td style="text-align: center;">99.44 ± 0.02</td>
+<td style="text-align: center;">88.60 ± 0.12</td>
 </tr>
 <tr>
 <td style="text-align: left;"><strong>YOLOv8n-Efficient (Ours)</strong></td>
 <td style="text-align: center;"><strong>2.00</strong></td>
-<td style="text-align: center;"><strong>5.69</strong></td>
+<td style="text-align: center;"><strong>2.36</strong></td>
 <td style="text-align: center;"><strong>9.02 ± 0.98</strong></td>
 <td style="text-align: center;"><strong>17.45 ± 1.62</strong></td>
-<td style="text-align: center;"><strong>99.45 ± 0.05%</strong></td>
-<td style="text-align: center;">88.41 ± 0.16%</td>
+<td style="text-align: center;"><strong>99.45 ± 0.03</strong></td>
+<td style="text-align: center;">88.07 ± 0.12</td>
 </tr>
 </tbody>
 </table>
 <blockquote>
-<p>Replacing C2f with C3Ghost across both backbone and head achieves a <strong>2.35× speedup on CPU</strong> (~<span class="arithmatex">\(40.92 \rightarrow\)</span> ~17.45 ms) and <strong>33.5% parameter reduction</strong> (<span class="arithmatex">\(3.01\text{M} \rightarrow 2.00\text{M}\)</span>) with <strong>zero accuracy drop</strong> (maintains ~99.45% <span class="arithmatex">\(\text{mAP}_{50}\)</span>).</p>
+<p>Replacing C2f with C3Ghost across both backbone and neck reduces <span class="arithmatex">\(416 \times 416\)</span> compute by <strong>30.8%</strong> (<span class="arithmatex">\(3.41 \rightarrow 2.36\)</span> GFLOPs), cuts parameters by <strong>33.6%</strong> (<span class="arithmatex">\(3.01\text{M} \rightarrow 2.00\text{M}\)</span>), and delivers a <strong>2.34× CPU speedup</strong> (<span class="arithmatex">\(40.92 \rightarrow 17.45\)</span> ms) while matching the baseline in <span class="arithmatex">\(\text{mAP}_{50}\)</span> (99.45%) and <span class="arithmatex">\(\text{mAP}_{50-95}\)</span> (88.07%).</p>
 </blockquote>
-<hr />
 <h2 id="3-recognition-module-ablation-svtr26-tiny">3. Recognition Module Ablation (SVTR26-Tiny)</h2>
-<p>Impact of replacing 2D attention matrices with Height-wise Average Pooling (HAP) and data synthesis augmentation (Accuracy and CER are reported as mean ± std over 3 random seeds):</p>
+<p>Impact of pruning 2D attention in favor of the Efficient RCTC Decoder (Height-wise Average Pooling) and synthetic degradation augmentations (latency measured over 1,000 samples with 50 warm-up runs; accuracy and CER over 3 random seeds):</p>
 <table>
 <thead>
 <tr>
 <th style="text-align: left;">Decoder Architecture</th>
-<th style="text-align: center;">Synthetic Degradation</th>
+<th style="text-align: center;">Synthetic Aug.</th>
 <th style="text-align: center;">Params (M)</th>
 <th style="text-align: center;">GPU Lat. (ms)</th>
 <th style="text-align: center;">CPU Lat. (ms)</th>
@@ -958,22 +1107,22 @@
 </thead>
 <tbody>
 <tr>
-<td style="text-align: left;">Baseline (Full Attention)</td>
+<td style="text-align: left;">Baseline (2D Attention)</td>
 <td style="text-align: center;">No</td>
 <td style="text-align: center;">5.11</td>
 <td style="text-align: center;">5.55 ± 0.92</td>
 <td style="text-align: center;">10.97 ± 1.26</td>
-<td style="text-align: center;">86.71 ± 0.12%</td>
-<td style="text-align: center;">4.13 ± 0.09%</td>
+<td style="text-align: center;">86.72 ± 0.12</td>
+<td style="text-align: center;">4.13 ± 0.09</td>
 </tr>
 <tr>
-<td style="text-align: left;">Baseline (Full Attention)</td>
+<td style="text-align: left;">Baseline (2D Attention)</td>
 <td style="text-align: center;">Yes</td>
 <td style="text-align: center;">5.11</td>
 <td style="text-align: center;">5.85 ± 0.89</td>
 <td style="text-align: center;">10.84 ± 0.76</td>
-<td style="text-align: center;">88.25 ± 0.11%</td>
-<td style="text-align: center;">3.56 ± 0.06%</td>
+<td style="text-align: center;">88.48 ± 0.11</td>
+<td style="text-align: center;">3.46 ± 0.06</td>
 </tr>
 <tr>
 <td style="text-align: left;">w/o Self-Attention</td>
@@ -981,8 +1130,8 @@
 <td style="text-align: center;">4.33</td>
 <td style="text-align: center;">5.95 ± 1.16</td>
 <td style="text-align: center;">9.79 ± 0.74</td>
-<td style="text-align: center;">85.98 ± 0.15%</td>
-<td style="text-align: center;">4.29 ± 0.11%</td>
+<td style="text-align: center;">85.98 ± 0.15</td>
+<td style="text-align: center;">4.29 ± 0.11</td>
 </tr>
 <tr>
 <td style="text-align: left;">w/o Self-Attention</td>
@@ -990,114 +1139,203 @@
 <td style="text-align: center;">4.33</td>
 <td style="text-align: center;">5.58 ± 0.77</td>
 <td style="text-align: center;">9.81 ± 0.73</td>
-<td style="text-align: center;">88.52 ± 0.12%</td>
-<td style="text-align: center;">3.48 ± 0.05%</td>
+<td style="text-align: center;">88.52 ± 0.12</td>
+<td style="text-align: center;">3.48 ± 0.05</td>
 </tr>
 <tr>
-<td style="text-align: left;"><strong>HAP (Ours)</strong></td>
+<td style="text-align: left;"><strong>Efficient RCTC (Ours)</strong></td>
 <td style="text-align: center;">No</td>
 <td style="text-align: center;"><strong>4.22</strong></td>
 <td style="text-align: center;">5.29 ± 1.19</td>
 <td style="text-align: center;">9.05 ± 1.34</td>
-<td style="text-align: center;">86.55 ± 0.09%</td>
-<td style="text-align: center;">4.16 ± 0.06%</td>
+<td style="text-align: center;">86.55 ± 0.09</td>
+<td style="text-align: center;">4.16 ± 0.06</td>
 </tr>
 <tr>
-<td style="text-align: left;"><strong>HAP + Degrade (Ours)</strong></td>
+<td style="text-align: left;"><strong>Efficient RCTC (Ours)</strong></td>
 <td style="text-align: center;"><strong>Yes</strong></td>
 <td style="text-align: center;"><strong>4.22</strong></td>
 <td style="text-align: center;"><strong>5.03 ± 0.51</strong></td>
 <td style="text-align: center;"><strong>8.32 ± 0.98</strong></td>
-<td style="text-align: center;"><strong>89.15 ± 0.10%</strong></td>
-<td style="text-align: center;"><strong>3.28 ± 0.04%</strong></td>
+<td style="text-align: center;"><strong>89.14 ± 0.10</strong></td>
+<td style="text-align: center;"><strong>3.28 ± 0.04</strong></td>
 </tr>
 </tbody>
 </table>
 <blockquote>
-<p>Height-wise Average Pooling (HAP) completely replaces 2D attention matrices, reducing CPU recognition latency from <strong>~10.84 ms</strong> down to <strong>~8.32 ms</strong> while maintaining a sequence recognition accuracy of <strong>89.15%</strong> and lowering Character Error Rate (CER) to <strong>3.28%</strong>.</p>
+<p>Overall across the 25,000 test crops, SVTR26-Tiny attains <strong>89.14% sequence accuracy</strong> (3.28% CER), or <strong>87.96%</strong> across the 22,350 real-image crops when excluding the 2,650 synthetic Vietnamese samples.</p>
 </blockquote>
-<hr />
-<h2 id="4-multi-national-robustness-across-regional-subsets">4. Multi-National Robustness across Regional Subsets</h2>
-<p>Evaluation of SVTR26-Tiny against widely-adopted sequence recognition baselines across 3 diverse geographic subsets (<strong>25,000 total test samples</strong>: 5,990 from Vietnam, 9,560 from Brazil, and 9,450 from China), fine-tuned under matched training conditions using identical crop resolution (<span class="arithmatex">\(128 \times 32\)</span>), vocabulary, and augmentations.</p>
-<blockquote>
-<p><strong>Evaluation Vocabulary:</strong> All models are evaluated on a unified 38-token Latin alphanumeric vocabulary (26 uppercase letters <strong>A–Z</strong>, Vietnamese <strong>Đ</strong>, 10 digits <strong>0–9</strong>, and 1 CTC blank token). To ensure a fair regional comparison, non-Latin provincial logograms (e.g., Chinese prefix characters) are excluded during label normalization, and multi-line plates are concatenated into a contiguous 1D sequence.</p>
-</blockquote>
-<p>The table below presents the performance of the evaluated lightweight architectures across regional benchmarks:</p>
+<h2 id="4-regional-subsets-unseen-plate-diagnostic-audit">4. Regional Subsets &amp; Unseen-Plate Diagnostic Audit</h2>
+<p>All baselines were fine-tuned on the same 25,000-crop training split using the same 38-token vocabulary (A–Z, Vietnamese <code>Đ</code>, 0–9, and CTC blank; Chinese provincial prefixes stripped; two-line plates concatenated row-wise) and synthetic augmentations, evaluated at each model's native input configuration (4-bucket resizing for <code>SVTR26-Tiny</code> and <code>SVTRv2-Tiny</code>; <span class="arithmatex">\(48 \times 320\)</span> for <code>PP-OCRv4-Mobile</code>; <span class="arithmatex">\(32 \times 128\)</span> for <code>CRNN</code>; <span class="arithmatex">\(384 \times 384\)</span> for <code>TrOCR</code>):</p>
 <table>
 <thead>
 <tr>
-<th style="text-align: center;">No.</th>
 <th style="text-align: left;">Model</th>
 <th style="text-align: center;">Params</th>
-<th style="text-align: center;">Vietnam Acc (%)</th>
+<th style="text-align: center;">Vietnam &amp; Aux. Acc (%)</th>
 <th style="text-align: center;">Brazil Acc (%)</th>
 <th style="text-align: center;">China Acc (%)</th>
-<th style="text-align: center;">Vietnam CER (%)</th>
+<th style="text-align: center;">Vietnam &amp; Aux. CER (%)</th>
 <th style="text-align: center;">Brazil CER (%)</th>
 <th style="text-align: center;">China CER (%)</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td style="text-align: center;">1</td>
-<td style="text-align: left;"><a href="https://arxiv.org/abs/1507.05717">CRNN</a></td>
+<td style="text-align: left;"><a href="https://arxiv.org/abs/1507.05717">CRNN (ResNet34)</a></td>
 <td style="text-align: center;">24.50M</td>
-<td style="text-align: center;">35.17%</td>
-<td style="text-align: center;">55.96%</td>
-<td style="text-align: center;">67.88%</td>
-<td style="text-align: center;">36.28%</td>
-<td style="text-align: center;">18.31%</td>
-<td style="text-align: center;">11.64%</td>
+<td style="text-align: center;">35.17</td>
+<td style="text-align: center;">55.96</td>
+<td style="text-align: center;">67.88</td>
+<td style="text-align: center;">36.28</td>
+<td style="text-align: center;">18.31</td>
+<td style="text-align: center;">11.64</td>
 </tr>
 <tr>
-<td style="text-align: center;">2</td>
 <td style="text-align: left;"><a href="https://github.com/PaddlePaddle/PaddleOCR">PP-OCRv4-Mobile</a></td>
-<td style="text-align: center;">19.30M</td>
-<td style="text-align: center;">64.50%</td>
-<td style="text-align: center;">87.28%</td>
-<td style="text-align: center;">92.05%</td>
-<td style="text-align: center;">13.00%</td>
-<td style="text-align: center;">3.02%</td>
-<td style="text-align: center;">1.84%</td>
+<td style="text-align: center;"><strong>1.89M</strong></td>
+<td style="text-align: center;">64.50</td>
+<td style="text-align: center;">87.28</td>
+<td style="text-align: center;">92.05</td>
+<td style="text-align: center;">13.00</td>
+<td style="text-align: center;">3.02</td>
+<td style="text-align: center;">1.84</td>
 </tr>
 <tr>
-<td style="text-align: center;">3</td>
 <td style="text-align: left;"><a href="http://dx.doi.org/10.1609/aaai.v37i11.26538">TrOCR</a></td>
 <td style="text-align: center;">333.92M</td>
-<td style="text-align: center;">70.20%</td>
-<td style="text-align: center;">90.85%</td>
-<td style="text-align: center;">91.45%</td>
-<td style="text-align: center;">11.44%</td>
-<td style="text-align: center;">2.50%</td>
-<td style="text-align: center;">2.03%</td>
+<td style="text-align: center;">70.20</td>
+<td style="text-align: center;">90.85</td>
+<td style="text-align: center;">91.45</td>
+<td style="text-align: center;">11.44</td>
+<td style="text-align: center;">2.50</td>
+<td style="text-align: center;">2.03</td>
 </tr>
 <tr>
-<td style="text-align: center;">4</td>
 <td style="text-align: left;"><a href="https://arxiv.org/abs/2411.15858">SVTRv2-Tiny</a></td>
 <td style="text-align: center;">5.11M</td>
-<td style="text-align: center;">81.36%</td>
-<td style="text-align: center;">90.54%</td>
-<td style="text-align: center;">96.00%</td>
-<td style="text-align: center;">5.05%</td>
-<td style="text-align: center;">2.19%</td>
-<td style="text-align: center;">0.82%</td>
+<td style="text-align: center;">73.39</td>
+<td style="text-align: center;">90.54</td>
+<td style="text-align: center;">95.96</td>
+<td style="text-align: center;">8.55</td>
+<td style="text-align: center;">2.19</td>
+<td style="text-align: center;">0.83</td>
 </tr>
 <tr>
-<td style="text-align: center;">5</td>
 <td style="text-align: left;"><strong>SVTR26-Tiny (Ours)</strong></td>
-<td style="text-align: center;"><strong>4.22M</strong></td>
-<td style="text-align: center;"><strong>82.93%</strong></td>
-<td style="text-align: center;"><strong>90.98%</strong></td>
-<td style="text-align: center;"><strong>96.51%</strong></td>
-<td style="text-align: center;"><strong>4.69%</strong></td>
-<td style="text-align: center;"><strong>2.06%</strong></td>
-<td style="text-align: center;"><strong>0.71%</strong></td>
+<td style="text-align: center;">4.22M</td>
+<td style="text-align: center;"><strong>74.56</strong></td>
+<td style="text-align: center;"><strong>91.03</strong></td>
+<td style="text-align: center;"><strong>96.49</strong></td>
+<td style="text-align: center;"><strong>8.23</strong></td>
+<td style="text-align: center;"><strong>2.06</strong></td>
+<td style="text-align: center;"><strong>0.72</strong></td>
 </tr>
 </tbody>
 </table>
-<blockquote>
-<p><strong>Summary:</strong> SVTR26-Tiny attains top performance among the evaluated architectures while requiring the smallest parameter footprint (<strong>4.22M</strong>). It demonstrates multi-national robustness across disparate plate aspect ratios, font morphologies, and line layouts within the pooled distribution.</p>
-</blockquote>
+<h3 id="diagnostic-breakdown-of-svtr26-tiny-unseen-plate-audit-per-source-accuracy">Diagnostic Breakdown of SVTR26-Tiny (Unseen-Plate Audit &amp; Per-Source Accuracy)</h3>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Diagnostic Subset</th>
+<th style="text-align: right;">Crops</th>
+<th style="text-align: center;">Acc. (%)</th>
+<th style="text-align: center;">CER (%)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><strong>Strictly Unseen-Plate Audit (Zero Training Overlap)</strong></td>
+<td style="text-align: right;"><strong>20,036</strong></td>
+<td style="text-align: center;"><strong>89.25</strong></td>
+<td style="text-align: center;"><strong>3.08</strong></td>
+</tr>
+<tr>
+<td style="text-align: left;">China (CBLPRD, unseen)</td>
+<td style="text-align: right;">9,448</td>
+<td style="text-align: center;">96.49</td>
+<td style="text-align: center;">0.72</td>
+</tr>
+<tr>
+<td style="text-align: left;">Brazil (RodoSol-ALPR, unseen)</td>
+<td style="text-align: right;">5,917</td>
+<td style="text-align: center;">88.03</td>
+<td style="text-align: center;">2.80</td>
+</tr>
+<tr>
+<td style="text-align: left;">Vietnam &amp; Auxiliary (unseen)</td>
+<td style="text-align: right;">4,671</td>
+<td style="text-align: center;">76.17</td>
+<td style="text-align: center;">7.14</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Homogeneous CBLPRD Clean vs. Degraded (Unseen)</strong></td>
+<td style="text-align: right;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+</tr>
+<tr>
+<td style="text-align: left;">Clean plates</td>
+<td style="text-align: right;">4,718</td>
+<td style="text-align: center;">99.45</td>
+<td style="text-align: center;">0.10</td>
+</tr>
+<tr>
+<td style="text-align: left;">Synthetically degraded plates</td>
+<td style="text-align: right;">4,730</td>
+<td style="text-align: center;">93.53</td>
+<td style="text-align: center;">1.33</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Vietnam &amp; Auxiliary Per-Source Breakdown (Full Test, <span class="arithmatex">\(n=5,990\)</span>)</strong></td>
+<td style="text-align: right;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+</tr>
+<tr>
+<td style="text-align: left;">Synthetic Vietnamese</td>
+<td style="text-align: right;">2,650</td>
+<td style="text-align: center;">99.13</td>
+<td style="text-align: center;">0.11</td>
+</tr>
+<tr>
+<td style="text-align: left;">Public Vietnamese (<code>vietnam_3173</code>)</td>
+<td style="text-align: right;">1,503</td>
+<td style="text-align: center;">68.13</td>
+<td style="text-align: center;">8.56</td>
+</tr>
+<tr>
+<td style="text-align: left;">Public Vietnamese (<code>vietnam_1383</code>)</td>
+<td style="text-align: right;">680</td>
+<td style="text-align: center;">52.06</td>
+<td style="text-align: center;">13.87</td>
+</tr>
+<tr>
+<td style="text-align: left;">Self-collected Vietnamese</td>
+<td style="text-align: right;">487</td>
+<td style="text-align: center;">38.81</td>
+<td style="text-align: center;">17.12</td>
+</tr>
+<tr>
+<td style="text-align: left;"><a href="https://www.kaggle.com/datasets/abdelhamidzakaria/european-license-plates-dataset">Auxiliary European</a> (original)</td>
+<td style="text-align: right;">338</td>
+<td style="text-align: center;">75.15</td>
+<td style="text-align: center;">4.89</td>
+</tr>
+<tr>
+<td style="text-align: left;"><a href="https://www.kaggle.com/datasets/abdelhamidzakaria/european-license-plates-dataset">Auxiliary European</a> (heavily degraded)</td>
+<td style="text-align: right;">332</td>
+<td style="text-align: center;">5.42</td>
+<td style="text-align: center;">58.17</td>
+</tr>
+</tbody>
+</table>
+<p>To reproduce the unseen-plate audit using <code>manifests/ocr_split_manifest.csv</code>:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>python<span class="w"> </span>test_performance/audit_unseen_plates.py<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="w">  </span>--manifest<span class="w"> </span>manifests/ocr_split_manifest.csv<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">  </span>--labels<span class="w"> </span>dataset/rec/test_labels.txt<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="w">  </span>--dataset_dir<span class="w"> </span>dataset/rec
+</span></code></pre></div>
 
 
 
