@@ -1,6 +1,6 @@
 # LiteALPR Dataset Split Manifests (v0.1.9)
 
-This archive contains the exact sample-level split manifests for the benchmarks reported in the *SoftwareX* manuscript *"LiteALPR: A lightweight open-source library for fast and accurate license plate recognition"* (DOI: `10.5281/zenodo.24094968`).
+This archive contains the exact sample-level split manifests for the benchmarks reported in the *SoftwareX* manuscript *"LiteALPR: A lightweight open-source library for fast and accurate license plate recognition"* (DOI: `10.5281/zenodo.24496125`).
 
 ## Files
 - `ocr_split_manifest.csv`: `52,595` pre-cropped license plate samples (`25,000` train / `2,595` val / `25,000` test) with full relative paths (`source/subfolder/filename`, zero duplicate paths) and an `unseen_plate` boolean flag (`20,036` `True` / `4,964` `False` on the test split, enabling direct reproduction of Table 7 without disclosing plate strings) across `CBLPRD_20000` (`20,000`), `RodoSol-ALPR_20000` (`20,000`), `vietnam_3173` (`3,173`), `vietnam_1383` (`1,383`), `vietnam_generated_5547` (`5,547`), `european_orc_729` (`1,456`), and privacy-redacted entries for `1,036` self-collected Vietnamese samples (`self_collected_private`).

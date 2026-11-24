@@ -10,7 +10,7 @@ If you find LiteALPR useful for your research or production deployments, please 
   author    = {Nguyen, Anh and Nguyen Van, Bay and Truong Hoang, Vinh},
   journal   = {SoftwareX},
   year      = {2026},
-  doi       = {10.5281/zenodo.24094968},
+  doi       = {10.5281/zenodo.24496125},
   publisher = {Elsevier}
 }
 ```
@@ -27,7 +27,7 @@ If you find LiteALPR useful for your research or production deployments, please 
 ## Software Metadata & DOI
 
 - **Software Name**: LiteALPR (`v0.1.9`)
-- **Permanent Archive DOI**: [10.5281/zenodo.24094968](https://doi.org/10.5281/zenodo.24094968)
+- **Permanent Archive DOI**: [10.5281/zenodo.24496125](https://doi.org/10.5281/zenodo.24496125)
 - **Source Code**: [https://github.com/vn-anhnth/LiteALPR](https://github.com/vn-anhnth/LiteALPR)
 - **License**: GNU Affero General Public License v3.0 (AGPL-3.0)
 - **PyPI Package**: [https://pypi.org/project/litealpr/](https://pypi.org/project/litealpr/)
