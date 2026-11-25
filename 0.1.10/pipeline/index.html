@@ -765,7 +765,7 @@
 <h2 id="1-yolov8n-efficient-for-fast-detection">1. YOLOv8n-Efficient for Fast Detection</h2>
 <p>The first stage localizes license plate bounding boxes from full-scene traffic frames.</p>
 <h3 id="c3ghost-integration">C3Ghost Integration</h3>
-<p>Standard YOLOv8 architectures rely on multi-layer <strong>C2f</strong> blocks containing dense <span class="arithmatex">\(3 \times 3\)</span> Bottlenecks across both backbone and neck. LiteALPR replaces C2f blocks across backbone stages (P3, P4, P5) and the PANet neck with lightweight <strong>C3Ghost</strong> blocks based on GhostNet:</p>
+<p>Standard YOLOv8 architectures rely on multi-layer <strong>C2f</strong> blocks containing dense <span class="arithmatex">\(3 \times 3\)</span> Bottlenecks across both backbone and neck. LiteALPR replaces C2f blocks across backbone stages (P3, P4, P5) and the PANet neck with lightweight <strong>C3Ghost</strong> blocks (substituting dense Bottlenecks with <strong>GhostBottlenecks</strong> built from Ghost Convolutions based on GhostNet):</p>
 <ol>
 <li>
 <p><strong>Intrinsic Feature Generation</strong>: Given input <span class="arithmatex">\(X \in \mathbb{R}^{C \times H \times W}\)</span>, a primary <span class="arithmatex">\(1 \times 1\)</span> convolution generates reduced intrinsic feature maps:</p>
