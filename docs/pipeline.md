@@ -14,7 +14,7 @@ LiteALPR is structured as a modular two-stage sequential pipeline: **Detection**
 The first stage localizes license plate bounding boxes from full-scene traffic frames.
 
 ### C3Ghost Integration
-Standard YOLOv8 architectures rely on multi-layer **C2f** blocks containing dense $3 \times 3$ Bottlenecks across both backbone and neck. LiteALPR replaces C2f blocks across backbone stages (P3, P4, P5) and the PANet neck with lightweight **C3Ghost** blocks based on GhostNet:
+Standard YOLOv8 architectures rely on multi-layer **C2f** blocks containing dense $3 \times 3$ Bottlenecks across both backbone and neck. LiteALPR replaces C2f blocks across backbone stages (P3, P4, P5) and the PANet neck with lightweight **C3Ghost** blocks (substituting dense Bottlenecks with **GhostBottlenecks** built from Ghost Convolutions based on GhostNet):
 
 1. **Intrinsic Feature Generation**: Given input $X \in \mathbb{R}^{C \times H \times W}$, a primary $1 \times 1$ convolution generates reduced intrinsic feature maps:
 
